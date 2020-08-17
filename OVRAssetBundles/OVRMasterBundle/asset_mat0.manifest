@@ -1,0 +1,21 @@
+ManifestFileVersion: 0
+CRC: 2349737223
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 741bb2e62aa0262b30b10a52a8427e35
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 21c99c86a43ad817b2cb7f65458ae090
+HashAppended: 0
+ClassTypes:
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+Assets:
+- Assets/Oculus/VR/Materials/cube_texture.mat
+Dependencies:
+- C:/Users/Raghav Mittal/Documents/SERC Prototyping/test_quest_2/OVRAssetBundles/OVRMasterBundle/asset_png0
