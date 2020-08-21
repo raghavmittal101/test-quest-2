@@ -109,8 +109,9 @@ public class renderer : MonoBehaviour
     
     private Vector3 ProjectPoint()
     /*
+     *  Generates a new point.
      *  updates the projected_points list
-        return : Vector3 : position of new point projected
+        return : Vector3 : position of new point
      */
     {
         int len = projected_points.Count;
