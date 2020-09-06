@@ -3,26 +3,26 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class MeshGenerator : MonoBehaviour
-{
-    public Material material;
+{ 
+    public Material passageway_material;
 
     [Range(0.05f, 5f)]
-    public float roadWidth = 1;
+    public float passageway_width = 1;
 
-    // Start is called before the first frame update
-    void Start()
+    public void CreateMesh(List<Vector3> pointsList)
     {
-        
-    }
+        List<Vector3> points = new List<Vector3>();
+        for(int i=1; i<pointsList.Count; i++)
+        {
+            Vector3 diff = Vector3.zero;
+            for (int j = 0; j <10; j++)
+            {
+                diff += (pointsList[i] - pointsList[i-1]) / 10;
+                points.Add(pointsList[i-1]+diff);
+            }
+            points.Add(pointsList[i]);
+        }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-    public void CreateMesh(List<Vector3> points)
-    {
         List<Vector3> verts = new List<Vector3>();
         List<int>tris = new List<int>();
         List<Vector3> uvs = new List<Vector3>();
@@ -43,11 +43,12 @@ public class MeshGenerator : MonoBehaviour
 
             forward.Normalize();
             Vector3 left = new Vector3(-forward.z, 0, forward.x);
-            verts.Add(points[i] + left * roadWidth * 0.5f); // left point
-            verts.Add(points[i] - left * roadWidth * 0.5f); // right point
-                                                            // float completionPercent = i / (float)(points.Count - 1);
-                                                            // uvs.Add(new Vector3(0, 0, completionPercent));
-                                                            // uvs.Add(new Vector3(1, 0, completionPercent));
+            verts.Add(points[i] + left * passageway_width * 0.5f); // left point
+            verts.Add(points[i] - left * passageway_width * 0.5f); // right point
+
+            float completionPercent = i / (float)(points.Count - 1);
+            uvs.Add(new Vector3(0, 0, completionPercent));
+            uvs.Add(new Vector3(1, 0, completionPercent));
 
             if (i < points.Count - 1)
             {
@@ -73,14 +74,14 @@ public class MeshGenerator : MonoBehaviour
         {
             Debug.Log(tris[k]);
         }
-        Mesh mesh = new Mesh();
-        mesh.SetVertices(verts);
+        Mesh passageway_mesh = new Mesh();
+        passageway_mesh.SetVertices(verts);
         //mesh.vertices = verts;
-        mesh.SetTriangles(tris, 0);
+        passageway_mesh.SetTriangles(tris, 0);
         //        mesh.triangles = tris;
-        //mesh.SetUVs(0, uvs, 0, uvs.Count);
-        GetComponent<MeshFilter>().mesh = mesh;
-        GetComponent<MeshRenderer>().material = material;
+        passageway_mesh.SetUVs(0, uvs);
+        GetComponent<MeshFilter>().mesh = passageway_mesh;
+        GetComponent<MeshRenderer>().material = passageway_material;
 
     }
 }
