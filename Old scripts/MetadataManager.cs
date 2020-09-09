@@ -6,7 +6,7 @@ public class MetadataManager
 {
     public static float pathWidth_static;
     public static float pathLength_static;
-    public static float numberOfPathSegments_static;
+    public static int numberOfPathSegments_static;
 
     /* Constructors */
     public MetadataManager(string filename)

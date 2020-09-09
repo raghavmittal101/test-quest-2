@@ -2,16 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PathMesh
+public class PathMeshOld
 {
     private List<Vector3> trianglePoints = new List<Vector3>();
-    private Points _points;
+    private List<Vector3> visiblePoints = new List<Vector3>();
 
-    private List<Vector3> presentPoints;
-
-
-    public PathMesh(Points _points) {
-        this._points = _points;
+    public PathMesh() {
+        for(int i = SceneManager.pointsVisibleInScene_static[0]; i <= SceneManager.pointsVisibleInScene_static[1]; i++)
+        {
+            visiblePoints.Add()
+        }
     }
 
     private void GenerateTrianglePoints()
@@ -23,9 +23,7 @@ public class PathMesh
     * Later on we will update this to build mesh whith different path segment sections
     */
     {
-        // do something
-        this.presentPoints = _points.GetPoints();
-        // generate mesh
+
     }
 
     public List<Vector3> GetTrianglePoints()
