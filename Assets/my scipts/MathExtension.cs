@@ -11,4 +11,13 @@ public static class MathExtension
     {
         return thisValue >= Mathf.Min(value1, value2) && thisValue <= Mathf.Max(value1, value2);
     }
+
+    static double NormalizeToRange(double value, double start, double end)
+    {
+        double width = end - start;   // 
+        double offsetValue = value - start;   // value relative to 0
+
+        return (offsetValue - (System.Math.Floor(offsetValue / width) * width)) + start;
+        // + start to reset back to start of original range
+    }
 }

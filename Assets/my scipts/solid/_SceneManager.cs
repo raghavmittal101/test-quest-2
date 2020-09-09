@@ -11,7 +11,6 @@ public class _SceneManager : MonoBehaviour
     private List<Vector3> pointLocationsList = new List<Vector3>();
     private Material material;
     private Vector3 playAreaDimension;
-    private float beta;
     private PathMesh pathMesh;
     private _Point point;
     private PathSegment pathSegment;

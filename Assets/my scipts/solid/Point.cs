@@ -19,15 +19,48 @@ public class _Point
         return this.zoneId;
     }
 
-    private int CalculateZoneId()
+    private int CalculateZoneId() {
+        var p = this.location;
+        var d = this.playAreaDimension;
+        var l = this.pathLength;
+
+       // Debug.Log("location: " + p);
+      //  Debug.Log("play area dimension: " + d);
+       // Debug.Log("path length: " + l);
+
+        if (p.z < l)
+        {
+            if (p.x < l) return 1;
+            if (p.x <= d.x - l) return 8;
+            if (p.x <= d.x) return 2;
+        }
+
+        if (p.z <= d.z - l)
+        {
+            if (p.z < l) return 5;
+            if (p.x <= d.x - l) return 9;
+            if (p.x <= d.x) return 7;
+        }
+
+        if (p.z <= d.z)
+        {
+            if (p.x < l) return 3;
+            if (p.x <= d.x - l) return 6;
+            if (p.x <= d.x) return 4;
+        }
+
+        return -1;
+    }
+
+    private int OldCalculateZoneId()
     {
         var p = this.location;
         var d = this.playAreaDimension;
         var l = this.pathLength;
 
-        Debug.Log("location: " + p);
-        Debug.Log("play area dimension: " + d);
-        Debug.Log("path length: " + l);
+        // Debug.Log("location: " + p);
+       // Debug.Log("play area dimension: " + d);
+        // Debug.Log("path length: " + l);
 
         if (p.z < l)
         {

@@ -460,10 +460,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1808948281}
-  - component: {fileID: 1808948283}
   - component: {fileID: 1808948285}
   - component: {fileID: 1808948284}
   - component: {fileID: 1808948286}
+  - component: {fileID: 1808948283}
+  - component: {fileID: 1808948282}
   m_Layer: 0
   m_Name: ScriptObject
   m_TagString: Untagged
@@ -485,6 +486,22 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1808948282
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1808948280}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9dc4ca2e704410f4bb2c075651587d9e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pathSegmentLength: 5
+  visiblePathSegmentCount: 2
+  pathWidth: 4
+  material: {fileID: 0}
 --- !u!114 &1808948283
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -494,16 +511,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1808948280}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 22c660bba569f4c45bb2b33a27408a84, type: 3}
+  m_Script: {fileID: 11500000, guid: 7804d5c9dea4f544eabe6a74cb086e12, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 1979622675}
-  l: 5
-  m: 5
-  line_prefab: {fileID: 2102180492459225612, guid: b2f664b6829b88e4d91c56d588a77959,
-    type: 3}
-  alpha: 1
-  mg: {fileID: 1808948286}
+  startingPosition: {x: 4, y: 0, z: 2}
+  playAreaDimensions: {x: 20, y: 0, z: 20}
 --- !u!23 &1808948284
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -563,6 +575,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e859a4a69535ec418527460c890c0f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerGameObject: {fileID: 1979622675}
 --- !u!1 &1979622675
 GameObject:
   m_ObjectHideFlags: 0
