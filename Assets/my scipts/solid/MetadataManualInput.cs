@@ -2,19 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MetadataManualInput : MonoBehaviour, IMetadataInput
+public class MetadataManualInput : IMetadataInput
 {
-    [SerializeField]
-    private float pathSegmentLength;
+    private readonly float pathSegmentLength;
+    private readonly int visiblePathSegmentCount;
+    private readonly float pathWidth;
+    private readonly Material material;
 
-    [SerializeField]
-    private int visiblePathSegmentCount;
-
-    [SerializeField]
-    private float pathWidth;
-
-    [SerializeField]
-    private Material material;
+    public MetadataManualInput(float pathSegmentLength, int visiblePathSegmentCount, float pathWidth, Material material)
+    {
+        this.pathSegmentLength = pathSegmentLength;
+        this.visiblePathSegmentCount = visiblePathSegmentCount;
+        this.pathWidth = pathWidth;
+        this.material = material;
+    }
 
     public float PathSegmentLength()
     {
@@ -29,7 +30,7 @@ public class MetadataManualInput : MonoBehaviour, IMetadataInput
     {
         return this.pathWidth;
     }
-    public Material Material()
+    public Material PathMaterial()
     {
         return this.material;
     }

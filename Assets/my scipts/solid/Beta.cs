@@ -2,21 +2,24 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Beta {
+public class Beta
+{
+    /*
     private float previousBeta; // can be calculate from point;
     private float[] betaRange = { 0f, 0f};
     private Vector3 pointLocation;
     private float beta;
     private int pointZoneId;
     private const float pi = 180f;
-
-    public Beta(Vector3 pointLocation, int pointZoneId)
+    */
+    public static float GenerateBeta(Vector3 pointLocation, int pointZoneId)
     {
-        this.pointLocation = pointLocation;
-        this.pointZoneId = pointZoneId;
-        this.previousBeta = (float)System.Math.Round(System.Math.Atan(pointLocation.x / pointLocation.z), 4);
-
-        this.GenerateBeta();
+        //Debug.Log("Beta.cs: GenerateBeta: pointLocation: " + pointLocation.x + "," + pointLocation.z);
+        float previousBeta = Mathf.Round(Mathf.Atan(pointLocation.x / pointLocation.z)*10000)/10000; // rounded to 4 places after decimal to avoid any floating point errors
+        Debug.Log("Beta.cs: GenerateBeta: previousBeta: " + previousBeta*Mathf.Rad2Deg);
+        float[] betaRange = Beta.GenerateBetaRange(previousBeta, pointZoneId);
+        Debug.Log("Beta.cs: GenerateBeta: BetaRange: " + betaRange[0] + "," + betaRange[1]);
+        return Random.Range(betaRange[0]*Mathf.Rad2Deg, betaRange[1]*Mathf.Rad2Deg);
     }
 
     private float NormalizedRad(float theta)
@@ -26,24 +29,12 @@ public class Beta {
         return _theta;
     }
 
-    public double GetBeta()
+    private static float[] GenerateBetaRange(float previousBeta, int pointZoneId)
     {
-        return this.beta;
-    }
+        float[] betaRange = new float[2];
 
-    private void GenerateBeta()
-    {
-        GenerateBetaRange();
-        Debug.Log("previous beta: " + this.previousBeta);
-        Debug.Log("zoneId: " + this.pointZoneId);
-        Debug.Log("Beta: "+ betaRange[0]);
-        this.beta = Random.Range((float)this.betaRange[0], (float)this.betaRange[1]);
-    }
-
-    private void GenerateBetaRange()
-    {
-        int a;
-
+        int a; // category of previous beta based on it's position in unit circle
+        const float pi = Mathf.PI;
         if (MathExtension.InRangeUpperInclusive(previousBeta, 0, pi / 2)) a = 1;
         else if (MathExtension.InRangeUpperInclusive(previousBeta, pi / 2, pi)) a = 2;
         else if (MathExtension.InRangeUpperInclusive(previousBeta, pi, 3 * (pi / 2))) a = 3;
@@ -57,17 +48,16 @@ public class Beta {
         else if (MathExtension.InRangeUpperInclusive(previousBeta, 3 * (pi / 4), pi)) a = 11;
         else if (MathExtension.InRangeUpperInclusive(previousBeta, 0, pi / 4)) a = 12;
 
-        else a = -1;
+        else { a = 1; Debug.Log("Beta.cs: GenerateBetaRange(): unable to calculate 'a'. Set to 1 for now !"); }
 
         // FOR ZONE 9
-        if(pointZoneId == 9)
+        if (pointZoneId == 9)
         {
             betaRange[0] = previousBeta - (pi / 2);
             betaRange[1] = previousBeta + (pi / 2);
         }
-
         // FOR ZONES 1 to 4 and a = 1 to 4
-        if (pointZoneId > 0 && pointZoneId < 5 && a > 0 && a < 5)
+        else if (pointZoneId > 0 && pointZoneId < 5 && a > 0 && a < 5)
         {
 
             if (a == pointZoneId)
@@ -108,13 +98,19 @@ public class Beta {
         }
 
         // FOR ZONES 1 to 4 and a = 5 to 8
-        else if(pointZoneId > 0 && pointZoneId < 5 && a > 4 && a < 9)
+        else if (pointZoneId > 0 && pointZoneId < 5 && a > 4 && a < 9)
         {
-            betaRange[0] = pi/2 * (Mathf.Abs(a - pointZoneId) - 8);
+            betaRange[0] = pi / 2 * (Mathf.Abs(a - pointZoneId) - 8);
             betaRange[1] = pi / 2 * (Mathf.Abs(a - pointZoneId) - 8);
         }
-    }
 
+        else { betaRange[0] = 0f; betaRange[1] = pi; Debug.Log("Beta.cs: GenerateBetaRange(): Unable to find a valid betaRange. Set to [0, pi] for now !"); }
+
+        return betaRange;
+
+    }
+}
+    /*
     private void OldGenerateBetaRange()
     {
         float B = this.previousBeta;
@@ -258,4 +254,4 @@ public class Beta {
         }
         else if (zoneId == 9) { this.betaRange[0] = B - (pi / 4); this.betaRange[1] = B + (pi / 4); }
     }
-}
+    */

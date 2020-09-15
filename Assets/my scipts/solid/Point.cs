@@ -2,27 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class _Point
+public static class _Point
 {
-    private Vector3 location;
-    private int zoneId;
-    private float pathLength;
-    private Vector3 playAreaDimension;
-
-
-    public int GetZoneId(Vector3 location, Vector3 playAreaDimension, float pathLength)
+    public static int GetZoneId(this Vector3 location, Vector3 playAreaDimension, float pathLength)
     {
-        this.location = location;
-        this.pathLength = pathLength;
-        this.playAreaDimension = playAreaDimension;
-        this.zoneId = this.CalculateZoneId();
-        return this.zoneId;
-    }
-
-    private int CalculateZoneId() {
-        var p = this.location;
-        var d = this.playAreaDimension;
-        var l = this.pathLength;
+        var p = location;
+        var d = playAreaDimension;
+        var l = pathLength;
 
        // Debug.Log("location: " + p);
       //  Debug.Log("play area dimension: " + d);
@@ -52,11 +38,11 @@ public class _Point
         return -1;
     }
 
-    private int OldCalculateZoneId()
+    public static int OldGetZoneId(this Vector3 location, Vector3 playAreaDimension, float pathLength)
     {
-        var p = this.location;
-        var d = this.playAreaDimension;
-        var l = this.pathLength;
+        var p = location;
+        var d = playAreaDimension;
+        var l = pathLength;
 
         // Debug.Log("location: " + p);
        // Debug.Log("play area dimension: " + d);

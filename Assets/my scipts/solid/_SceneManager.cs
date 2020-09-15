@@ -4,51 +4,69 @@ using UnityEngine;
 
 public class _SceneManager : MonoBehaviour
 {
-    // Start is called before the first frame update
-    private float pathSegmentLength;
-    private float pathWidth;
-    private int visiblePathSegmentCount;
-    private List<Vector3> pointLocationsList = new List<Vector3>();
-    private Material material;
-    private Vector3 playAreaDimension;
-    private PathMesh pathMesh;
-    private _Point point;
     private PathSegment pathSegment;
-    MetadataManualInput metadataInput;
-    // ManualDeviceInput deviceInput = new ManualDeviceInput();
-    ManualDeviceInput deviceInput;
+    private List<Vector3> pointLocationsList = new List<Vector3>();
+    private PathMesh pathMesh;
+
     private Vector3 startLocation;
     private int zoneId;
-    private int numberOfSegmentsCovered=0;
+    private int numberOfPathSegmentsCovered = 0;
+
+    // input settings
+    MetadataInputContext metadataInput;
+    InputDeviceContext inputDevice;
 
     // for demo purposes
     public GameObject playerGameObject;
 
+    // For setting boundary colliders
+    private GameObject[] boundaryCollider = new GameObject[4];
+    public GameObject boundaryColliderPrefab;
+
     private void Awake()
     {
-        this.metadataInput = GameObject.Find("ScriptObject").GetComponent<MetadataManualInput>();
-        this.deviceInput = GameObject.Find("ScriptObject").GetComponent<ManualDeviceInput>();
-        this.pathSegmentLength = metadataInput.PathSegmentLength();
-        this.visiblePathSegmentCount = metadataInput.VisiblePathSegmentCount();
-        this.pathWidth = metadataInput.PathWidth();
-        this.material = metadataInput.Material();
-        this.pathMesh = new PathMesh(this.pathWidth);
-        this.point = new _Point();
-        this.startLocation = GameObject.Find("ScriptObject").GetComponent<ManualDeviceInput>().StartingPosition();
+        this.inputDevice = GameObject.Find("ScriptObject").GetComponent<InputDeviceContext>();
+        this.metadataInput = GameObject.Find("ScriptObject").GetComponent<MetadataInputContext>();
+
+        this.pathMesh = new PathMesh(metadataInput.PathWidth());
     }
     void Start()
     {
-        playerGameObject.transform.position = startLocation;
+        SpawnBoundaryColliders();
 
-        this.playAreaDimension = deviceInput.PlayAreaDimensions();
-       // Debug.Log("startLocation: " + this.startLocation.x);
-        pointLocationsList.Add(this.startLocation);
+        playerGameObject.transform.position = inputDevice.StartingPosition();
 
-        for (int i=0; i<this.visiblePathSegmentCount; i++)
+        pointLocationsList.Add(inputDevice.StartingPosition());
+
+        for (int i = 0; i < metadataInput.VisiblePathSegmentCount(); i++)
         {
             this.GenerateNewPathSegment();
         }
         this.RenderMesh(this.pathMesh.GetMesh(this.pointLocationsList));
+
+
+    }
+
+    private void SpawnBoundaryColliders()
+    {
+        // place colliders on boundries of play area
+        Vector3[] boundaryPositions = new Vector3[4];
+
+        Vector3 playAreaDimensions = inputDevice.PlayAreaDimensions();
+        boundaryPositions[0] = new Vector3(0f, 5f, -playAreaDimensions.z / 2);
+        boundaryPositions[1] = new Vector3(-playAreaDimensions.x / 2, 5f, 0f);
+        boundaryPositions[2] = new Vector3(0f, 5f, playAreaDimensions.z / 2);
+        boundaryPositions[3] = new Vector3(playAreaDimensions.x / 2, 5f, 0f);
+
+        for (int i = 0; i < 4; i++)
+        {
+            var go = Instantiate(boundaryColliderPrefab, boundaryPositions[i], Quaternion.Euler(0f, i*90f, 0f));
+            var scale = go.transform.localScale;
+            if (boundaryPositions[i].z == 0f) scale.x = playAreaDimensions.z;
+            else scale.x = playAreaDimensions.x;
+            go.transform.localScale = scale;
+            boundaryCollider[i] = go;
+        }
     }
 
     // Update is called once per frame
@@ -56,20 +74,20 @@ public class _SceneManager : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            numberOfSegmentsCovered += 1;
+            numberOfPathSegmentsCovered += 1;
 
-            if (numberOfSegmentsCovered <= visiblePathSegmentCount / 2 + 1)
-            {// demo purpose
-                playerGameObject.transform.position = pointLocationsList[numberOfSegmentsCovered];
+            if (numberOfPathSegmentsCovered <= metadataInput.VisiblePathSegmentCount() / 2 + 1)
+            {
+                playerGameObject.transform.position = pointLocationsList[numberOfPathSegmentsCovered];
             }
-            if(numberOfSegmentsCovered >= this.visiblePathSegmentCount / 2 + 1)
+            if(numberOfPathSegmentsCovered >= this.metadataInput.VisiblePathSegmentCount() / 2 + 1)
             {
                 pointLocationsList.RemoveAt(0);
                 this.GenerateNewPathSegment();
                 this.RenderMesh(this.pathMesh.GetMesh(this.pointLocationsList));
 
                 // demo purpose
-                playerGameObject.transform.position = pointLocationsList[visiblePathSegmentCount/2 + 1];
+                playerGameObject.transform.position = pointLocationsList[metadataInput.VisiblePathSegmentCount() / 2 + 1];
             }
         }
     }
@@ -77,19 +95,20 @@ public class _SceneManager : MonoBehaviour
     private void RenderMesh(Mesh mesh)
     {
         GetComponent<MeshFilter>().mesh = mesh;
-        GetComponent<MeshRenderer>().material = material;
+        GetComponent<MeshRenderer>().material = metadataInput.PathMaterial();
     }
 
     private void GenerateNewPathSegment()
     {
         this.startLocation = this.pointLocationsList[this.pointLocationsList.Count - 1];
-        this.zoneId = this.point.GetZoneId(this.startLocation, this.playAreaDimension, this.pathSegmentLength);
-       // Debug.Log("ZoneId: "+ this.zoneId);
-       // Debug.Log("playAreaDimension: " + this.playAreaDimension);
-       // Debug.Log("pathSegmentLength: "+ this.pathSegmentLength);
-        Beta B = new Beta(this.startLocation, this.zoneId);
-        this.pathSegment = new PathSegment(startLocation, this.pathSegmentLength, (float)B.GetBeta());
+        this.zoneId = startLocation.GetZoneId(inputDevice.PlayAreaDimensions(), metadataInput.PathSegmentLength());
+        float beta = Beta.GenerateBeta(this.startLocation, this.zoneId);
+        //Debug.Log("_SceneManager.cs: beta: " + beta);
+        this.pathSegment = new PathSegment(startLocation, metadataInput.PathSegmentLength(), beta);
         this.pointLocationsList.Add(pathSegment.GetEndLocation());
 
+        // Debug.Log("ZoneId: "+ this.zoneId);
+        // Debug.Log("playAreaDimension: " + this.playAreaDimension);
+        // Debug.Log("pathSegmentLength: "+ this.pathSegmentLength);
     }
 }
