@@ -290,7 +290,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 694362666}
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 59.1, z: 0}
+  m_LocalPosition: {x: 0, y: 97.1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -463,8 +463,8 @@ GameObject:
   - component: {fileID: 1808948285}
   - component: {fileID: 1808948284}
   - component: {fileID: 1808948286}
-  - component: {fileID: 1808948283}
   - component: {fileID: 1808948282}
+  - component: {fileID: 1808948283}
   m_Layer: 0
   m_Name: ScriptObject
   m_TagString: Untagged
@@ -495,12 +495,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1808948280}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9dc4ca2e704410f4bb2c075651587d9e, type: 3}
+  m_Script: {fileID: 11500000, guid: 1d5b65a449f801d45a67fdef46b6b4a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _metadataInputType: 0
   pathSegmentLength: 5
-  visiblePathSegmentCount: 2
-  pathWidth: 4
+  visiblePathSegmentCount: 4
+  pathWidth: 5
   material: {fileID: 0}
 --- !u!114 &1808948283
 MonoBehaviour:
@@ -511,11 +512,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1808948280}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7804d5c9dea4f544eabe6a74cb086e12, type: 3}
+  m_Script: {fileID: 11500000, guid: bbf668a36985cb74a86a2d2ceebd1b3b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startingPosition: {x: 4, y: 0, z: 2}
-  playAreaDimensions: {x: 20, y: 0, z: 20}
+  _inputDeviceType: 0
+  startingPosition: {x: 2, y: 0, z: 6}
+  playAreaDimensions: {x: 10, y: 0, z: 10}
 --- !u!23 &1808948284
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -576,6 +578,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerGameObject: {fileID: 1979622675}
+  boundaryColliderPrefab: {fileID: 5365083274968223888, guid: 0aa4a010bc4e1544489dead0d65cd2ae,
+    type: 3}
 --- !u!1 &1979622675
 GameObject:
   m_ObjectHideFlags: 0
