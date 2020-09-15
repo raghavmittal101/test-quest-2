@@ -35,7 +35,7 @@ public class DetectBoundary
 
         // only lower range is invalid, means path is very close to one of the boundaries
         // set lower range = upper range
-        if (betaRange[0] > 0 && betaRange[1] > 0)
+        if (betaRange[0] == -1*Mathf.PI/2 && betaRange[1] > 0)
         {
             Debug.Log("DetectBoundary: very close to left boundary");
             betaRange[0] = betaRange[1];
@@ -79,9 +79,6 @@ public class DetectBoundary
     private float GetAngleRecusively(float angle, int i)
     {
         
-        if (angle==3*Mathf.PI/4 || angle == -3 * Mathf.PI / 4)
-        { return (Mathf.PI / 2) * i; }
-        
         // Debug.DrawLine(transform.position, hit.transform.position, Color.blue, 10f);
         ///Debug.DrawLine(this.point, hit.transform.position, Color.blue, 10f);
         
@@ -90,13 +87,15 @@ public class DetectBoundary
             Debug.DrawRay(point, GetFwd(beta + angle, point), Color.red, 5f);
             Debug.Log("DetectBoundary: GetAngleRecursively: hit at" + angle * Mathf.Rad2Deg);
             Debug.Log("DetectBoundary: GetAngleRecursively: colliderName: " + hit.collider.name);
+            if(angle == 0 || angle == Mathf.PI * 2 || angle==-1*Mathf.PI*2) { return -1000; }
             return angle - i * (Mathf.PI / 4);
         }
         else
         {
             Debug.DrawRay(point, GetFwd(beta + angle, point), Color.green, 2f);
             Debug.Log("DetectBoundary: GetAngleRecursively: no hit at" + angle * Mathf.Rad2Deg);
-            return GetAngleRecusively(angle + (Mathf.PI / 4) * i, i);
+            if(angle == i*Mathf.PI / 2) { return angle; }
+            return GetAngleRecusively(angle + i * (Mathf.PI / 4), i);
         }
     }
 
@@ -105,10 +104,10 @@ public class DetectBoundary
         // beta should be in radians
         // returns a vector pointing in forward direction from the current point at an given angle
         Vector3 targetPoint = Vector3.zero; // direction of the ray
-        targetPoint.x = pathLength*Mathf.Sin(beta) + point.x;
+        targetPoint.x = validDistance*Mathf.Sin(beta) + point.x;
         targetPoint.y = 0f;
         originPoint.y = 0f;
-        targetPoint.z = pathLength * Mathf.Cos(beta) + point.z;
+        targetPoint.z = validDistance* Mathf.Cos(beta) + point.z;
         return targetPoint-originPoint;
     }
 }
