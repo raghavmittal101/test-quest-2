@@ -6,8 +6,9 @@ public class InputDeviceContext : MonoBehaviour, IDeviceInput
 {
     private enum inputDeviceType { ManualInput, OculusVRNotWorking };
     [SerializeField] private inputDeviceType _inputDeviceType;
-    [SerializeField] private Vector3 startingPosition;
+    [SerializeField] private Vector3 playerPosition;
     [SerializeField] private Vector3 playAreaDimensions;
+    [SerializeField] private float playerRotationAlongYAxis;
 
     public IDeviceInput inputDevice;
 
@@ -15,7 +16,7 @@ public class InputDeviceContext : MonoBehaviour, IDeviceInput
     {
             if (_inputDeviceType == inputDeviceType.ManualInput)
             {
-                this.inputDevice = new ManualDeviceInput(startingPosition, playAreaDimensions);
+                this.inputDevice = new ManualDeviceInput(playerPosition, playerRotationAlongYAxis, playAreaDimensions);
             }
 
             else
@@ -26,13 +27,18 @@ public class InputDeviceContext : MonoBehaviour, IDeviceInput
     }
    
 
-    public Vector3 StartingPosition()
+    public Vector3 PlayerPosition()
     {
-        return this.inputDevice.StartingPosition();
+        return this.inputDevice.PlayerPosition();
     }
 
     public Vector3 PlayAreaDimensions()
     {
         return this.inputDevice.PlayAreaDimensions();
+    }
+
+    public float PlayerRotationAlongYAxis()
+    {
+        return this.inputDevice.PlayerRotationAlongYAxis();
     }
 }

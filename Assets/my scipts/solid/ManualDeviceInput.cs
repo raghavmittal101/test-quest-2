@@ -4,17 +4,23 @@ using UnityEngine;
 
 public class ManualDeviceInput : IDeviceInput
 {
-    private Vector3 startingPosition;
+    private Vector3 playerPosition;
     private Vector3 playAreaDimensions;
+    private float playerRotationAlongYAxis;
     
-    public ManualDeviceInput(Vector3 startingPosition, Vector3 playAreaDimensions)
+    public ManualDeviceInput(Vector3 playerPosition, float playerRotationAlongYAxis, Vector3 playAreaDimensions)
     {
-        this.startingPosition = startingPosition;
+        this.playerPosition = playerPosition;
+        this.playerRotationAlongYAxis = playerRotationAlongYAxis;
         this.playAreaDimensions = playAreaDimensions;
     }
-    public Vector3 StartingPosition()
+    public Vector3 PlayerPosition()
     {
-        return startingPosition;
+        return playerPosition;
+    }
+    public float PlayerRotationAlongYAxis()
+    {
+        return playerRotationAlongYAxis;
     }
     public Vector3 PlayAreaDimensions()
     {

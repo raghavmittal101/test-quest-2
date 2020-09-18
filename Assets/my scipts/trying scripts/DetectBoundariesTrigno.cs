@@ -5,9 +5,7 @@ using UnityEngine;
 
 public class DetectBoundariesTrigno: MonoBehaviour
 {
-    Vector3 previousPosition;
-    Vector3 playerPosition;
-    Vector3[] RayDirections = { new Vector3(0f, 0f, 1f),
+    Vector3[] rayDirectionArray = { new Vector3(0f, 0f, 1f),
                                     new Vector3(1f, 0f, 0f),
                                     new Vector3(0f, 0f, -1f),
                                     new Vector3(-1f, 0f, 0f) };
@@ -16,6 +14,7 @@ public class DetectBoundariesTrigno: MonoBehaviour
     RaycastHit south = new RaycastHit();
     RaycastHit west = new RaycastHit();
     RaycastHit[] rayArray = new RaycastHit[4];
+
     public GameObject player;
     public GameObject previousPlayerPositionObject;
     
@@ -24,8 +23,6 @@ public class DetectBoundariesTrigno: MonoBehaviour
 
     private void Awake()
     {
-        playerPosition = player.transform.position;
-        previousPosition = previousPlayerPositionObject.transform.position;
         rayArray[0] = north;
         rayArray[1] = east; 
         rayArray[2] = south;
@@ -40,10 +37,10 @@ public class DetectBoundariesTrigno: MonoBehaviour
 
     private void Update()
     {
-        playerPosition = player.transform.position;
-        previousPosition = previousPlayerPositionObject.transform.position;
+        Vector3 playerPosition = player.transform.position;
+        Vector3 previousPosition = previousPlayerPositionObject.transform.position;
 
-        // for visualising the orientation and position of the player
+        // for visualizing the orientation and position of the player
 
         Debug.DrawLine(previousPosition, playerPosition);
         // ray towards right of player
@@ -52,31 +49,34 @@ public class DetectBoundariesTrigno: MonoBehaviour
         Debug.DrawRay(playerPosition, GetFwd(player.transform.rotation.eulerAngles.y*Mathf.Deg2Rad - Mathf.PI / 2, playerPosition) * rayLength, Color.grey);
 
         // list for storing all possible beta ranges
-        // this will be useful if the player is in corner, we will have 4 gamma lines, hence 2 sets of beta
         List<float[]> betaRanges = new List<float[]>();
 
-        // rays for north, east, south and west directions
+        List<float> angleBetaRightList = new List<float>();
+        List<float> angleBetaLeftList = new List<float>();
+
+        // rays for global directions 0:north, 1:east, 2:south and 3:west directions
         for (int i=0; i<4; i++)
         {
-            // cast ray in a direction
-            // make it red if hit else green
-            if (Physics.Raycast(playerPosition, RayDirections[i], out rayArray[i], rayLength))
-            {
-                Debug.DrawRay(playerPosition, RayDirections[i]*rayLength, Color.red);
-            }
-            else Debug.DrawRay(playerPosition, RayDirections[i]*rayLength, Color.green);
+            // cast ray to a global direction from player's position
 
-            // cast ray in a direction and if it hits a collider
-            if (Physics.Raycast(playerPosition, RayDirections[i], out rayArray[i], rayLength))
+            // make it red if hit else green for visualization purpose
+            if (Physics.Raycast(playerPosition, rayDirectionArray[i], out rayArray[i], rayLength))
             {
-                // find signed angle between the player's orientation and direction 
+                Debug.DrawRay(playerPosition, rayDirectionArray[i]*rayLength, Color.red);
+            }
+            else Debug.DrawRay(playerPosition, rayDirectionArray[i]*rayLength, Color.green);
+
+            // check if ray casted in a global direction hits a collider
+            if (Physics.Raycast(playerPosition, rayDirectionArray[i], out rayArray[i], rayLength))
+            {
+                // find signed angle `A` between the player's orientation and global direction 
                 // -- angle has negative sign when player's rotation along y-axis is positive and vice versa
-                float angle = Vector3.SignedAngle(playerPosition - previousPosition, RayDirections[i], Vector3.up);
-                angle = angle * Mathf.Deg2Rad;
-                Debug.Log("Angle between player orientation and raydirection[" + i + "]: " + angle*Mathf.Rad2Deg);
+                float A = Vector3.SignedAngle(playerPosition - previousPosition, rayDirectionArray[i], Vector3.up);
+                A = A * Mathf.Deg2Rad;
+                Debug.Log("Angle between player orientation and raydirection[" + i + "]: " + A*Mathf.Rad2Deg);
                 Debug.Log("ray.distance for ["+i+"]: " + rayArray[i].distance);
                 
-                // angle between the direction and a line of length rayLength
+                // angle `gamma` between the global direction and a line of length `rayLength`
                 float gamma = Mathf.Acos(rayArray[i].distance / rayLength);
                 Debug.Log("gamma for ["+i+"]: " + gamma*Mathf.Rad2Deg);
 
@@ -87,8 +87,10 @@ public class DetectBoundariesTrigno: MonoBehaviour
                 // angles between gamma line and player's local right and left directions
                 float angleBetaLeft;
                 float angleBetaRight;
-                angleBetaRight = Mathf.PI / 2 - (gamma + angle);
-                angleBetaLeft = Mathf.PI / 2 - (gamma - angle);
+                angleBetaRight = Mathf.PI / 2 - (gamma + A);
+                angleBetaLeft = Mathf.PI / 2 - (gamma - A);
+                angleBetaRightList.Add(angleBetaRight);
+                angleBetaLeftList.Add(angleBetaLeft);
 
                 Debug.Log("angleBetaLeft [" + i + "]: " + angleBetaLeft*Mathf.Rad2Deg);
                 Debug.Log("angleBetaRight [" + i + "]: " + angleBetaRight*Mathf.Rad2Deg);
@@ -121,13 +123,13 @@ public class DetectBoundariesTrigno: MonoBehaviour
         // if the list of ranges is empty, this means, player is not close to boundaries
         if(betaRanges.Count == 0)
         {
-            Debug.Log("BetaRange: { -90, 90 }");
+            Debug.Log("Valid BetaRange: { -90, 90 }");
         }
         // if there is one range in the list, then it means player has hit only one boundary and the orientation is such that there is only one range
         // if there is only one range, then it must be a valid range
         else if(betaRanges.Count == 1)
         {
-            Debug.Log("BetaRange: {" + betaRanges[0][0] * Mathf.Rad2Deg + "," + betaRanges[0][1] * Mathf.Rad2Deg + "}");
+            Debug.Log("Valid BetaRange: {" + betaRanges[0][0] * Mathf.Rad2Deg + "," + betaRanges[0][1] * Mathf.Rad2Deg + "}");
         }
 
         // if there are two ranges in the list, this means the player has hit only one boundary and the orientation is such that there are two available ranges
@@ -135,7 +137,22 @@ public class DetectBoundariesTrigno: MonoBehaviour
         // both the ranges must be valid range
         else if(betaRanges.Count == 2)
         {
-            Debug.Log("BetaRange: {" +betaRanges[0][0] * Mathf.Rad2Deg + "," + betaRanges[0][1] * Mathf.Rad2Deg + "}, " +
+
+            // if the left most betaLeft is negative and right most betaRight is negative, then it means player is stuck in corner.
+            if(angleBetaLeftList.Count == 2 & angleBetaRightList.Count == 2)
+            {
+                if (angleBetaLeftList[1] < 0 & angleBetaRightList[0] < 0)
+                {
+                Debug.Log("left most angleBetaLeft: " + angleBetaLeftList[1]*Mathf.Rad2Deg + "; right most angleBetaRight: " + angleBetaRightList[0]*Mathf.Rad2Deg);
+                Debug.Log("Stuck in corner, cast rays to -135 or +135");
+                Debug.DrawRay(playerPosition, (1f+rayLength) * GetFwd(player.transform.rotation.eulerAngles.y*Mathf.Deg2Rad - (3 * Mathf.PI / 4), playerPosition), Color.cyan);
+                Debug.DrawRay(playerPosition, (1f+rayLength) * GetFwd(player.transform.rotation.eulerAngles.y*Mathf.Deg2Rad + (3 * Mathf.PI / 4), playerPosition), Color.cyan);
+                }
+            }
+
+            else
+
+            Debug.Log("Valid BetaRange: {" +betaRanges[0][0] * Mathf.Rad2Deg + "," + betaRanges[0][1] * Mathf.Rad2Deg + "}, " +
                 "{ " +betaRanges[1][0] * Mathf.Rad2Deg + "," + betaRanges[1][1] * Mathf.Rad2Deg + "}");
         }
 
@@ -146,9 +163,9 @@ public class DetectBoundariesTrigno: MonoBehaviour
         {
             if(Mathf.Abs(betaRanges[2][1] - betaRanges[2][0]) > Mathf.Abs(betaRanges[0][1] - betaRanges[0][0]))
             {
-                Debug.Log("BetaRange: {" + betaRanges[0][0] * Mathf.Rad2Deg + "," + betaRanges[0][1] * Mathf.Rad2Deg + "}");
+                Debug.Log("Valid BetaRange: {" + betaRanges[0][0] * Mathf.Rad2Deg + "," + betaRanges[0][1] * Mathf.Rad2Deg + "}");
             }
-            else Debug.Log("BetaRange: {" + betaRanges[2][0] * Mathf.Rad2Deg + "," + betaRanges[2][1] * Mathf.Rad2Deg + "}");
+            else Debug.Log("Valid BetaRange: {" + betaRanges[2][0] * Mathf.Rad2Deg + "," + betaRanges[2][1] * Mathf.Rad2Deg + "}");
         }
 
         // if there are 4 elements in list then it means the player is for sure stuck in the corner, because the probability of getting a point close to 
@@ -158,9 +175,11 @@ public class DetectBoundariesTrigno: MonoBehaviour
         // the play area. Similarly, it can happen with z-axis also. If player is moved parallaly towards the  corner of boundary, the gamma will remain same.
         else if(betaRanges.Count == 4)
         {
-            Debug.Log("Stuck in corner, cast rays to -135 or +135");
-            Debug.DrawRay(playerPosition, (1f+rayLength) * GetFwd(player.transform.rotation.eulerAngles.y*Mathf.Deg2Rad - (3 * Mathf.PI / 4), playerPosition), Color.cyan);
-            Debug.DrawRay(playerPosition, (1f+rayLength) * GetFwd(player.transform.rotation.eulerAngles.y*Mathf.Deg2Rad + (3 * Mathf.PI / 4), playerPosition), Color.cyan);
+            Debug.Log("Valid BetaRange: {" + betaRanges[0][0] * Mathf.Rad2Deg + "," + betaRanges[0][1] * Mathf.Rad2Deg + "}, " +
+                "{ " + betaRanges[3][0] * Mathf.Rad2Deg + "," + betaRanges[3][1] * Mathf.Rad2Deg + "}");
+            //Debug.Log("Stuck in corner, cast rays to -135 or +135");
+            //Debug.DrawRay(playerPosition, (1f+rayLength) * GetFwd(player.transform.rotation.eulerAngles.y*Mathf.Deg2Rad - (3 * Mathf.PI / 4), playerPosition), Color.cyan);
+            //Debug.DrawRay(playerPosition, (1f+rayLength) * GetFwd(player.transform.rotation.eulerAngles.y*Mathf.Deg2Rad + (3 * Mathf.PI / 4), playerPosition), Color.cyan);
         }
     }
 
