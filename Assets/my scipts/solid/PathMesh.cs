@@ -10,8 +10,8 @@ public class PathMesh
 
     public Mesh GetMesh(List<Vector3> pathPointsLocationsList, float pathWidth, int slices) {
         Mesh mesh = new Mesh();
-        //GenerateTrianglesAndUvs(SlicePath(pathPointsLocationsList, slices), pathWidth);
-        GenerateTrianglesAndUvs(pathPointsLocationsList, pathWidth);
+        GenerateTrianglesAndUvs(SlicePath(pathPointsLocationsList, slices), pathWidth);
+        //GenerateTrianglesAndUvs(pathPointsLocationsList, pathWidth);
         //mesh.SetVertices(this.vertices);
         mesh.vertices = this.vertices.ToArray();
         //mesh.SetTriangles(this.triangles, 0);

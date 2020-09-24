@@ -6,4 +6,5 @@ public interface IDeviceInput {
     Vector3 PlayerPosition();
     Vector3 PlayAreaDimensions();
     float PlayerRotationAlongYAxis();
+    bool ButtonPressed();
 }

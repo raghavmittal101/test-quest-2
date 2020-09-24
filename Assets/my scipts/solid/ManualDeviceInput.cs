@@ -26,4 +26,11 @@ public class ManualDeviceInput : IDeviceInput
     {
         return playAreaDimensions;
     }
+
+    public bool ButtonPressed()
+    {
+        if (Input.GetMouseButtonDown(0))
+            return true;
+        return false;
+    }
 }

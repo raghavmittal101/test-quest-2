@@ -55,41 +55,28 @@ public class _SceneManager : MonoBehaviour
             Debug.DrawLine(pointLocationsList[i], pointLocationsList[i+1], Color.cyan);
         }
         this.RenderMesh(this.pathMesh.GetMesh(this.pointLocationsList, metadataInput.PathWidth(), slices));
-
-        Vector3 planeScale = plane.transform.localScale;
-        planeScale.z = inputDevice.PlayAreaDimensions().z;
-        planeScale.x = inputDevice.PlayAreaDimensions().x;
-        plane.transform.localScale = planeScale;
+        resizePlane();
+        
 
     }
 
-    private void SpawnBoundaryColliders()
-    {
-        // place colliders on boundaries of play area
-        Vector3[] boundaryPositions = new Vector3[4];
-
-        Vector3 playAreaDimensions = inputDevice.PlayAreaDimensions();
-        boundaryPositions[0] = new Vector3(0f, 0f, -playAreaDimensions.z*10 / 2);
-        boundaryPositions[1] = new Vector3(-playAreaDimensions.x*10 / 2, 0f, 0f);
-        boundaryPositions[2] = new Vector3(0f, 0f, playAreaDimensions.z*10 / 2);
-        boundaryPositions[3] = new Vector3(playAreaDimensions.x*10 / 2, 0f, 0f);
-
-        for (int i = 0; i < 4; i++)
-        {
-            var go = Instantiate(boundaryColliderPrefab, boundaryPositions[i], Quaternion.Euler(0f, i*90f, 0f));
-            var scale = go.transform.localScale;
-            if (boundaryPositions[i].z == 0f) scale.x = playAreaDimensions.z*10;
-            else scale.x = playAreaDimensions.x*10;
-            go.transform.localScale = scale;
-            boundaryCollider[i] = go;
-        }
-    }
-    
     void Update()
     {
+
+
+        Debug.Log("player area dimensions: x: "+ inputDevice.PlayAreaDimensions() +", y: " +inputDevice.PlayAreaDimensions().y + ", z: "+inputDevice.PlayAreaDimensions().z);
         // will be done through collider triggers instead of mouse click in future
-        if (Input.GetMouseButtonDown(0))
+        if (this.inputDevice.ButtonPressed())
         {
+            // Spawning the paths again to check if this is the reason behind colliders not spawning properly with playarea dimensions
+            // it may also mean that the playarea dimensions are not set properly.
+            foreach(GameObject obj in boundaryCollider)
+            {
+                Destroy(obj);
+            }
+            SpawnBoundaryColliders();
+            resizePlane();
+
             numberOfPathSegmentsCovered += 1;
             if (pointLocationsList.Count >= this.metadataInput.VisiblePathSegmentCount() + 1)
             {
@@ -110,6 +97,36 @@ public class _SceneManager : MonoBehaviour
         for (int i = 0; i < pointLocationsList.Count - 1; i++)
             Debug.DrawLine(pointLocationsList[i], pointLocationsList[i + 1], Color.gray);
         db.GenerateRays();
+    }
+
+    private void resizePlane()
+    {
+        Vector3 planeScale = plane.transform.localScale;
+        Vector3 size = plane.GetComponent<Renderer>().bounds.size;
+        planeScale.z = inputDevice.PlayAreaDimensions().z * planeScale.z / size.z;
+        planeScale.x = inputDevice.PlayAreaDimensions().x * planeScale.x / size.x;
+        plane.transform.localScale = planeScale;
+    }
+    private void SpawnBoundaryColliders()
+    {
+        // place colliders on boundaries of play area
+        Vector3[] boundaryPositions = new Vector3[4];
+
+        Vector3 playAreaDimensions = inputDevice.PlayAreaDimensions();
+        boundaryPositions[0] = new Vector3(0f, 0f, -playAreaDimensions.z / 2);
+        boundaryPositions[1] = new Vector3(-playAreaDimensions.x / 2, 0f, 0f);
+        boundaryPositions[2] = new Vector3(0f, 0f, playAreaDimensions.z / 2);
+        boundaryPositions[3] = new Vector3(playAreaDimensions.x / 2, 0f, 0f);
+
+        for (int i = 0; i < 4; i++)
+        {
+            var go = Instantiate(boundaryColliderPrefab, boundaryPositions[i], Quaternion.Euler(0f, i * 90f, 0f));
+            var scale = go.transform.localScale;
+            if (boundaryPositions[i].z == 0f) scale.x = playAreaDimensions.z;
+            else scale.x = playAreaDimensions.x;
+            go.transform.localScale = scale;
+            boundaryCollider[i] = go;
+        }
     }
 
     private void RenderMesh(Mesh mesh)

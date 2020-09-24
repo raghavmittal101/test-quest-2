@@ -44,11 +44,16 @@ public class DetectBoundaryTestScript : MonoBehaviour
                 player.transform.position = p;
             }
             GenerateNextPoint();
-            
+
+            //if(pointsList.Count > 2)
+            WallsSpawner.SpawnWall(pointsList[pointsList.Count-2], pointsList[pointsList.Count-1], betaList[betaList.Count-1], pathWidth);
         }
         
+
         for (int i = 0; i < pointsList.Count - 1; i++)
-            Debug.DrawLine(pointsList[i], pointsList[i+1], Color.gray);
+        {
+            Debug.DrawLine(pointsList[i], pointsList[i + 1], Color.gray);
+        }
         
 
     }

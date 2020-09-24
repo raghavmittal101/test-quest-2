@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class InputDeviceContext : MonoBehaviour, IDeviceInput
 {
-    private enum inputDeviceType { ManualInput, OculusVRNotWorking };
+    private enum inputDeviceType { ManualInput, OculusVR };
     [SerializeField] private inputDeviceType _inputDeviceType;
     [SerializeField] private Vector3 playerPosition;
     [SerializeField] private Vector3 playAreaDimensions;
@@ -19,11 +19,15 @@ public class InputDeviceContext : MonoBehaviour, IDeviceInput
                 this.inputDevice = new ManualDeviceInput(playerPosition, playerRotationAlongYAxis, playAreaDimensions);
             }
 
+            else if(_inputDeviceType == inputDeviceType.OculusVR)
+            {
+                this.inputDevice = new OculusDeviceInput();
+            }
             else
         {
             Debug.Log("Please select Manual Input in Input device type");
         }
-            // add new input options here
+        // add new input options here
     }
    
 
@@ -40,5 +44,9 @@ public class InputDeviceContext : MonoBehaviour, IDeviceInput
     public float PlayerRotationAlongYAxis()
     {
         return this.inputDevice.PlayerRotationAlongYAxis();
+    }
+    public bool ButtonPressed()
+    {
+        return this.inputDevice.ButtonPressed();
     }
 }
