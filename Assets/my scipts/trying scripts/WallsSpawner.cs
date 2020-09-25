@@ -4,28 +4,25 @@ using UnityEngine;
 
 public class WallsSpawner : MonoBehaviour
 {
-
-    public static void SpawnWall(Vector3 startPos, Vector3 endPos, float rotationAlongYAxis, float pathWidth)
+    public GameObject GenerateWall(List<Vector3> points, GameObject wallPrefab)
     {
-        Vector3 LeftWallPos;
-        Vector3 RightWallPos;
+        //GameObject wallPrefab = GameObject.Find("wallPrefab");
+        Vector3 wallPos = (points[points.Count-2] + points[points.Count - 3]) / 2;
+        wallPos.y = 1f;
+   
+        GameObject wall = Instantiate(wallPrefab, wallPos, Quaternion.identity);
+        Vector3 wallScale = wall.transform.localScale;
+        wallScale.x = (points[points.Count - 2] - points[points.Count - 3]).magnitude;
+        wallScale.y = 2f;
+        wallScale.z = 0.1f;
+        wall.transform.localScale = wallScale;
 
-        GameObject wallPrefab = GameObject.Find("wallPrefab");
-        Vector3 wallPos = (endPos + startPos)/2;
-        wallPos.y = wallPrefab.transform.position.y;
+        float wallRotAngleAlongY = Vector3.SignedAngle(new Vector3(1f, 0f, 0f), (points[points.Count - 2] - points[points.Count - 3]).normalized, Vector3.up);
+        Vector3 rotation = wall.transform.localEulerAngles;
+        rotation = new Vector3(0f, wallRotAngleAlongY, 0f);
+        wall.transform.localEulerAngles = rotation;
+        return wall;
 
-        Vector3 left = new Vector3(-wallPos.z, 0, wallPos.x).normalized;
-
-        LeftWallPos = wallPos + left * pathWidth * 0.5f; // left point
-        RightWallPos = wallPos - left * pathWidth * 0.5f; // right point
-
-        Debug.DrawLine(startPos, wallPos, Color.blue, 10f);
-        Vector3 wallRot = new Vector3(0f, (rotationAlongYAxis+ Mathf.PI / 2 )* Mathf.Rad2Deg, 0f) ;
-        GameObject leftWall = Instantiate(wallPrefab, RightWallPos, Quaternion.Euler(wallRot));
-        GameObject rightWall = Instantiate(wallPrefab, LeftWallPos, Quaternion.Euler(wallRot));
-        
-        //var scale = go.transform.localScale.normalized;
-        //scale.x = scale.x * wallVector.magnitude;
-        //go.transform.localScale = scale;
     }
+
 }

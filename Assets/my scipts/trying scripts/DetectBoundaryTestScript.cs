@@ -14,8 +14,15 @@ public class DetectBoundaryTestScript : MonoBehaviour
     public float[] betaRange = new float[2];
     public int rayArrayLength = 5;
     public float boundaryBufferWidth = 0.5f;
+    public int numberOfPathSegments;
+    public GameObject wallPrefab;
+    public GameObject tasveer;
 
-    // Start is called before the first frame update
+    private WallsSpawner _WallSpawner;
+    private int steps = 0;
+
+    List<GameObject> leftWalls, rightWalls;
+
     void Awake()
     {
         //this.db = new DetectBoundary();
@@ -24,29 +31,63 @@ public class DetectBoundaryTestScript : MonoBehaviour
         this.point = player.transform.position;
         this.betaList.Add(beta);
         this.pointsList.Add(point);
+        this._WallSpawner = new WallsSpawner();
+        leftWalls = new List<GameObject>();
+        rightWalls = new List<GameObject>();
     }
 
     private void Start()
     {
+        List<Vector3>[] leftRightPoints;
         GenerateNextPoint();
+        for (int i=0; i<numberOfPathSegments; i++)
+        {
+            GenerateNextPoint();
+            leftRightPoints = GenerateLeftRightPoints(pointsList, pathWidth);
+            leftWalls.Add(_WallSpawner.GenerateWall(leftRightPoints[0], wallPrefab));
+            rightWalls.Add(_WallSpawner.GenerateWall(leftRightPoints[1], wallPrefab));
+            PlaceOnWall(leftWalls[leftWalls.Count-1], true);
+            PlaceOnWall(rightWalls[rightWalls.Count - 1], false);
+        }
+        // after above step:
+        // length of pointsList is numberOfPathSegments+1
+        // 1 extra point is generated to keep the walls aligned properly
+        
     }
-    // Update is called once per frame
+
     void Update()
     {
-        db.GenerateRays();
+        List<Vector3>[] leftRightPoints;
         if (Input.GetMouseButtonDown(0))
         {
-            if (pointsList.Count >= 5) {
+            if (steps <= numberOfPathSegments/2)
+            {
+                
+                var p = player.transform.position;
+                p = pointsList[steps];
+                player.transform.position = p;
+                steps+=1;
+            }
+
+            else
+            {
                 pointsList.RemoveAt(0);
                 betaList.RemoveAt(0);
+                GenerateNextPoint();
                 var p = player.transform.position;
-                p = pointsList[2];
+                p = pointsList[numberOfPathSegments / 2];
                 player.transform.position = p;
-            }
-            GenerateNextPoint();
 
-            //if(pointsList.Count > 2)
-            WallsSpawner.SpawnWall(pointsList[pointsList.Count-2], pointsList[pointsList.Count-1], betaList[betaList.Count-1], pathWidth);
+                Destroy(leftWalls[0]);
+                leftWalls.RemoveAt(0);
+                Destroy(rightWalls[0]);
+                rightWalls.RemoveAt(0);
+                leftRightPoints = GenerateLeftRightPoints(pointsList, pathWidth);
+                leftWalls.Add(_WallSpawner.GenerateWall(leftRightPoints[0], wallPrefab));
+                rightWalls.Add(_WallSpawner.GenerateWall(leftRightPoints[1], wallPrefab));
+                PlaceOnWall(leftWalls[leftWalls.Count - 1], true);
+                PlaceOnWall(rightWalls[rightWalls.Count - 1], false);
+            }
         }
         
 
@@ -54,8 +95,9 @@ public class DetectBoundaryTestScript : MonoBehaviour
         {
             Debug.DrawLine(pointsList[i], pointsList[i + 1], Color.gray);
         }
-        
-
+        db.GenerateRays(pointsList[pointsList.Count-1], betaList[betaList.Count-1]);
+        //_WallSpawner.GenerateWalls(pointsList, betaList, pathWidth);
+        List<Vector3>[] _leftRightPoints = GenerateLeftRightPoints(pointsList, pathWidth);
     }
 
     private void GenerateNextPoint()
@@ -84,5 +126,54 @@ public class DetectBoundaryTestScript : MonoBehaviour
         targetPoint.z = Mathf.Cos(beta) + origin.z;
         return (targetPoint - origin).normalized;
     }
+    
+    private List<Vector3>[] GenerateLeftRightPoints(List<Vector3> points, float pathWidth)
+    {
+        List<Vector3> leftPoints = new List<Vector3>();
+        List<Vector3> rightPoints = new List<Vector3>();
 
+        for (int i = 0; i < points.Count; i++)
+        {
+            Vector3 forward = Vector3.zero;
+            if (i < points.Count - 1)
+            {
+                forward += points[i + 1] - points[i];
+            }
+            if (i > 0)
+            {
+                forward += points[i] - points[i - 1];
+            }
+
+            forward.Normalize();
+            Vector3 left = new Vector3(-forward.z, 0, forward.x);
+
+            leftPoints.Add(points[i] + left * pathWidth * 0.5f); // left point
+            rightPoints.Add(points[i] - left * pathWidth * 0.5f); // right point
+
+        }
+
+        List<Vector3>[] array = new List<Vector3>[2];
+        array[0] = leftPoints;
+        array[1] = rightPoints;
+
+        for (int i = 1; i < leftPoints.Count; i++)
+        {
+            Debug.DrawLine(leftPoints[i - 1], leftPoints[i], Color.yellow);
+            Debug.DrawLine(rightPoints[i - 1], rightPoints[i], Color.yellow);
+        }
+
+        return array;
+    }
+
+    private void PlaceOnWall(GameObject wallObj, bool isLeft)
+    {
+        GameObject tasveerObj = Instantiate(tasveer, wallObj.transform);
+        Vector3 localPosition;
+        if (isLeft) localPosition = new Vector3(0f, 0f, -1f);
+        else localPosition = new Vector3(0f, 0f, 1f);
+       // localPosition = new Vector3(0f, 0f, 1f);
+        tasveerObj.transform.localPosition = localPosition;
+        tasveerObj.transform.localScale = new Vector3(0.5f, 0.5f, 0.1f);
+
+    }
 }
