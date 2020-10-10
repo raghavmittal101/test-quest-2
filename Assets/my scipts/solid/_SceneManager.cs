@@ -119,7 +119,7 @@ public class _SceneManager : MonoBehaviour
     void Update()
     {
         Debug.Log("player area dimensions: x: "+ inputDevice.PlayAreaDimensions() +", y: " +inputDevice.PlayAreaDimensions().y + ", z: "+inputDevice.PlayAreaDimensions().z);
-        // will be done through collider triggers instead of mouse click in future
+        // to be done through collider triggers instead of mouse or controller input in future
         if (this.inputDevice.ButtonPressed())
         {
             // Spawning the paths again to check if this is the reason behind colliders not spawning properly with playarea dimensions

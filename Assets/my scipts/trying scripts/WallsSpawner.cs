@@ -8,13 +8,13 @@ public class WallsSpawner : MonoBehaviour
     {
         //GameObject wallPrefab = GameObject.Find("wallPrefab");
         Vector3 wallPos = (points[points.Count-2] + points[points.Count - 3]) / 2;
-        wallPos.y = 1f;
+        wallPos.y = 0.5f;
    
         GameObject wall = Instantiate(wallPrefab, wallPos, Quaternion.identity);
         Vector3 wallScale = wall.transform.localScale;
         wallScale.x = (points[points.Count - 2] - points[points.Count - 3]).magnitude;
-        wallScale.y = 2f;
-        wallScale.z = 0.1f;
+        wallScale.y = 1f;
+        wallScale.z = 0.01f;
         wall.transform.localScale = wallScale;
 
         float wallRotAngleAlongY = Vector3.SignedAngle(new Vector3(1f, 0f, 0f), (points[points.Count - 2] - points[points.Count - 3]).normalized, Vector3.up);

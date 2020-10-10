@@ -17,11 +17,14 @@ public class DetectBoundaryTestScript : MonoBehaviour
     public int numberOfPathSegments;
     public GameObject wallPrefab;
     public GameObject tasveer;
+    public bool spawnWallsFlag = false; // for simulation purpose to on/off wall spawning
 
     private WallsSpawner _WallSpawner;
     private int steps = 0;
 
     List<GameObject> leftWalls, rightWalls;
+    public List<Texture> imageList = new List<Texture>();
+    int imageIndex;
 
     void Awake()
     {
@@ -34,6 +37,7 @@ public class DetectBoundaryTestScript : MonoBehaviour
         this._WallSpawner = new WallsSpawner();
         leftWalls = new List<GameObject>();
         rightWalls = new List<GameObject>();
+        imageIndex = imageList.Count - 1; // number of images. Images will be placed in reverse order
     }
 
     private void Start()
@@ -44,10 +48,13 @@ public class DetectBoundaryTestScript : MonoBehaviour
         {
             GenerateNextPoint();
             leftRightPoints = GenerateLeftRightPoints(pointsList, pathWidth);
-            leftWalls.Add(_WallSpawner.GenerateWall(leftRightPoints[0], wallPrefab));
-            rightWalls.Add(_WallSpawner.GenerateWall(leftRightPoints[1], wallPrefab));
-            PlaceOnWall(leftWalls[leftWalls.Count-1], true);
-            PlaceOnWall(rightWalls[rightWalls.Count - 1], false);
+            if (spawnWallsFlag)
+            {
+                leftWalls.Add(_WallSpawner.GenerateWall(leftRightPoints[0], wallPrefab));
+                rightWalls.Add(_WallSpawner.GenerateWall(leftRightPoints[1], wallPrefab));
+                if(imageIndex >= 0) { PlaceOnWall(leftWalls[leftWalls.Count - 1], true, imageList[imageIndex--]); };
+                if(imageIndex >= 0) { PlaceOnWall(rightWalls[rightWalls.Count - 1], false, imageList[imageIndex--]); }
+            }
         }
         // after above step:
         // length of pointsList is numberOfPathSegments+1
@@ -83,10 +90,14 @@ public class DetectBoundaryTestScript : MonoBehaviour
                 Destroy(rightWalls[0]);
                 rightWalls.RemoveAt(0);
                 leftRightPoints = GenerateLeftRightPoints(pointsList, pathWidth);
-                leftWalls.Add(_WallSpawner.GenerateWall(leftRightPoints[0], wallPrefab));
-                rightWalls.Add(_WallSpawner.GenerateWall(leftRightPoints[1], wallPrefab));
-                PlaceOnWall(leftWalls[leftWalls.Count - 1], true);
-                PlaceOnWall(rightWalls[rightWalls.Count - 1], false);
+                if (spawnWallsFlag)
+                {
+                    leftWalls.Add(_WallSpawner.GenerateWall(leftRightPoints[0], wallPrefab));
+                    rightWalls.Add(_WallSpawner.GenerateWall(leftRightPoints[1], wallPrefab));
+                    if (imageIndex >= 0) { PlaceOnWall(leftWalls[leftWalls.Count - 1], true, imageList[imageIndex--]); };
+                    if (imageIndex >= 0) { PlaceOnWall(rightWalls[rightWalls.Count - 1], false, imageList[imageIndex--]); }
+                }
+                
             }
         }
         
@@ -100,6 +111,10 @@ public class DetectBoundaryTestScript : MonoBehaviour
         List<Vector3>[] _leftRightPoints = GenerateLeftRightPoints(pointsList, pathWidth);
     }
 
+    /// <summary>
+    /// Generates a new point based on last element in <see cref="pointsList"/> and <see cref="betaList"/>.
+    /// Appends the new point to <see cref="pointsList"/> and new beta to <see cref="betaList"/>.
+    /// </summary>
     private void GenerateNextPoint()
     {
         float lastBeta = betaList[betaList.Count - 1];
@@ -126,7 +141,14 @@ public class DetectBoundaryTestScript : MonoBehaviour
         targetPoint.z = Mathf.Cos(beta) + origin.z;
         return (targetPoint - origin).normalized;
     }
-    
+
+    /// <summary>
+    /// Generates points to repsent the width of path and shape of path. 
+    /// Can be used to spawn walls or generate mesh by using returned points as vertices.
+    /// </summary>
+    /// <param name="points">List of points representing the direction of path segments.</param>
+    /// <param name="pathWidth"></param>
+    /// <returns>[Left point, Right point] to the last element of the points list input</returns>
     private List<Vector3>[] GenerateLeftRightPoints(List<Vector3> points, float pathWidth)
     {
         List<Vector3> leftPoints = new List<Vector3>();
@@ -165,15 +187,24 @@ public class DetectBoundaryTestScript : MonoBehaviour
         return array;
     }
 
-    private void PlaceOnWall(GameObject wallObj, bool isLeft)
+    /// <summary>
+    /// Place a tasveer prefab on wall.
+    /// </summary>
+    /// <param name="wallObj">Reference to wall Gameobject on which tasveer has to be placed.</param>
+    /// <param name="isLeft">If it's a left side wall, then isLeft should be true.</param>
+    /// <param name="image">Image/painting/poster in Texture form to place on wall.</param>
+    private void PlaceOnWall(GameObject wallObj, bool isLeft, Texture image)
     {
         GameObject tasveerObj = Instantiate(tasveer, wallObj.transform);
-        Vector3 localPosition;
-        if (isLeft) localPosition = new Vector3(0f, 0f, -1f);
+        Vector3 localPosition, localRotation=Vector3.zero;
+        if (isLeft) { localPosition = new Vector3(0f, 0f, -1f); localRotation = new Vector3(180f, 0f, 180f); }
         else localPosition = new Vector3(0f, 0f, 1f);
        // localPosition = new Vector3(0f, 0f, 1f);
         tasveerObj.transform.localPosition = localPosition;
-        tasveerObj.transform.localScale = new Vector3(0.5f, 0.5f, 0.1f);
-
+        tasveerObj.transform.localRotation = Quaternion.Euler(localRotation);
+        Vector3 wallScale = wallObj.transform.localScale; // scale of tasveer will be divided by wallscale to mantain the original scale of tasveer which otherwise will be lost because it's child of wall.
+        tasveerObj.transform.localScale = new Vector3(0.7f/wallScale.x, 0.7f/wallScale.y, 0.1f); // not done along z-axis, the depth of wall is less than tasveer
+        Renderer tasveerRenderer = tasveerObj.GetComponents<Renderer>()[0];
+        tasveerRenderer.material.mainTexture = image;
     }
 }

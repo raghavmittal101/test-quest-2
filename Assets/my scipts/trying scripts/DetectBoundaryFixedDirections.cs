@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// This class is responsible for detecting the boundaries of the playarea and set range of beta.
+/// </summary>
 public class DetectBoundaryFixedDirections
 {
 
