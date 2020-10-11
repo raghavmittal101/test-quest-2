@@ -21,6 +21,7 @@ public class DetectBoundaryTestScript : MonoBehaviour
     public Vector3 tasveerDimensions = new Vector3(0.7f, 0.7f, 0.01f);
     public List<Texture> imageList = new List<Texture>();
     public float tasveerLeftRightPadding;
+    public bool repeatPictures = false;
 
     private WallsSpawner _WallSpawner;
     private int steps = 0;
@@ -97,7 +98,9 @@ public class DetectBoundaryTestScript : MonoBehaviour
                 {
                     leftWalls.Add(_WallSpawner.GenerateWall(leftRightPoints[0], wallPrefab));
                     rightWalls.Add(_WallSpawner.GenerateWall(leftRightPoints[1], wallPrefab));
-                    if (imageIndex >= 0) { PlaceOnWall(leftWalls[leftWalls.Count - 1], true); };
+                    if (imageIndex<0 && repeatPictures) { imageIndex = imageList.Count - 1; }
+                    if (imageIndex >= 0) { PlaceOnWall(leftWalls[leftWalls.Count - 1], true); }
+                    if (imageIndex < 0 && repeatPictures) { imageIndex = imageList.Count - 1; }
                     if (imageIndex >= 0) { PlaceOnWall(rightWalls[rightWalls.Count - 1], false); }
                 }
                 
