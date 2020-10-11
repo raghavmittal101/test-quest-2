@@ -25,6 +25,7 @@ public class DetectBoundaryTestScript : MonoBehaviour
 
     private WallsSpawner _WallSpawner;
     private int steps = 0;
+    private List<GameObject> pathTriggerColliderList;
 
     List<GameObject> leftWalls, rightWalls;
     
@@ -42,6 +43,7 @@ public class DetectBoundaryTestScript : MonoBehaviour
         leftWalls = new List<GameObject>();
         rightWalls = new List<GameObject>();
         imageIndex = imageList.Count - 1; // number of images. Images will be placed in reverse order
+        pathTriggerColliderList = new List<GameObject>();
     }
 
     private void Start()
@@ -52,6 +54,9 @@ public class DetectBoundaryTestScript : MonoBehaviour
         {
             GenerateNextPoint();
             leftRightPoints = GenerateLeftRightPoints(pointsList, pathWidth);
+            var lastLeftPoint = leftRightPoints[0][leftRightPoints[0].Count - 2];
+            var lastRightPoint = leftRightPoints[1][leftRightPoints[1].Count - 2];
+            SpawnPathTrigger(lastLeftPoint, lastRightPoint);
             if (spawnWallsFlag)
             {
                 leftWalls.Add(_WallSpawner.GenerateWall(leftRightPoints[0], wallPrefab));
@@ -94,6 +99,9 @@ public class DetectBoundaryTestScript : MonoBehaviour
                 Destroy(rightWalls[0]);
                 rightWalls.RemoveAt(0);
                 leftRightPoints = GenerateLeftRightPoints(pointsList, pathWidth);
+                var lastLeftPoint = leftRightPoints[0][leftRightPoints[0].Count - 2];
+                var lastRightPoint = leftRightPoints[1][leftRightPoints[1].Count - 2];
+                SpawnPathTrigger(lastLeftPoint, lastRightPoint);
                 if (spawnWallsFlag)
                 {
                     leftWalls.Add(_WallSpawner.GenerateWall(leftRightPoints[0], wallPrefab));
@@ -154,7 +162,7 @@ public class DetectBoundaryTestScript : MonoBehaviour
     /// </summary>
     /// <param name="points">List of points representing the direction of path segments.</param>
     /// <param name="pathWidth"></param>
-    /// <returns>[Left point, Right point] to the last element of the points list input</returns>
+    /// <returns>[List of left points, list of right points] corresponding to input list of points.</returns>
     private List<Vector3>[] GenerateLeftRightPoints(List<Vector3> points, float pathWidth)
     {
         List<Vector3> leftPoints = new List<Vector3>();
@@ -191,6 +199,28 @@ public class DetectBoundaryTestScript : MonoBehaviour
         }
 
         return array;
+    }
+
+    public GameObject pathTriggerCollider;
+
+    /// <summary>
+    /// Spawn triggers at joints in path. GameObjects are saved in <see cref="pathTriggerColliderList"/>.
+    /// </summary>
+    /// <param name="leftRightPoints">List of two points between which the collider should be placed.</param>
+    private void SpawnPathTrigger(Vector3 leftPoint, Vector3 rightPoint)
+    {
+        var obj = Instantiate(pathTriggerCollider);
+        var localScale = new Vector3((rightPoint - leftPoint).magnitude, 1f, 0.1f);
+        obj.transform.localScale = localScale;
+        float wallRotAngleAlongY = Vector3.SignedAngle(new Vector3(1f, 0f, 0f), (rightPoint - leftPoint).normalized, Vector3.up);
+        Vector3 rotation = obj.transform.localEulerAngles;
+        rotation = new Vector3(0f, wallRotAngleAlongY, 0f);
+        obj.transform.localEulerAngles = rotation;
+        obj.name = pathTriggerColliderList.Count.ToString();
+        var pos = (rightPoint + leftPoint) / 2;
+        pos.y = localScale.y / 2;
+        obj.transform.position = pos;
+        pathTriggerColliderList.Add(obj);
     }
 
     /// <summary>
