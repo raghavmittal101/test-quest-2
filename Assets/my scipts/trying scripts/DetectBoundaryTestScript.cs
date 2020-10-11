@@ -18,12 +18,15 @@ public class DetectBoundaryTestScript : MonoBehaviour
     public GameObject wallPrefab;
     public GameObject tasveer;
     public bool spawnWallsFlag = false; // for simulation purpose to on/off wall spawning
+    public Vector3 tasveerDimensions = new Vector3(0.7f, 0.7f, 0.01f);
+    public List<Texture> imageList = new List<Texture>();
+    public float tasveerLeftRightPadding;
 
     private WallsSpawner _WallSpawner;
     private int steps = 0;
 
     List<GameObject> leftWalls, rightWalls;
-    public List<Texture> imageList = new List<Texture>();
+    
     int imageIndex;
 
     void Awake()
@@ -32,8 +35,8 @@ public class DetectBoundaryTestScript : MonoBehaviour
         this.db = new DetectBoundaryFixedDirections(rayArrayLength, boundaryBufferWidth, pathLength, pathWidth);
         float beta = player.transform.rotation.eulerAngles.y*Mathf.Deg2Rad;
         this.point = player.transform.position;
-        this.betaList.Add(beta);
-        this.pointsList.Add(point);
+        this.betaList.Add(beta); // adding beta_0 that is player's rotation along Y axis
+        this.pointsList.Add(point); // adding P_0 that is player's initial position 
         this._WallSpawner = new WallsSpawner();
         leftWalls = new List<GameObject>();
         rightWalls = new List<GameObject>();
@@ -52,8 +55,8 @@ public class DetectBoundaryTestScript : MonoBehaviour
             {
                 leftWalls.Add(_WallSpawner.GenerateWall(leftRightPoints[0], wallPrefab));
                 rightWalls.Add(_WallSpawner.GenerateWall(leftRightPoints[1], wallPrefab));
-                if(imageIndex >= 0) { PlaceOnWall(leftWalls[leftWalls.Count - 1], true, imageList[imageIndex--]); };
-                if(imageIndex >= 0) { PlaceOnWall(rightWalls[rightWalls.Count - 1], false, imageList[imageIndex--]); }
+                if(imageIndex >= 0) { PlaceOnWall(leftWalls[leftWalls.Count - 1], true); };
+                if(imageIndex >= 0) { PlaceOnWall(rightWalls[rightWalls.Count - 1], false); }
             }
         }
         // after above step:
@@ -94,8 +97,8 @@ public class DetectBoundaryTestScript : MonoBehaviour
                 {
                     leftWalls.Add(_WallSpawner.GenerateWall(leftRightPoints[0], wallPrefab));
                     rightWalls.Add(_WallSpawner.GenerateWall(leftRightPoints[1], wallPrefab));
-                    if (imageIndex >= 0) { PlaceOnWall(leftWalls[leftWalls.Count - 1], true, imageList[imageIndex--]); };
-                    if (imageIndex >= 0) { PlaceOnWall(rightWalls[rightWalls.Count - 1], false, imageList[imageIndex--]); }
+                    if (imageIndex >= 0) { PlaceOnWall(leftWalls[leftWalls.Count - 1], true); };
+                    if (imageIndex >= 0) { PlaceOnWall(rightWalls[rightWalls.Count - 1], false); }
                 }
                 
             }
@@ -123,7 +126,7 @@ public class DetectBoundaryTestScript : MonoBehaviour
         betaRange = db.GetBetaRange(lastPoint, lastBeta);
         float newBeta;
         if (betaRange[0] != betaRange[1]) newBeta = Random.Range(lastBeta + betaRange[0], lastBeta + betaRange[1]);
-        else newBeta = lastBeta + betaRange[0];
+        else newBeta = lastBeta + betaRange[0]; // if upper and lower bound of beta are equal
         Debug.Log("GenerateNextPoint: betaRange: " + betaRange[0] * Mathf.Rad2Deg + ", " + betaRange[1] * Mathf.Rad2Deg);
         Debug.Log("GenerateNextPoint: newBeta: " + newBeta*Mathf.Rad2Deg);
         Vector3 newPoint = new Vector3(lastPoint.x + pathLength * Mathf.Sin(newBeta), 0f, lastPoint.z + pathLength * Mathf.Cos(newBeta));
@@ -193,18 +196,30 @@ public class DetectBoundaryTestScript : MonoBehaviour
     /// <param name="wallObj">Reference to wall Gameobject on which tasveer has to be placed.</param>
     /// <param name="isLeft">If it's a left side wall, then isLeft should be true.</param>
     /// <param name="image">Image/painting/poster in Texture form to place on wall.</param>
-    private void PlaceOnWall(GameObject wallObj, bool isLeft, Texture image)
+    private void PlaceOnWall(GameObject wallObj, bool isLeft)
     {
-        GameObject tasveerObj = Instantiate(tasveer, wallObj.transform);
-        Vector3 localPosition, localRotation=Vector3.zero;
+        Vector3 localPosition, localRotation = Vector3.zero;
+        Vector3 wallScale = wallObj.transform.localScale; // scale of tasveer will be divided by wallscale to mantain the original scale of tasveer which otherwise will be lost because it's child of wall.
         if (isLeft) { localPosition = new Vector3(0f, 0f, -1f); localRotation = new Vector3(180f, 0f, 180f); }
         else localPosition = new Vector3(0f, 0f, 1f);
-       // localPosition = new Vector3(0f, 0f, 1f);
-        tasveerObj.transform.localPosition = localPosition;
-        tasveerObj.transform.localRotation = Quaternion.Euler(localRotation);
-        Vector3 wallScale = wallObj.transform.localScale; // scale of tasveer will be divided by wallscale to mantain the original scale of tasveer which otherwise will be lost because it's child of wall.
-        tasveerObj.transform.localScale = new Vector3(0.7f/wallScale.x, 0.7f/wallScale.y, 0.1f); // not done along z-axis, the depth of wall is less than tasveer
-        Renderer tasveerRenderer = tasveerObj.GetComponents<Renderer>()[0];
-        tasveerRenderer.material.mainTexture = image;
+
+        float numberOfTasveer_float = wallScale.x / (tasveerDimensions.x + 2*tasveerLeftRightPadding);
+
+        for (int i = 0; i < (int)numberOfTasveer_float; i++)
+        {
+            if (imageIndex >= 0)
+            {
+                float tasveerWidth = tasveerDimensions.x + 2 * tasveerLeftRightPadding;
+                localPosition.x = (tasveerWidth/2 + (tasveerWidth * i) - (wallScale.x / 2))/wallScale.x; // the position of tasveer relative to wall
+                GameObject tasveerObj = Instantiate(tasveer, wallObj.transform); // added as child of wall to simplify positioning
+                tasveerObj.transform.localPosition = localPosition;
+                tasveerObj.transform.localRotation = Quaternion.Euler(localRotation);
+                tasveerObj.transform.localScale = new Vector3(tasveerDimensions.x / wallScale.x, tasveerDimensions.y / wallScale.y, tasveerDimensions.z); // not required along z-axis as the thickness of wall is constant in scene
+                Renderer tasveerRenderer = tasveerObj.GetComponents<Renderer>()[0];
+                tasveerRenderer.material.mainTexture = imageList[imageIndex--];
+            }
+        }
+        
+        
     }
 }

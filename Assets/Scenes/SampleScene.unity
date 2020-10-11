@@ -565,12 +565,14 @@ MonoBehaviour:
     type: 3}
   tasveer: {fileID: 3213625642546069461, guid: 8a5aa2e49c6e66846a94569b622322a6, type: 3}
   spawnWallsFlag: 1
+  tasveerDimensions: {x: 0.7, y: 0.7, z: 0.01}
   imageList:
   - {fileID: 2800000, guid: 7fe6a5422e286a64fabaeb6813cb4759, type: 3}
   - {fileID: 2800000, guid: 9905c32d767c4a542890c70b8412bd58, type: 3}
   - {fileID: 2800000, guid: 9199c437145e81c45a824e21027df67b, type: 3}
   - {fileID: 2800000, guid: 96f771b9a2f0985418a5af7e4ff9f1c1, type: 3}
   - {fileID: 2800000, guid: f671d7a6033319c4d97188eeb8fb8c42, type: 3}
+  tasveerLeftRightPadding: 0.5
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
