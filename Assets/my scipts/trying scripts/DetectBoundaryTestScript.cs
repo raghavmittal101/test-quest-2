@@ -5,6 +5,12 @@ using UnityEngine;
 public class DetectBoundaryTestScript : MonoBehaviour
 {
     private DetectBoundaryFixedDirections db;
+    private WallsSpawner _WallSpawner;
+    private int steps = 0;
+    private List<GameObject> pathTriggerColliderList;
+    private List<GameObject> leftWalls, rightWalls;
+    private int imageIndex;
+
     public Vector3 point;
     public GameObject player;
     public float pathLength;
@@ -22,20 +28,13 @@ public class DetectBoundaryTestScript : MonoBehaviour
     public List<Texture> imageList = new List<Texture>();
     public float tasveerLeftRightPadding;
     public bool repeatPictures = false;
-
-    private WallsSpawner _WallSpawner;
-    private int steps = 0;
-    private List<GameObject> pathTriggerColliderList;
-
-    List<GameObject> leftWalls, rightWalls;
-    
-    int imageIndex;
+    public GameObject pathTriggerCollider; // holds the reference to prefab
 
     void Awake()
     {
         //this.db = new DetectBoundary();
         this.db = new DetectBoundaryFixedDirections(rayArrayLength, boundaryBufferWidth, pathLength, pathWidth);
-        float beta = player.transform.rotation.eulerAngles.y*Mathf.Deg2Rad;
+        float beta = player.transform.rotation.eulerAngles.y * Mathf.Deg2Rad;
         this.point = player.transform.position;
         this.betaList.Add(beta); // adding beta_0 that is player's rotation along Y axis
         this.pointsList.Add(point); // adding P_0 that is player's initial position 
@@ -50,7 +49,7 @@ public class DetectBoundaryTestScript : MonoBehaviour
     {
         List<Vector3>[] leftRightPoints;
         GenerateNextPoint();
-        for (int i=0; i<numberOfPathSegments; i++)
+        for (int i = 0; i < numberOfPathSegments; i++)
         {
             GenerateNextPoint();
             leftRightPoints = GenerateLeftRightPoints(pointsList, pathWidth);
@@ -59,16 +58,16 @@ public class DetectBoundaryTestScript : MonoBehaviour
             SpawnPathTrigger(lastLeftPoint, lastRightPoint);
             if (spawnWallsFlag)
             {
-                leftWalls.Add(_WallSpawner.GenerateWall(leftRightPoints[0], wallPrefab));
-                rightWalls.Add(_WallSpawner.GenerateWall(leftRightPoints[1], wallPrefab));
-                if(imageIndex >= 0) { PlaceOnWall(leftWalls[leftWalls.Count - 1], true); };
-                if(imageIndex >= 0) { PlaceOnWall(rightWalls[rightWalls.Count - 1], false); }
+                leftWalls.Add(_WallSpawner.GenerateWall(ref leftRightPoints[0], ref wallPrefab));
+                rightWalls.Add(_WallSpawner.GenerateWall(ref leftRightPoints[1], ref wallPrefab));
+                if (imageIndex >= 0) { PlaceOnWall(leftWalls[leftWalls.Count - 1], true); };
+        // after above step:
+                if (imageIndex >= 0) { PlaceOnWall(rightWalls[rightWalls.Count - 1], false); }
             }
         }
-        // after above step:
         // length of pointsList is numberOfPathSegments+1
         // 1 extra point is generated to keep the walls aligned properly
-        
+
     }
 
     void Update()
@@ -76,13 +75,13 @@ public class DetectBoundaryTestScript : MonoBehaviour
         List<Vector3>[] leftRightPoints;
         if (Input.GetMouseButtonDown(0))
         {
-            if (steps <= numberOfPathSegments/2)
+            if (steps <= numberOfPathSegments / 2)
             {
-                
+
                 var p = player.transform.position;
                 p = pointsList[steps];
                 player.transform.position = p;
-                steps+=1;
+                steps += 1;
             }
 
             else
@@ -98,29 +97,30 @@ public class DetectBoundaryTestScript : MonoBehaviour
                 leftWalls.RemoveAt(0);
                 Destroy(rightWalls[0]);
                 rightWalls.RemoveAt(0);
+                Destroy(pathTriggerColliderList[0]);
+                pathTriggerColliderList.RemoveAt(0);
                 leftRightPoints = GenerateLeftRightPoints(pointsList, pathWidth);
                 var lastLeftPoint = leftRightPoints[0][leftRightPoints[0].Count - 2];
                 var lastRightPoint = leftRightPoints[1][leftRightPoints[1].Count - 2];
                 SpawnPathTrigger(lastLeftPoint, lastRightPoint);
                 if (spawnWallsFlag)
                 {
-                    leftWalls.Add(_WallSpawner.GenerateWall(leftRightPoints[0], wallPrefab));
-                    rightWalls.Add(_WallSpawner.GenerateWall(leftRightPoints[1], wallPrefab));
-                    if (imageIndex<0 && repeatPictures) { imageIndex = imageList.Count - 1; }
+                    leftWalls.Add(_WallSpawner.GenerateWall(ref leftRightPoints[0], ref wallPrefab));
+                    rightWalls.Add(_WallSpawner.GenerateWall(ref leftRightPoints[1], ref wallPrefab));
+                    if (imageIndex < 0 && repeatPictures) { imageIndex = imageList.Count - 1; }
                     if (imageIndex >= 0) { PlaceOnWall(leftWalls[leftWalls.Count - 1], true); }
                     if (imageIndex < 0 && repeatPictures) { imageIndex = imageList.Count - 1; }
                     if (imageIndex >= 0) { PlaceOnWall(rightWalls[rightWalls.Count - 1], false); }
                 }
-                
+
             }
         }
-        
 
         for (int i = 0; i < pointsList.Count - 1; i++)
         {
             Debug.DrawLine(pointsList[i], pointsList[i + 1], Color.gray);
         }
-        db.GenerateRays(pointsList[pointsList.Count-1], betaList[betaList.Count-1]);
+        db.GenerateRays(pointsList[pointsList.Count - 1], betaList[betaList.Count - 1]);
         //_WallSpawner.GenerateWalls(pointsList, betaList, pathWidth);
         List<Vector3>[] _leftRightPoints = GenerateLeftRightPoints(pointsList, pathWidth);
     }
@@ -132,19 +132,25 @@ public class DetectBoundaryTestScript : MonoBehaviour
     private void GenerateNextPoint()
     {
         float lastBeta = betaList[betaList.Count - 1];
-        
+
         Vector3 lastPoint = pointsList[pointsList.Count - 1];
         betaRange = db.GetBetaRange(lastPoint, lastBeta);
         float newBeta;
         if (betaRange[0] != betaRange[1]) newBeta = Random.Range(lastBeta + betaRange[0], lastBeta + betaRange[1]);
         else newBeta = lastBeta + betaRange[0]; // if upper and lower bound of beta are equal
         Debug.Log("GenerateNextPoint: betaRange: " + betaRange[0] * Mathf.Rad2Deg + ", " + betaRange[1] * Mathf.Rad2Deg);
-        Debug.Log("GenerateNextPoint: newBeta: " + newBeta*Mathf.Rad2Deg);
+        Debug.Log("GenerateNextPoint: newBeta: " + newBeta * Mathf.Rad2Deg);
         Vector3 newPoint = new Vector3(lastPoint.x + pathLength * Mathf.Sin(newBeta), 0f, lastPoint.z + pathLength * Mathf.Cos(newBeta));
         this.betaList.Add(newBeta);
         this.pointsList.Add(newPoint);
     }
 
+    /// <summary>
+    /// Generate a new point at a deviation of beta angles from direction of origin point.
+    /// </summary>
+    /// <param name="beta">beta should be in radians</param>
+    /// <param name="origin"></param>
+    /// <returns>unit vector pointing in forward direction from the current vector at an given angle</returns>
     private Vector3 GetFwd(float beta, Vector3 origin)
     {
         // beta should be in radians
@@ -162,7 +168,7 @@ public class DetectBoundaryTestScript : MonoBehaviour
     /// </summary>
     /// <param name="points">List of points representing the direction of path segments.</param>
     /// <param name="pathWidth"></param>
-    /// <returns>[List of left points, list of right points] corresponding to input list of points.</returns>
+    /// <returns>List[List of left points, list of right points] corresponding to input list of points.</returns>
     private List<Vector3>[] GenerateLeftRightPoints(List<Vector3> points, float pathWidth)
     {
         List<Vector3> leftPoints = new List<Vector3>();
@@ -201,10 +207,8 @@ public class DetectBoundaryTestScript : MonoBehaviour
         return array;
     }
 
-    public GameObject pathTriggerCollider;
-
     /// <summary>
-    /// Spawn triggers at joints in path. GameObjects are saved in <see cref="pathTriggerColliderList"/>.
+    /// Spawn trigger colliders at joints in path. Spawned GameObjects are added to <see cref="pathTriggerColliderList"/>.
     /// </summary>
     /// <param name="leftRightPoints">List of two points between which the collider should be placed.</param>
     private void SpawnPathTrigger(Vector3 leftPoint, Vector3 rightPoint)
@@ -224,11 +228,11 @@ public class DetectBoundaryTestScript : MonoBehaviour
     }
 
     /// <summary>
-    /// Place a tasveer prefab on wall.
+    /// Build a photoframe by adding image as texture to it.
+    /// Place the photoframe on wall which has enough space to accomodate it.
     /// </summary>
     /// <param name="wallObj">Reference to wall Gameobject on which tasveer has to be placed.</param>
     /// <param name="isLeft">If it's a left side wall, then isLeft should be true.</param>
-    /// <param name="image">Image/painting/poster in Texture form to place on wall.</param>
     private void PlaceOnWall(GameObject wallObj, bool isLeft)
     {
         Vector3 localPosition, localRotation = Vector3.zero;
@@ -236,23 +240,31 @@ public class DetectBoundaryTestScript : MonoBehaviour
         if (isLeft) { localPosition = new Vector3(0f, 0f, -1f); localRotation = new Vector3(180f, 0f, 180f); }
         else localPosition = new Vector3(0f, 0f, 1f);
 
-        float numberOfTasveer_float = wallScale.x / (tasveerDimensions.x + 2*tasveerLeftRightPadding);
+        float numberOfTasveer_float = wallScale.x / (tasveerDimensions.x + 2 * tasveerLeftRightPadding);
 
         for (int i = 0; i < (int)numberOfTasveer_float; i++)
         {
             if (imageIndex >= 0)
             {
                 float tasveerWidth = tasveerDimensions.x + 2 * tasveerLeftRightPadding;
-                localPosition.x = (tasveerWidth/2 + (tasveerWidth * i) - (wallScale.x / 2))/wallScale.x; // the position of tasveer relative to wall
+                localPosition.x = (tasveerWidth / 2 + (tasveerWidth * i) - (wallScale.x / 2)) / wallScale.x; // the position of tasveer relative to wall
                 GameObject tasveerObj = Instantiate(tasveer, wallObj.transform); // added as child of wall to simplify positioning
                 tasveerObj.transform.localPosition = localPosition;
                 tasveerObj.transform.localRotation = Quaternion.Euler(localRotation);
-                tasveerObj.transform.localScale = new Vector3(tasveerDimensions.x / wallScale.x, tasveerDimensions.y / wallScale.y, tasveerDimensions.z); // not required along z-axis as the thickness of wall is constant in scene
-                Renderer tasveerRenderer = tasveerObj.GetComponents<Renderer>()[0];
-                tasveerRenderer.material.mainTexture = imageList[imageIndex--];
+                tasveerObj.transform.localScale = new Vector3(tasveerDimensions.x / wallScale.x, tasveerDimensions.y / wallScale.y, tasveerDimensions.z); // no need to divide tasveerDimensions.z as the thickness of wall is constant in scene
+                AddImageTexture(ref tasveerObj, imageList[imageIndex--]);
             }
         }
-        
-        
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="tasveerObj">reference to GameObject created for adding image texture</param>
+    /// <param name="image">Image/painting/poster in Texture form to place on wall.</param>
+    private void AddImageTexture(ref GameObject tasveerObj, Texture image)
+    {
+        Renderer tasveerRenderer = tasveerObj.GetComponents<Renderer>()[0];
+        tasveerRenderer.material.mainTexture = image;
     }
 }

@@ -4,9 +4,14 @@ using UnityEngine;
 
 public class WallsSpawner : MonoBehaviour
 {
-    public GameObject GenerateWall(List<Vector3> points, GameObject wallPrefab)
+    /// <summary>
+    /// </summary>
+    /// <param name="points">List of points between which you want to place it and stretch it. 
+    /// These points are not center point by left or right points.</param>
+    /// <param name="wallPrefab">ref to wall GameObject prefab</param>
+    /// <returns></returns>
+    public GameObject GenerateWall(ref List<Vector3> points, ref GameObject wallPrefab)
     {
-        //GameObject wallPrefab = GameObject.Find("wallPrefab");
         Vector3 wallPos = (points[points.Count-2] + points[points.Count - 3]) / 2;
         wallPos.y = 0.5f;
    

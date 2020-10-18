@@ -28,10 +28,10 @@ public class _SceneManager : MonoBehaviour
     /// </summary>
     private Vector3 startLocation;
 
-    /// <see cref="MetadataInputContext"/>
+    /// <summary><see cref="MetadataInputContext"/></summary>
     private MetadataInputContext metadataInput;
 
-    /// <see cref="InputDeviceContext"/>
+    /// <summary><see cref="InputDeviceContext"/></summary>
     private InputDeviceContext inputDevice;
 
     private int numberOfPathSegmentsCovered = 0;
@@ -206,9 +206,5 @@ public class _SceneManager : MonoBehaviour
 
         this.pointLocationsList.Add(newPoint);
         this.betaList.Add(newBeta);
-
-        // Debug.Log("ZoneId: "+ this.zoneId);
-        // Debug.Log("playAreaDimension: " + this.playAreaDimension);
-        // Debug.Log("pathSegmentLength: "+ this.pathSegmentLength);
     }
 }

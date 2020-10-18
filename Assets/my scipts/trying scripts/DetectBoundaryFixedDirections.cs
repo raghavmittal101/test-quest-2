@@ -17,6 +17,13 @@ public class DetectBoundaryFixedDirections
     Vector3 playerPosition;
     float boundaryBufferWidth = 0.5f;
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="rayArrayLength">Number of rays to project in a range of 0 to 180 degrees</param>
+    /// <param name="boundaryBufferWidth"></param>
+    /// <param name="pathLength"></param>
+    /// <param name="pathWidth"></param>
     public DetectBoundaryFixedDirections(int rayArrayLength, float boundaryBufferWidth, float pathLength, float pathWidth)
     {
         this.boundaryBufferWidth = boundaryBufferWidth;
@@ -28,7 +35,12 @@ public class DetectBoundaryFixedDirections
         for (int i = 0; i < rayArrayLength; i++) { rayDirectionArray[i] = (-1) * (Mathf.PI / 2) + ((Mathf.PI / (rayArrayLength-1)) * i); }
     }
 
-    
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="pointLocation"></param>
+    /// <param name="pointRotationWithY"></param>
+    /// <returns></returns>
     public float GetBeta(Vector3 pointLocation, float pointRotationWithY)
     {
         float[] betaRange = this.GetBetaRange(pointLocation, pointRotationWithY);
@@ -90,6 +102,11 @@ public class DetectBoundaryFixedDirections
         }
     }
 
+    /// <summary>
+    /// for visualising the generated rays using <see cref="Debug.DrawRay(Vector3, Vector3, Color)"/>
+    /// </summary>
+    /// <param name="playerPosition"></param>
+    /// <param name="playerRotation"></param>
     public void GenerateRays(Vector3 playerPosition, float playerRotation)
     {
         for (int i = 0; i < rayArrayLength; i++)
