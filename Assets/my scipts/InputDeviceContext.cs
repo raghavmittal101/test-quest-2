@@ -30,17 +30,27 @@ public class InputDeviceContext : MonoBehaviour, IDeviceInput
         // add new input options here
     }
    
-
+    /// <summary>
+    /// Player x-z position in playArea. y is 0
+    /// PlayArea origin is at middle of the playarea.
+    /// </summary>
+    /// <returns>player position in playarea. y is 0</returns>
     public Vector3 PlayerPosition()
     {
         return this.inputDevice.PlayerPosition();
     }
-
+    /// <summary>
+    /// Rectangular Playarea dimensions x and z. y is 0.
+    /// </summary>
+    /// <returns>Playarea dimensions x and z. y is 0</returns>
     public Vector3 PlayAreaDimensions()
     {
         return this.inputDevice.PlayAreaDimensions();
     }
-
+    /// <summary>
+    /// Player head yaw in radians
+    /// </summary>
+    /// <returns>Player's head yaw in radians</returns>
     public float PlayerRotationAlongYAxis()
     {
         return this.inputDevice.PlayerRotationAlongYAxis();

@@ -153,6 +153,9 @@ public class _SceneManager : MonoBehaviour
         db.GenerateRays(pointLocationsList[pointLocationsList.Count-1], betaList[betaList.Count-1]);
     }
 
+    /// <summary>
+    /// To make sure that floor is present throught the play area
+    /// </summary>
     private void resizePlane()
     {
         Vector3 planeScale = plane.transform.localScale;

@@ -16,10 +16,14 @@ public class OculusDeviceInput : MonoBehaviour, IDeviceInput
         dimensions = OVRManager.boundary.GetDimensions(OVRBoundary.BoundaryType.PlayArea);
         return dimensions;
     }
+    /// <summary>
+    /// head yaw is converted to radians from degrees
+    /// </summary>
+    /// <returns>Player's head yaw in radians</returns>
     public float PlayerRotationAlongYAxis()
     {
         OVRCameraRig cameraRig = FindObjectOfType<OVRCameraRig>();
-        float rotAlongY = cameraRig.transform.eulerAngles.y;
+        float rotAlongY = cameraRig.transform.eulerAngles.y * Mathf.Deg2Rad;
         return rotAlongY;
     }
 
