@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PathSegment
+public class _PathSegment
 {
     private Vector3 startLocation;
     private Vector3 endLocation;
     private float pathSegmentLength;
     private float beta;
 
-    public PathSegment(Vector3 startLocation, float pathSegmentLength, float beta)
+    public _PathSegment(Vector3 startLocation, float pathSegmentLength, float beta)
     {
         this.startLocation = startLocation;
         this.pathSegmentLength = pathSegmentLength;

@@ -36,7 +36,8 @@ public class DetectBoundaryFixedDirections
     }
 
     /// <summary>
-    /// 
+    /// Generate a beta range and get a beta based on range.
+    /// If range has some width then beta is picked randomly else beta is not randomly picked
     /// </summary>
     /// <param name="pointLocation"></param>
     /// <param name="pointRotationWithY"></param>

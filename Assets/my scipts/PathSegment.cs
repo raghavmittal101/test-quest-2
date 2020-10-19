@@ -4,39 +4,47 @@ using UnityEngine;
 
 /// <summary>
 /// </summary>
-public class _Path : MonoBehaviour
+public class _Path
 {
-    Vector3 startPoint { get; }
-    Vector3 endPoint { get; }
-    List<PathSegment> presentPathSegmentsList { get; }
-    float maxPathSegments;
+    private MetadataInputContext metadataInput = GameObject.Find("ScriptObject").GetComponent<MetadataInputContext>();
+    Vector3 startPoint;
+    Vector3 endPoint;
+    public Vector3 StartPoint { get { return startPoint; } }
+    public Vector3 EndPoint { get { return endPoint; } }
+    private List<PathSegment> presentPathSegmentsList;
+    public List<PathSegment>PresentPathSegmentsList{ get{return presentPathSegmentsList;} }
+    readonly float maxPathSegments;
 
-    public _Path(int maxPathSegments, Vector3 startPoint)
+    /// <summary>
+    /// Initialize a path.
+    /// </summary>
+    public _Path()
     {
         this.presentPathSegmentsList = new List<PathSegment>();
-        this.startPoint = startPoint;
-        this.maxPathSegments = maxPathSegments;
-        this.endPoint = startPoint;
+        this.maxPathSegments = metadataInput.VisiblePathSegmentCount();
     }
 
-    void GrowForwardPath() {
+    /// <summary>
+    /// Generate path in forward direction while maintaining a constant path length
+    /// </summary>
+    public void GrowForward() {
         int presentCount = presentPathSegmentsList.Count;
+        
         if(presentCount == maxPathSegments)
         {
             presentPathSegmentsList.RemoveAt(0);
-            presentPathSegmentsList.Add(new PathSegment(beta, length));
+            presentPathSegmentsList.Add(new PathSegment());
         }
         else if(presentCount == 0)
         {
-            // generate first path segment
-            presentPathSegmentsList.Add(new PathSegment());
-
-            // generate other path segments
-            for (int i=0; i<maxPathSegments-1; i++)
+            // generate first and following path segments
+            for (int i=0; i<maxPathSegments; i++)
             {
-                // generate remaining path segments
-                presentPathSegmentsList.Add(new PathSegment(beta, length));
+                presentPathSegmentsList.Add(new PathSegment());
             }
         }
+
+        this.startPoint = presentPathSegmentsList[0].StartPoint;
+        this.endPoint = presentPathSegmentsList[presentPathSegmentsList.Count - 1].EndPoint;
     }
 }
