@@ -38,8 +38,11 @@ public class _Scene : MonoBehaviour
         resizePlane();
         spawner.SpawnPlayAreaBoundaryColliders();
 
-        for (int i=0; i<metadataInput.VisiblePathSegmentCount(); i++)
+        for (int i = 0; i < metadataInput.VisiblePathSegmentCount(); i++)
+        {
             path.GrowForward();
+        }
+        spawner.SpawnWalls(ref path.presentPathLeftRightPointsArray);
     }
 
     /// <summary>
@@ -56,13 +59,14 @@ public class _Scene : MonoBehaviour
             resizePlane();
 
             /*
-             *  done because in Oculus Quest the gaurdian system don't
+             *  Playarea boudanries are updated because in Oculus Quest the gaurdian system don't
              *  provide correct playarea dimensions on Awake and Start.
              */
             spawner.UpdatePlayAreaBoundaries();
 
             path.GrowForward();
-            
+            spawner.SpawnWalls(ref path.presentPathLeftRightPointsArray);
+            spawner.RemoveFirstLeftRightWalls();
         }
         for(int i=0; i<path.PresentPathSegmentsList.Count; i++)
         {

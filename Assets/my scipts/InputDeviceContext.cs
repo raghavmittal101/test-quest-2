@@ -9,6 +9,7 @@ public class InputDeviceContext : MonoBehaviour, IDeviceInput
     [SerializeField] private Vector3 playerPosition;
     [SerializeField] private Vector3 playAreaDimensions;
     [SerializeField] private float playerRotationAlongYAxis;
+    [SerializeField] private GameObject playerObj;
 
     public IDeviceInput inputDevice;
 
@@ -16,7 +17,7 @@ public class InputDeviceContext : MonoBehaviour, IDeviceInput
     {
             if (_inputDeviceType == inputDeviceType.ManualInput)
             {
-                this.inputDevice = new ManualDeviceInput(playerPosition, playerRotationAlongYAxis, playAreaDimensions);
+                this.inputDevice = new ManualDeviceInput(playerPosition, playerRotationAlongYAxis, playAreaDimensions, playerObj);
             }
 
             else if(_inputDeviceType == inputDeviceType.OculusVR)
@@ -30,6 +31,10 @@ public class InputDeviceContext : MonoBehaviour, IDeviceInput
         // add new input options here
     }
    
+    public bool PlayerMovingForward()
+    {
+        return this.inputDevice.PlayerMovingForward();
+    }
     /// <summary>
     /// Player x-z position in playArea. y is 0
     /// PlayArea origin is at middle of the playarea.

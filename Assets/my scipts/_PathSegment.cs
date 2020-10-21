@@ -11,6 +11,12 @@ public class _PathSegment : MonoBehaviour
     public Vector3 StartPoint { get { return startPoint; } }
     private Vector3 endPoint;
     public Vector3 EndPoint { get { return endPoint; } }
+
+    // left right points for placing the walls
+    private Vector3[] leftRightStartPoint;
+    public Vector3[] LeftRightStartPoint { get { return leftRightStartPoint; } set { leftRightStartPoint = value; } }
+    private Vector3[] leftRightEndPoint;
+    public Vector3[] LeftRightEndPoint { get { return leftRightEndPoint; } set { leftRightEndPoint = value; } }
     /// <summary>
     /// list of path segments generated since start of system
     /// </summary>
@@ -23,10 +29,6 @@ public class _PathSegment : MonoBehaviour
 
     private MetadataInputContext MetadataInput { get { return _ResourceLoader.metadataInput; } }
     private InputDeviceContext InputDevice { get { return _ResourceLoader.inputDevice; } }
-    private void Awake()
-    { 
-    }
-
 
     /// <summary>
     /// Generate a new path segment between two points and add it to <see cref="PathSegmentsList"/>
@@ -99,5 +101,4 @@ public class _PathSegment : MonoBehaviour
         endPoint.y = 0f;
         return endPoint;
     }
-
 }

@@ -7,4 +7,5 @@ public interface IDeviceInput {
     Vector3 PlayAreaDimensions();
     float PlayerRotationAlongYAxis();
     bool ButtonPressed();
+    bool PlayerMovingForward();
 }

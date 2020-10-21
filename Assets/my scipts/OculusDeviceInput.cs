@@ -5,7 +5,35 @@ using UnityEngine;
 public class OculusDeviceInput : MonoBehaviour, IDeviceInput
 {
     Vector3 dimensions;
+    int triggerColliderHitNumber = -1;
 
+    public bool PlayerMovingForward()
+    {
+        var playerObj = GameObject.Find("CenterEyeAnchor");
+        RaycastHit hit;
+        int num;
+        Debug.DrawRay(playerObj.transform.position, Vector3.forward * 0.5f, Color.white);
+        if (Physics.Raycast(playerObj.transform.position, Vector3.forward, out hit, 0.5f)) // cast a ray 0.5 units in player direction
+        {
+            try
+            {
+                num = System.Convert.ToInt32(hit.collider.name);
+            }
+            catch (System.Exception) // if player hits some collider with alphanumeric string then exception will occur
+            {
+                num = -1;
+            }
+
+            if (triggerColliderHitNumber < num) // means that the player has moved forward
+            {
+                Debug.Log(num);
+                triggerColliderHitNumber = num;
+
+                return true;
+            }
+        }
+        return false;
+    }
     public Vector3 PlayerPosition()
     {
         var centerEyeAnchor = GameObject.Find("CenterEyeAnchor").transform.position;
