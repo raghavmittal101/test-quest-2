@@ -3,13 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class PathSegment
+public class _PathSegment : MonoBehaviour
 {
-    /// <summary><see cref="MetadataInputContext"/></summary>
-    private MetadataInputContext metadataInput = GameObject.Find("ScriptObject").GetComponent<MetadataInputContext>();
-    /// <summary><see cref="InputDeviceContext"/></summary>
-    private InputDeviceContext inputDevice = GameObject.Find("ScriptObject").GetComponent<InputDeviceContext>();
-
     private BoundaryDetector boundaryDetector = new BoundaryDetector();
 
     private Vector3 startPoint;
@@ -19,37 +14,44 @@ public class PathSegment
     /// <summary>
     /// list of path segments generated since start of system
     /// </summary>
-    public static readonly List<PathSegment> PathSegmentsList;
+    public static List<_PathSegment> PathSegmentsList = new List<_PathSegment>();
     /// <summary>
     /// angle in radians between path segment and z-axis
     /// </summary>
     private float rotationAlongYAxis;
     public float RotationAlongYAxis { get { return rotationAlongYAxis; } }
 
+    private MetadataInputContext MetadataInput { get { return _ResourceLoader.metadataInput; } }
+    private InputDeviceContext InputDevice { get { return _ResourceLoader.inputDevice; } }
+    private void Awake()
+    { 
+    }
+
+
     /// <summary>
     /// Generate a new path segment between two points and add it to <see cref="PathSegmentsList"/>
     /// </summary>
     /// <param name="startPoint"></param>
     /// <param name="endPoint"></param>
-    public PathSegment(Vector3 startPoint, Vector3 endPoint)
-    {
-        this.startPoint = startPoint;
-        this.endPoint = endPoint;
-        this.rotationAlongYAxis = Vector3.SignedAngle(Vector3.forward, (endPoint - startPoint), Vector3.up)*Mathf.Deg2Rad;
-        PathSegment.PathSegmentsList.Add(this);
-    }
+    public _PathSegment(Vector3 startPoint, Vector3 endPoint)
+        {
+            this.startPoint = startPoint;
+            this.endPoint = endPoint;
+            this.rotationAlongYAxis = Vector3.SignedAngle(Vector3.forward, (endPoint - startPoint), Vector3.up)*Mathf.Deg2Rad;
+            _PathSegment.PathSegmentsList.Add(this);
+        }
 
     /// <summary>
     /// Generate a new path segment from given startPoint and add it to <see cref="PathSegmentsList"/>
     /// </summary>
     /// <param name="playerYaw">head rotation along y-axis in radians</param>
     /// <param name="startPoint">position of player</param>
-    public PathSegment(float playerYaw, Vector3 startPoint)
+    public _PathSegment(float playerYaw, Vector3 startPoint)
     {
         this.startPoint = startPoint;
         this.endPoint = GenerateEndPoint(playerYaw, startPoint);
         this.rotationAlongYAxis = Vector3.SignedAngle(Vector3.forward, (endPoint - startPoint), Vector3.up) * Mathf.Deg2Rad;
-        PathSegment.PathSegmentsList.Add(this);
+        _PathSegment.PathSegmentsList.Add(this);
     }
 
     /// <summary>
@@ -59,37 +61,39 @@ public class PathSegment
     /// When <seealso cref="PathSegmentsList"/> is empty, pathsegment from player's current position is generated.
     /// </para>
     /// </summary>
-    public PathSegment()
+    public _PathSegment()
     {
-        var PathSegmentsListCount = PathSegment.PathSegmentsList.Count;
+        var PathSegmentsListCount = PathSegmentsList.Count;
         float initialRotation;
         if (PathSegmentsListCount > 0)
         {
-            var lastSegment = PathSegment.PathSegmentsList[PathSegmentsListCount - 1];
+            var lastSegment = PathSegmentsList[PathSegmentsListCount - 1];
             this.startPoint = lastSegment.endPoint;
             initialRotation = lastSegment.rotationAlongYAxis;
         }
         else
         {
-            this.startPoint = inputDevice.PlayerPosition(); //player starting position
-            initialRotation = inputDevice.PlayerRotationAlongYAxis(); //player head yaw
+            this.startPoint = InputDevice.PlayerPosition(); //player starting position
+            initialRotation = InputDevice.PlayerRotationAlongYAxis(); //player head yaw
             
         }
         this.endPoint = GenerateEndPoint(initialRotation, startPoint);
         this.rotationAlongYAxis = Vector3.SignedAngle(Vector3.forward, (endPoint - startPoint), Vector3.up) * Mathf.Deg2Rad;
-        PathSegment.PathSegmentsList.Add(this);
+        _PathSegment.PathSegmentsList.Add(this);
     }
     /// <summary>
     /// Calculate the endpoint of the pathsegment by generating a new beta <see cref="DetectBoundaryFixedDirections.GetBeta(Vector3, float)"/>.
     /// </summary>
-    /// <param name="rotationAlongYAxis">heading direction of the startPoint. Direction of generated pathsegment will be relative to this.</param>
+    /// <param name="rotationAlongYAxis">heading direction of the startPoint in radians. Direction of generated pathsegment will be relative to this.</param>
     /// <param name="startPoint"></param>
     /// <returns></returns>
     private Vector3 GenerateEndPoint(float rotationAlongYAxis, Vector3 startPoint)
     {
         Vector3 endPoint;
-        var pathSegmentLength = metadataInput.PathSegmentLength();
+        var pathSegmentLength = MetadataInput.PathSegmentLength();
+        Debug.Log("_PathSegment.cs: GenerateEndPoint(): rotationAlongYAxis:" + rotationAlongYAxis * Mathf.Rad2Deg);
         var beta = boundaryDetector.GetBeta(startPoint, rotationAlongYAxis);
+        Debug.Log("_PathSegment.cs: GenerateEndPoint(): beta:" + beta * Mathf.Rad2Deg);
         endPoint.x = pathSegmentLength * Mathf.Sin(rotationAlongYAxis + beta) + startPoint.x;
         endPoint.z = pathSegmentLength * Mathf.Cos(rotationAlongYAxis + beta) + startPoint.z;
         endPoint.y = 0f;

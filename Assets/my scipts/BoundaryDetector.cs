@@ -7,7 +7,8 @@ using UnityEngine;
 /// </summary>
 public class BoundaryDetector
 {
-    private MetadataInputContext metadataInput = GameObject.Find("ScriptObject").GetComponent<MetadataInputContext>();
+    private MetadataInputContext metadataInput { get { return _ResourceLoader.metadataInput; } }
+    private InputDeviceContext inputDevice { get { return _ResourceLoader.inputDevice; } }
 
     RaycastHit[] rayArray;
     float[] rayDirectionArray;
@@ -37,25 +38,33 @@ public class BoundaryDetector
     /// If range has some width then beta is picked randomly else beta is not randomly picked
     /// </summary>
     /// <param name="pointLocation"></param>
-    /// <param name="pointRotationWithY"></param>
+    /// <param name="pointRotationWithY">Required for generating rays for demonstration puposes only in radians</param>
     /// <returns></returns>
     public float GetBeta(Vector3 pointLocation, float pointRotationWithY)
     {
         float[] betaRange = this.GetBetaRange(pointLocation, pointRotationWithY);
         float newBeta;
-        if (betaRange[0] != betaRange[1]) newBeta = Random.Range(pointRotationWithY + betaRange[0], pointRotationWithY + betaRange[1]);
-        else newBeta = pointRotationWithY + betaRange[0];
+        Debug.Log("BoudaryDetector.cs: GetBeta(): betaRange: (" + betaRange[0]*Mathf.Rad2Deg + "," + betaRange[1]*Mathf.Rad2Deg +")");
+        Debug.Log("BoudaryDetector.cs: GetBeta(): betaRange: (" + betaRange[0] + "," + betaRange[1] + ")");
+        if (betaRange[0] != betaRange[1]) newBeta = Random.Range(betaRange[0], betaRange[1]);
+        else newBeta = betaRange[0];
         return newBeta;
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="pointPosition"></param>
+    /// <param name="pointRotationWithY"></param>
+    /// <returns></returns>
     private float[] GetBetaRange(Vector3 pointPosition, float pointRotationWithY)
     {
         this.playerPosition = pointPosition;
         this.playerRotation = pointRotationWithY;
         List<int> noHitRayIndexList = new List<int>();
         float[] betaRange = new float[2];
-        Debug.Log("DetectBoundaryFixedDirections.cs: playerPosition" + playerPosition);
-        GenerateRays(this.playerPosition, this.playerRotation);
+        Debug.Log("BoundaryDetector.cs: GetBetaRange(): playerPosition" + playerPosition);
+        GenerateRays();
 
         for (int i = 0; i < rayArrayLength; i++)
         {
@@ -70,31 +79,35 @@ public class BoundaryDetector
             }
         }
 
-        var message = "";
-        foreach (int i in noHitRayIndexList) { message += ", " + i; }
-
-        //Debug.Log("noHitRayIndexList" + message);
+        /*
+         * if player is in corner, then generate a new ray at -135-degree in right. 
+         * If it hits then that means left side is free else right side is free.
+         * */
 
         if (noHitRayIndexList.Count == 0)
         {
+            // 135-degree in right direction
             if (Physics.Raycast(playerPosition, GetFwd(playerRotation + (3 * Mathf.PI / 4), playerPosition), out RaycastHit hitObj, rayLength))
-                return new float[] { -3 * Mathf.PI / 4, -3 * Mathf.PI / 4 };
-            else return new float[] { -3 * Mathf.PI / 4, -3 * Mathf.PI / 4 };
+                return new float[] { -3 * Mathf.PI / 4, -3 * Mathf.PI / 4 }; // return left direction if right ray hits
+            else return new float[] { 3 * Mathf.PI / 4, 3 * Mathf.PI / 4 }; // else return right direction
         }
 
+        // if some rays don't hit, then radomly choose one of them as direction
         System.Random r = new System.Random();
         var rayDirectionIndex = noHitRayIndexList[r.Next(noHitRayIndexList.Count)];
 
-        Debug.Log("Next beta is:" + rayDirectionArray[rayDirectionIndex] * Mathf.Rad2Deg);
+        //Debug.Log("Next beta is:" + rayDirectionArray[rayDirectionIndex] * Mathf.Rad2Deg);
         Debug.DrawRay(playerPosition, GetFwd(playerRotation + rayDirectionArray[rayDirectionIndex], playerPosition) * rayLength, Color.white);
 
         
         if (noHitRayIndexList.Count < rayArrayLength)
         {
+            // if only a few rays hit then keep betaRange upper=lower
             return new float[] { rayDirectionArray[rayDirectionIndex], rayDirectionArray[rayDirectionIndex] };
         }
         else
         {
+            // if none of the rays hit then BetaRange will be -90 to +90
             return new float[] { rayDirectionArray[0], rayDirectionArray[rayArrayLength - 1] };
         }
     }
@@ -102,16 +115,14 @@ public class BoundaryDetector
     /// <summary>
     /// For visualising the generated rays using <see cref="Debug.DrawRay(Vector3, Vector3, Color)"/>
     /// </summary>
-    /// <param name="playerPosition"></param>
-    /// <param name="playerRotation"></param>
-    public void GenerateRays(Vector3 playerPosition, float playerRotation)
+    public void GenerateRays()
     {
         for (int i = 0; i < rayArrayLength; i++)
         {
-            Debug.DrawRay(playerPosition, GetFwd(playerRotation + rayDirectionArray[i], playerPosition) * rayLength, Color.green);
+            Debug.DrawRay(playerPosition, GetFwd(playerRotation + rayDirectionArray[i], playerPosition) * rayLength, Color.green, 1f);
             if (Physics.Raycast(playerPosition, GetFwd(playerRotation + rayDirectionArray[i], playerPosition), out rayArray[i], rayLength))
             {
-                Debug.DrawRay(playerPosition, GetFwd(playerRotation + rayDirectionArray[i], playerPosition) * rayLength, Color.red);
+                Debug.DrawRay(playerPosition, GetFwd(playerRotation + rayDirectionArray[i], playerPosition) * rayLength, Color.red, 1f);
             }
         }
     }

@@ -20,7 +20,7 @@ public class ManualDeviceInput : IDeviceInput
     }
     public float PlayerRotationAlongYAxis()
     {
-        return playerRotationAlongYAxis;
+        return playerRotationAlongYAxis * Mathf.Deg2Rad; // should be in radians
     }
     public Vector3 PlayAreaDimensions()
     {

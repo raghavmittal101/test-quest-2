@@ -2,36 +2,44 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MainSceneManager : MonoBehaviour
+/*
+ * All the angles are assumed to be in radians.
+ * Units are Unity units 1 Unity unit ~ 1 meter.
+ * 
+ * Awake function excecution order 
+ *      MetadataInputContext, InputDeviceContext
+ *      Spawner
+ *      _Scene
+ *  Can be changed from edit -> project settings -> script excecution order
+ */
+public class _Scene : MonoBehaviour
 {
     /// <summary><see cref="MetadataInputContext"/></summary>
-    private MetadataInputContext metadataInput;
+    private MetadataInputContext metadataInput { get { return _ResourceLoader.metadataInput; } }
 
     /// <summary><see cref="InputDeviceContext"/></summary>
-    private InputDeviceContext inputDevice;
+    private InputDeviceContext inputDevice { get { return _ResourceLoader.inputDevice; } }
 
     _Path path;
     Spawner spawner;
-
-    /// <summary>
-    /// Array of GameObjects which contains colliders to represent the boundary of the play-area.
-    /// </summary>
-    private GameObject[] boundaryCollider = new GameObject[4];
 
     public GameObject planeObject;
 
     private void Awake()
     {
-        path = new _Path();
-        inputDevice = GameObject.Find("ScriptObject").GetComponent<InputDeviceContext>();
-        metadataInput = GameObject.Find("ScriptObject").GetComponent<MetadataInputContext>();
-        spawner = new Spawner();
+        
+        
     }
     // Start is called before the first frame update
     void Start()
     {
+        spawner = new Spawner();
+        path = new _Path();
         resizePlane();
         spawner.SpawnPlayAreaBoundaryColliders();
+
+        for (int i=0; i<metadataInput.VisiblePathSegmentCount(); i++)
+            path.GrowForward();
     }
 
     /// <summary>
@@ -39,11 +47,7 @@ public class MainSceneManager : MonoBehaviour
     /// </summary>
     void Update()
     {
-        for(int i=0; i<metadataInput.VisiblePathSegmentCount(); i++)
-        {
-            path.GrowForward();
-        }
-        if (this.inputDevice.ButtonPressed())
+        if (inputDevice.ButtonPressed()) // TBD: to be replaced with path collider hit
         {
             /*
              * done to ensure that the environment adapts to changes in play area
@@ -56,9 +60,15 @@ public class MainSceneManager : MonoBehaviour
              *  provide correct playarea dimensions on Awake and Start.
              */
             spawner.UpdatePlayAreaBoundaries();
+
             path.GrowForward();
             
         }
+        for(int i=0; i<path.PresentPathSegmentsList.Count; i++)
+        {
+            Debug.DrawLine(path.PresentPathSegmentsList[i].StartPoint, path.PresentPathSegmentsList[i].EndPoint, Color.blue);
+        }
+
     }
 
     /// <summary>

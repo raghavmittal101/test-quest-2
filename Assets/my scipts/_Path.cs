@@ -6,13 +6,14 @@ using UnityEngine;
 /// </summary>
 public class _Path
 {
-    private MetadataInputContext metadataInput = GameObject.Find("ScriptObject").GetComponent<MetadataInputContext>();
+    private MetadataInputContext MetadataInput { get { return _ResourceLoader.metadataInput; } }
+    private InputDeviceContext InputDevice { get { return _ResourceLoader.inputDevice; } }
     Vector3 startPoint;
     Vector3 endPoint;
     public Vector3 StartPoint { get { return startPoint; } }
     public Vector3 EndPoint { get { return endPoint; } }
-    private List<PathSegment> presentPathSegmentsList;
-    public List<PathSegment>PresentPathSegmentsList{ get{return presentPathSegmentsList;} }
+    private List<_PathSegment> presentPathSegmentsList;
+    public List<_PathSegment>PresentPathSegmentsList{ get{return presentPathSegmentsList;} }
     readonly float maxPathSegments;
 
     /// <summary>
@@ -20,8 +21,8 @@ public class _Path
     /// </summary>
     public _Path()
     {
-        this.presentPathSegmentsList = new List<PathSegment>();
-        this.maxPathSegments = metadataInput.VisiblePathSegmentCount();
+        this.presentPathSegmentsList = new List<_PathSegment>();
+        this.maxPathSegments = MetadataInput.VisiblePathSegmentCount();
     }
 
     /// <summary>
@@ -30,7 +31,7 @@ public class _Path
     /// </summary>
     public void GrowForward() {
         int presentCount = presentPathSegmentsList.Count;
-        presentPathSegmentsList.Add(new PathSegment());
+        presentPathSegmentsList.Add(new _PathSegment());
         if (presentCount == maxPathSegments)
         {
             presentPathSegmentsList.RemoveAt(0);

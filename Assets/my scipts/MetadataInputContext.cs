@@ -26,15 +26,10 @@ public class MetadataInputContext : MonoBehaviour, IMetadataInput
 
         else Debug.Log("Please choose manual input in metadata input type");
     }
-    public MetadataInputContext()
-    {
-        
-        // add new input options here
-    }
 
     public float PlayAreaPadding()
     {
-        return this.PlayAreaPadding();
+        return this.metadataInput.PlayAreaPadding();
     }
     public int RayArrayLength()
     {

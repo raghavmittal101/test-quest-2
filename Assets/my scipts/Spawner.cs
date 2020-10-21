@@ -2,31 +2,47 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// This class provides functionality for intantiating GameObjects in scene.
+/// </summary>
 public class Spawner : MonoBehaviour
 {
     /// <summary><see cref="InputDeviceContext"/></summary>
-    private InputDeviceContext inputDevice;
+    private InputDeviceContext inputDevice { get { return _ResourceLoader.inputDevice; } }
+    private MetadataInputContext metadataInput { get { return _ResourceLoader.metadataInput; } }
     private GameObject[] boundaryColliderArr;
     /// <summary>
-    /// Must be stored at "Assets/resources/prefabs/" as "boundaryColliderPrefab"
+    /// Must be stored at "Assets/Resources/prefabs/"
     /// </summary>
-    private GameObject boundaryColliderPrefab;
-    private GameObject wallPrefab;
-    private GameObject photoFramePrefab;
-    private GameObject triggerColliderPrefab;
+    private GameObject boundaryColliderPrefab { get { return _ResourceLoader.spawner_boundaryColliderPrefab; } }
+    private GameObject wallPrefab { get { return _ResourceLoader.spawner_wallPrefab; } }
+    private GameObject photoFramePrefab { get { return _ResourceLoader.spawner_photoFramePrefab; } }
+    private GameObject triggerColliderPrefab { get { return _ResourceLoader.spawner_triggerColliderPrefab; } }
 
-    private void Awake()
+    List<GameObject[]> pathSegmentWallsList;
+
+    private void Start()
     {
+    }
+    public Spawner() {
         boundaryColliderArr = new GameObject[4];
-        boundaryColliderPrefab = (GameObject)Resources.Load("prefabs/boundaryColliderPrefab", typeof(GameObject));
-        wallPrefab = (GameObject)Resources.Load("prefabs/wallPrefab", typeof(GameObject));
-        photoFramePrefab = (GameObject)Resources.Load("prefabs/photoFramePrefab", typeof(GameObject));
-        triggerColliderPrefab = (GameObject)Resources.Load("prefabs/triggerColliderPrefab", typeof(GameObject));
+    }
 
+    /// <summary>
+    /// Instantiate walls on both sides of the given path segment. And add them to spawnned walls list.
+    /// </summary>
+    /// <param name="pathSegment"></param>
+    private void SpawnPathSegmentWalls(_PathSegment pathSegment) {
 
     }
 
-    public void SpawnLeftRightWalls() { }
+    /// <summary>
+    /// Removes the left and right wall GameObject of oldest  from scene
+    /// </summary>
+    private void RemoveOldestLeftRightWalls()
+    {
+
+    }
 
     public void SpawnImages() { }
 
