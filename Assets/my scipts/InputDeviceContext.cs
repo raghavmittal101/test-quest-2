@@ -64,4 +64,9 @@ public class InputDeviceContext : MonoBehaviour, IDeviceInput
     {
         return this.inputDevice.ButtonPressed();
     }
+
+    public GameObject PlayerObj()
+    {
+        return this.inputDevice.PlayerObj();
+    }
 }

@@ -20,7 +20,7 @@ public class MetadataInputContext : MonoBehaviour, IMetadataInput
     {
         if (_metadataInputType == metadataInputType.ManualInput)
         {
-            this.metadataInput = new MetadataManualInput(pathSegmentLength, visiblePathSegmentCount, pathSegmentLength, 
+            this.metadataInput = new MetadataManualInput(pathSegmentLength, visiblePathSegmentCount, pathWidth, 
                 material, rayArrayLength, playAreaPadding);
         }
 

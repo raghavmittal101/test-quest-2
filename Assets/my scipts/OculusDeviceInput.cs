@@ -62,6 +62,16 @@ public class OculusDeviceInput : MonoBehaviour, IDeviceInput
         return false;
     }
 
+    /// <summary>
+    /// Returns centerEyeAnchor GameObject.
+    /// </summary>
+    /// <returns></returns>
+    public GameObject PlayerObj()
+    {
+        var centerEyeAnchor = GameObject.Find("CenterEyeAnchor");
+        return centerEyeAnchor;
+    }
+
     void Update()
     {
         dimensions = OVRManager.boundary.GetDimensions(OVRBoundary.BoundaryType.PlayArea);

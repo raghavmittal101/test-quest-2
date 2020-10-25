@@ -8,4 +8,5 @@ public interface IDeviceInput {
     float PlayerRotationAlongYAxis();
     bool ButtonPressed();
     bool PlayerMovingForward();
+    GameObject PlayerObj();
 }

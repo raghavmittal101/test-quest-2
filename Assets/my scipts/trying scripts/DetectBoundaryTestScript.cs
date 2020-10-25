@@ -13,8 +13,9 @@ public class DetectBoundaryTestScript : MonoBehaviour
     private List<GameObject> leftWalls, rightWalls;
     private int imageIndex;
 
+    private MetadataInputContext metadataInput { get { return _ResourceLoader.metadataInput; } }
+    private InputDeviceContext inputDevice { get { return _ResourceLoader.inputDevice; } }
     private Vector3 point;
-    [SerializeField] private GameObject player;
     private float pathLength { get { return metadataInput.PathSegmentLength(); } }
     private float pathWidth { get { return metadataInput.PathWidth(); } }
     private List<float> betaList = new List<float>();
@@ -25,15 +26,15 @@ public class DetectBoundaryTestScript : MonoBehaviour
     private int numberOfPathSegments { get { return metadataInput.VisiblePathSegmentCount(); } }
     private GameObject wallPrefab { get { return _ResourceLoader.spawner_wallPrefab; } }
     private GameObject tasveer { get { return _ResourceLoader.spawner_photoFramePrefab; } }
+    private Light pointLight { get { return _ResourceLoader.spawner_pointLight; } }
+    private GameObject pathTriggerCollider { get { return _ResourceLoader.spawner_triggerColliderPrefab; } }
     [SerializeField] private bool spawnWallsFlag = false; // for simulation purpose to on/off wall spawning
     [SerializeField] Vector3 tasveerDimensions = new Vector3(0.7f, 0.7f, 0.01f);
     [SerializeField] private List<Texture> imageList = new List<Texture>();
     [SerializeField] private float tasveerLeftRightPadding;
     [SerializeField] private bool repeatPictures = false;
-    private GameObject pathTriggerCollider { get { return _ResourceLoader.spawner_triggerColliderPrefab; } }
-    private MetadataInputContext metadataInput { get { return _ResourceLoader.metadataInput; } }
-    private InputDeviceContext inputDevice { get { return _ResourceLoader.inputDevice; } }
     [SerializeField] private GameObject planeObject;
+    [SerializeField] private GameObject player { get { return inputDevice.PlayerObj(); } }
     private int triggerColliderHitNumber = -1;
     private int triggerColliderSpawnCount = 0;
 
@@ -41,8 +42,8 @@ public class DetectBoundaryTestScript : MonoBehaviour
     {
         //this.db = new DetectBoundary();
         
-        float beta = player.transform.rotation.eulerAngles.y * Mathf.Deg2Rad;
-        this.point = player.transform.position;
+        float beta = inputDevice.PlayerRotationAlongYAxis();
+        this.point = inputDevice.PlayerPosition();
         this.betaList.Add(beta); // adding beta_0 that is player's rotation along Y axis
         this.pointsList.Add(point); // adding P_0 that is player's initial position 
         this._WallSpawner = new WallsSpawner();
@@ -51,40 +52,57 @@ public class DetectBoundaryTestScript : MonoBehaviour
         imageIndex = imageList.Count - 1; // number of images. Images will be placed in reverse order
         pathTriggerColliderList = new List<GameObject>();
         spawner = new Spawner();
+        this.db = new DetectBoundaryFixedDirections(rayArrayLength, boundaryBufferWidth, pathLength, pathWidth);
+        spawner.SpawnPlayAreaBoundaryColliders();
     }
 
     private void Start()
     {
         resizePlane();
-        spawner.SpawnPlayAreaBoundaryColliders();
+        spawner.UpdatePlayAreaBoundaries();
+        GenerateInitialPath();
+        
+    }
 
-        this.db = new DetectBoundaryFixedDirections(rayArrayLength, boundaryBufferWidth, pathLength, pathWidth);
-        List<Vector3>[] leftRightPoints;
+    void GenerateInitialPath()
+    {
+        // generate first corridor in front of player
+        //float lastBeta = betaList[betaList.Count - 1];
+        //Vector3 lastPoint = pointsList[pointsList.Count - 1];
+        //Vector3 newPoint = new Vector3(lastPoint.x + pathLength * Mathf.Sin(lastBeta), 0f, lastPoint.z + pathLength * Mathf.Cos(lastBeta));
+        //betaList.Add(lastBeta);
+        //pointsList.Add(newPoint);
         GenerateNextPoint();
+
         for (int i = 0; i < numberOfPathSegments; i++)
         {
             GenerateNextPoint();
-            leftRightPoints = GenerateLeftRightPoints(pointsList, pathWidth);
-            var lastLeftPoint = leftRightPoints[0][leftRightPoints[0].Count - 2];
-            var lastRightPoint = leftRightPoints[1][leftRightPoints[1].Count - 2];
-            SpawnPathTrigger(lastLeftPoint, lastRightPoint);
-            if (spawnWallsFlag)
-            {
-                leftWalls.Add(_WallSpawner.GenerateWall(ref leftRightPoints[0], wallPrefab));
-                rightWalls.Add(_WallSpawner.GenerateWall(ref leftRightPoints[1], wallPrefab));
-                if (imageIndex >= 0) { PlaceOnWall(leftWalls[leftWalls.Count - 1], true); };
-        // after above step:
-                if (imageIndex >= 0) { PlaceOnWall(rightWalls[rightWalls.Count - 1], false); }
-            }
+            SpawnWallsAndImages();
         }
         // length of pointsList is numberOfPathSegments+1
         // 1 extra point is generated to keep the walls aligned properly
+    }
 
+    private void SpawnWallsAndImages()
+    {
+        List<Vector3>[] leftRightPoints = GenerateLeftRightPoints(pointsList, pathWidth);
+        var lastLeftPoint = leftRightPoints[0][leftRightPoints[0].Count - 2];
+        var lastRightPoint = leftRightPoints[1][leftRightPoints[1].Count - 2];
+        SpawnPathTrigger(lastLeftPoint, lastRightPoint);
+        if (spawnWallsFlag)
+        {
+            leftWalls.Add(_WallSpawner.GenerateWall(ref leftRightPoints[0], wallPrefab));
+            rightWalls.Add(_WallSpawner.GenerateWall(ref leftRightPoints[1], wallPrefab));
+            if (imageIndex < 0 && repeatPictures) { imageIndex = imageList.Count - 1; }
+            if (imageIndex >= 0) { PlaceOnWall(leftWalls[leftWalls.Count - 1], true); }
+            if (imageIndex < 0 && repeatPictures) { imageIndex = imageList.Count - 1; }
+            if (imageIndex >= 0) { PlaceOnWall(rightWalls[rightWalls.Count - 1], false); }
+        }
     }
 
     void Update()
     {
-        List<Vector3>[] leftRightPoints;
+        //List<Vector3>[] leftRightPoints;
         //if (Input.GetMouseButtonDown(0))
         if(inputDevice.PlayerMovingForward())
         {
@@ -92,10 +110,6 @@ public class DetectBoundaryTestScript : MonoBehaviour
             spawner.UpdatePlayAreaBoundaries();
             if (steps <= numberOfPathSegments / 2 - 1)
             {
-
-                //var p = player.transform.position;
-                //p = pointsList[steps];
-                //player.transform.position = p;
                 steps += 1;
             }
 
@@ -104,9 +118,6 @@ public class DetectBoundaryTestScript : MonoBehaviour
                 pointsList.RemoveAt(0);
                 betaList.RemoveAt(0);
                 GenerateNextPoint();
-                //var p = player.transform.position;
-                //p = pointsList[numberOfPathSegments / 2];
-                //player.transform.position = p;
 
                 Destroy(leftWalls[0]);
                 leftWalls.RemoveAt(0);
@@ -114,19 +125,7 @@ public class DetectBoundaryTestScript : MonoBehaviour
                 rightWalls.RemoveAt(0);
                 Destroy(pathTriggerColliderList[0]);
                 pathTriggerColliderList.RemoveAt(0);
-                leftRightPoints = GenerateLeftRightPoints(pointsList, pathWidth);
-                var lastLeftPoint = leftRightPoints[0][leftRightPoints[0].Count - 2];
-                var lastRightPoint = leftRightPoints[1][leftRightPoints[1].Count - 2];
-                SpawnPathTrigger(lastLeftPoint, lastRightPoint);
-                if (spawnWallsFlag)
-                {
-                    leftWalls.Add(_WallSpawner.GenerateWall(ref leftRightPoints[0], wallPrefab));
-                    rightWalls.Add(_WallSpawner.GenerateWall(ref leftRightPoints[1], wallPrefab));
-                    if (imageIndex < 0 && repeatPictures) { imageIndex = imageList.Count - 1; }
-                    if (imageIndex >= 0) { PlaceOnWall(leftWalls[leftWalls.Count - 1], true); }
-                    if (imageIndex < 0 && repeatPictures) { imageIndex = imageList.Count - 1; }
-                    if (imageIndex >= 0) { PlaceOnWall(rightWalls[rightWalls.Count - 1], false); }
-                }
+                SpawnWallsAndImages();
 
             }
         }
@@ -229,7 +228,7 @@ public class DetectBoundaryTestScript : MonoBehaviour
     private void SpawnPathTrigger(Vector3 leftPoint, Vector3 rightPoint)
     {
         var obj = Instantiate(pathTriggerCollider);
-        var localScale = new Vector3((rightPoint - leftPoint).magnitude, 1f, 0.1f);
+        var localScale = new Vector3((rightPoint - leftPoint).magnitude, 3f, 0.1f);
         obj.transform.localScale = localScale;
         float wallRotAngleAlongY = Vector3.SignedAngle(new Vector3(1f, 0f, 0f), (rightPoint - leftPoint).normalized, Vector3.up);
         Vector3 rotation = obj.transform.localEulerAngles;
@@ -241,6 +240,9 @@ public class DetectBoundaryTestScript : MonoBehaviour
         obj.transform.position = pos;
         pathTriggerColliderList.Add(obj);
         triggerColliderSpawnCount++;
+
+        // Adding pointLight with collider, positioned at top of it and as a subobject of it.
+        //Instantiate(pointLight, new Vector3(0f, localScale.y, 0f), Quaternion.identity, obj.transform);
     }
 
     /// <summary>
@@ -253,8 +255,8 @@ public class DetectBoundaryTestScript : MonoBehaviour
     {
         Vector3 localPosition, localRotation = Vector3.zero;
         Vector3 wallScale = wallObj.transform.localScale; // scale of tasveer will be divided by wallscale to mantain the original scale of tasveer which otherwise will be lost because it's child of wall.
-        if (isLeft) { localPosition = new Vector3(0f, 0f, -1f); localRotation = new Vector3(180f, 0f, 180f); }
-        else localPosition = new Vector3(0f, 0f, 1f);
+        if (isLeft) { localPosition = new Vector3(0f, 0.15f, -1f); localRotation = new Vector3(180f, 0f, 180f); }
+        else localPosition = new Vector3(0f, 0.15f, 1f);
 
         float numberOfTasveer_float = wallScale.x / (tasveerDimensions.x + 2 * tasveerLeftRightPadding);
 
@@ -282,6 +284,10 @@ public class DetectBoundaryTestScript : MonoBehaviour
     {
         Renderer tasveerRenderer = tasveerObj.GetComponents<Renderer>()[0];
         tasveerRenderer.material.mainTexture = image;
+        var meshProperties = tasveerObj.GetComponent<MeshRenderer>();
+        var materialProperties = meshProperties.material;
+        materialProperties.SetTexture("_EmissionMap", image);
+        materialProperties.SetColor("EmissionColor", Color.white);
     }
 
     /// <summary>
@@ -294,5 +300,7 @@ public class DetectBoundaryTestScript : MonoBehaviour
         planeScale.z = inputDevice.PlayAreaDimensions().z * planeScale.z / size.z;
         planeScale.x = inputDevice.PlayAreaDimensions().x * planeScale.x / size.x;
         planeObject.transform.localScale = planeScale;
+        var texture = planeObject.GetComponent<MeshRenderer>();
+        texture.material.SetTextureScale("_MainTex", new Vector2(planeScale.x, planeScale.z));
     }
 }

@@ -24,6 +24,7 @@ public class _ResourceLoader : MonoBehaviour
     public static GameObject spawner_wallPrefab;
     public static GameObject spawner_photoFramePrefab;
     public static GameObject spawner_triggerColliderPrefab;
+    public static Light spawner_pointLight;
 
     private void Awake()
     {
@@ -46,5 +47,6 @@ public class _ResourceLoader : MonoBehaviour
         spawner_wallPrefab = Resources.Load("Prefabs/WallPrefab") as GameObject;
         spawner_photoFramePrefab = (GameObject)Resources.Load("Prefabs/PhotoFramePrefab", typeof(GameObject));
         spawner_triggerColliderPrefab = (GameObject)Resources.Load("Prefabs/PathTriggerColliderPrefab", typeof(GameObject));
+        spawner_pointLight = (Light)Resources.Load("Prefabs/PointLight", typeof(Light));
     }
 }

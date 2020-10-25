@@ -14,7 +14,7 @@ public class ManualDeviceInput : IDeviceInput
     public ManualDeviceInput(Vector3 playerPosition, float playerRotationAlongYAxis, Vector3 playAreaDimensions, GameObject playerObj)
     {
         this.playerPosition = playerPosition;
-        this.playerRotationAlongYAxis = playerRotationAlongYAxis;
+        this.playerRotationAlongYAxis = playerRotationAlongYAxis*Mathf.Deg2Rad;
         this.playAreaDimensions = playAreaDimensions;
         this.playerObj = playerObj;
     }
@@ -26,7 +26,7 @@ public class ManualDeviceInput : IDeviceInput
     {
         RaycastHit hit;
         int num;
-        Debug.DrawRay(playerObj.transform.position, Vector3.forward * 0.5f, Color.white);
+        Debug.DrawRay(playerObj.transform.position, playerObj.transform.localRotation.eulerAngles.normalized * 1f, Color.white);
         if (Physics.Raycast(playerObj.transform.position, Vector3.forward, out hit, 0.5f)) // cast a ray 0.5 units in player direction
         {
             try
@@ -66,5 +66,10 @@ public class ManualDeviceInput : IDeviceInput
         if (Input.GetMouseButtonDown(0))
             return true;
         return false;
+    }
+
+    public GameObject PlayerObj()
+    {
+        return playerObj;
     }
 }
