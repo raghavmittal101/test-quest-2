@@ -30,7 +30,7 @@ public class DetectBoundaryTestScript : MonoBehaviour
     private GameObject pathTriggerCollider { get { return _ResourceLoader.spawner_triggerColliderPrefab; } }
     [SerializeField] private bool spawnWallsFlag = false; // for simulation purpose to on/off wall spawning
     [SerializeField] Vector3 tasveerDimensions = new Vector3(0.7f, 0.7f, 0.01f);
-    [SerializeField] private List<Texture> imageList = new List<Texture>();
+    [SerializeField] private List<Texture> imageList { get { return _ResourceLoader.imagesList; } }
     [SerializeField] private float tasveerLeftRightPadding;
     [SerializeField] private bool repeatPictures = false;
     [SerializeField] private GameObject planeObject;
@@ -60,11 +60,22 @@ public class DetectBoundaryTestScript : MonoBehaviour
     {
         resizePlane();
         spawner.UpdatePlayAreaBoundaries();
-        GenerateInitialPath();
+        StartCoroutine(WaitForPlayAreaBoudaries());
+        StartCoroutine(GenerateInitialPath());
         
     }
 
-    void GenerateInitialPath()
+    private IEnumerator WaitForPlayAreaBoudaries()
+    {
+        yield return new WaitForSeconds(0.1f);
+    }
+
+    private IEnumerator WaitForInitialPathSegments()
+    {
+        yield return new WaitForSeconds(0.1f);
+    }
+
+    IEnumerator GenerateInitialPath()
     {
         // generate first corridor in front of player
         //float lastBeta = betaList[betaList.Count - 1];
@@ -77,6 +88,7 @@ public class DetectBoundaryTestScript : MonoBehaviour
         for (int i = 0; i < numberOfPathSegments; i++)
         {
             GenerateNextPoint();
+            yield return StartCoroutine(WaitForInitialPathSegments());
             SpawnWallsAndImages();
         }
         // length of pointsList is numberOfPathSegments+1
@@ -149,6 +161,7 @@ public class DetectBoundaryTestScript : MonoBehaviour
 
         Vector3 lastPoint = pointsList[pointsList.Count - 1];
         betaRange = db.GetBetaRange(lastPoint, lastBeta);
+
         float newBeta;
         if (betaRange[0] != betaRange[1]) newBeta = UnityEngine.Random.Range(lastBeta + betaRange[0], lastBeta + betaRange[1]);
         else newBeta = lastBeta + betaRange[0]; // if upper and lower bound of beta are equal
