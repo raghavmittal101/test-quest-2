@@ -134,6 +134,7 @@ public class Spawner : MonoBehaviour
             if (boundaryPositions[i].z == 0f) scale.x = playAreaDimensions.z;
             else scale.x = playAreaDimensions.x;
             go.transform.localScale = scale;
+            go.transform.position = new Vector3(boundaryPositions[i].x, scale.y / 2, boundaryPositions[i].z);
             boundaryColliderArr[i] = go;
         }
     }
