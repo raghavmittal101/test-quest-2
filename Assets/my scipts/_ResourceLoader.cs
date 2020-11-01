@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.IO;
 
 /// <summary>
 /// Contains methods for finding scripts and loading resources required by other classes.
@@ -25,6 +26,7 @@ public class _ResourceLoader : MonoBehaviour
     public static GameObject spawner_photoFramePrefab;
     public static GameObject spawner_triggerColliderPrefab;
     public static Light spawner_pointLight;
+    public static List<Texture> imagesList = new List<Texture>();
 
     private void Awake()
     {
@@ -41,6 +43,8 @@ public class _ResourceLoader : MonoBehaviour
     {
         inputDevice = GameObject.Find("ScriptObject").GetComponent<InputDeviceContext>();
     }
+
+    bool allImagesLoaded;
     void LoadSpawnerResources()
     {
         spawner_boundaryColliderPrefab = Resources.Load("Prefabs/WallCollidersPrefab") as GameObject;
@@ -48,5 +52,28 @@ public class _ResourceLoader : MonoBehaviour
         spawner_photoFramePrefab = (GameObject)Resources.Load("Prefabs/PhotoFramePrefab", typeof(GameObject));
         spawner_triggerColliderPrefab = (GameObject)Resources.Load("Prefabs/PathTriggerColliderPrefab", typeof(GameObject));
         spawner_pointLight = (Light)Resources.Load("Prefabs/PointLight", typeof(Light));
+        StartCoroutine(LoadImageResources());
+        new WaitUntil(() => allImagesLoaded);   
+    }
+    IEnumerator LoadImageResources()
+    {
+        DirectoryInfo directoryInfo = new DirectoryInfo("Assets/Resources/Pictures/paintings/");
+        foreach (FileInfo file in directoryInfo.GetFiles("*.jpg")) { yield return StartCoroutine(LoadFile(file)); }
+        allImagesLoaded = true;
+    }
+
+    /// <summary>
+    /// Loads the file, waits until it is fully loaded and then adds it to <see cref="imagesList"/>.
+    /// </summary>
+    IEnumerator LoadFile(FileInfo file)
+    {
+        string filePath = file.FullName.ToString();
+        string url = string.Format("file://{0}", filePath);
+        WWW www = new WWW(filePath);
+        yield return new WaitUntil(() => www.isDone);
+        Debug.Log(file);
+        Debug.Log(www.bytesDownloaded);
+        imagesList.Add(www.texture);
+        
     }
 }
