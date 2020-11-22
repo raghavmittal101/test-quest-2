@@ -46,6 +46,8 @@ public class ManualDeviceInput : IDeviceInput
                 return true;
             }
         }
+        // a left click on mouse will also mean that player is moving forward
+        if (Input.GetMouseButtonDown(0)) return true;
         return false;
     }
     public Vector3 PlayerPosition()

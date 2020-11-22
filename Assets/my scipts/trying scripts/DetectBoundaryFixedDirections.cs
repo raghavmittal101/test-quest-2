@@ -58,7 +58,7 @@ public class DetectBoundaryFixedDirections
         List<int> noHitRayIndexList = new List<int>();
         float[] betaRange = new float[2];
         Debug.Log("DetectBoundaryFixedDirections.cs: playerPosition" + playerPosition);
-        GenerateRays(this.playerPosition, this.playerRotation);
+        GenerateRays(this.playerPosition, this.playerRotation); // only for visualization and debugging purposes
 
         for (int i = 0; i < rayArrayLength; i++)
         {

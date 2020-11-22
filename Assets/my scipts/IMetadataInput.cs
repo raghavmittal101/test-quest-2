@@ -8,6 +8,6 @@ public interface IMetadataInput
     int VisiblePathSegmentCount();
     float PathWidth();
     int RayArrayLength();
-    Material PathMaterial();
+    List<Texture> ImageTexturesList();
     float PlayAreaPadding();
 }

@@ -5,14 +5,17 @@ using UnityEngine;
 public class MetadataInputContext : MonoBehaviour, IMetadataInput
 {
     
-    private enum metadataInputType { ManualInput, MetadataFileNotWorking};
+    private enum metadataInputType { ManualInput, FileInput};
     [SerializeField] private metadataInputType _metadataInputType;
     [SerializeField] private float pathSegmentLength;
     [SerializeField] private int visiblePathSegmentCount;
     [SerializeField] private float pathWidth;
-    [SerializeField] private Material material;
+//    [SerializeField] private Material material;
     [SerializeField] private int rayArrayLength;
     [SerializeField] private float playAreaPadding;
+    [SerializeField] private string docId;
+    [SerializeField] private string metadataAPIURL;
+    [SerializeField] private List<Texture> imageTexturesList;
 
     public IMetadataInput metadataInput;
 
@@ -21,7 +24,11 @@ public class MetadataInputContext : MonoBehaviour, IMetadataInput
         if (_metadataInputType == metadataInputType.ManualInput)
         {
             this.metadataInput = new MetadataManualInput(pathSegmentLength, visiblePathSegmentCount, pathWidth, 
-                material, rayArrayLength, playAreaPadding);
+                rayArrayLength, playAreaPadding, imageTexturesList);
+        }
+        else if (_metadataInputType == metadataInputType.FileInput)
+        {
+            this.metadataInput = new MetadataFileInput(docId, metadataAPIURL);
         }
 
         else Debug.Log("Please choose manual input in metadata input type");
@@ -46,8 +53,12 @@ public class MetadataInputContext : MonoBehaviour, IMetadataInput
     public float PathWidth() {
         return this.metadataInput.PathWidth();
     }
-    public Material PathMaterial()
+    public List<Texture> ImageTexturesList()
     {
-        return this.metadataInput.PathMaterial();
+        return this.imageTexturesList;
     }
+  //  public Material PathMaterial()
+  //  {
+  //      return this.metadataInput.PathMaterial();
+  //  }
 }

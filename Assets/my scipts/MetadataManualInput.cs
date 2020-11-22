@@ -7,16 +7,17 @@ public class MetadataManualInput : IMetadataInput
     private readonly float pathSegmentLength;
     private readonly int visiblePathSegmentCount;
     private readonly float pathWidth;
-    private readonly Material material;
+   // private readonly Material material;
     private readonly int rayArrayLength;
     private readonly float playAreaPadding;
+    private readonly List<Texture> imageTexturesList;
 
-    public MetadataManualInput(float pathSegmentLength, int visiblePathSegmentCount, float pathWidth, Material material, int rayArrayLength, float playAreaPadding)
+    public MetadataManualInput(float pathSegmentLength, int visiblePathSegmentCount, float pathWidth, int rayArrayLength, float playAreaPadding, List<Texture> imageTexturesList)
     {
         this.pathSegmentLength = pathSegmentLength;
         this.visiblePathSegmentCount = visiblePathSegmentCount;
         this.pathWidth = pathWidth;
-        this.material = material;
+        this.imageTexturesList = imageTexturesList;
         this.rayArrayLength = rayArrayLength;
         this.playAreaPadding = playAreaPadding;
     }
@@ -41,8 +42,13 @@ public class MetadataManualInput : IMetadataInput
     {
         return this.pathWidth;
     }
-    public Material PathMaterial()
+    
+    public List<Texture> ImageTexturesList()
     {
-        return this.material;
+        return this.imageTexturesList;
     }
+   // public Material PathMaterial()
+   // {
+   //     return this.material;
+   // }
 }

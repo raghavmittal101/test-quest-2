@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
-
+using UnityEngine.Networking;
 /// <summary>
 /// Contains methods for finding scripts and loading resources required by other classes.
 /// This is done to avoid issues which occur due to asynchronous running of Awake methods of different classes.
@@ -27,6 +27,7 @@ public class _ResourceLoader : MonoBehaviour
     public static GameObject spawner_triggerColliderPrefab;
     public static Light spawner_pointLight;
     public static List<Texture> imagesList = new List<Texture>();
+    public static string requestData;
 
     private void Awake()
     {
@@ -58,7 +59,14 @@ public class _ResourceLoader : MonoBehaviour
     IEnumerator LoadImageResources()
     {
         DirectoryInfo directoryInfo = new DirectoryInfo("Assets/Resources/Pictures/paintings/");
-        foreach (FileInfo file in directoryInfo.GetFiles("*.jpg")) { yield return StartCoroutine(LoadFile(file)); }
+        FileInfo[] files;
+        
+        files = directoryInfo.GetFiles("*");
+            
+       
+        //catch { files = directoryInfo.GetFiles("*.jpeg"); }
+
+        foreach (FileInfo file in files) { yield return StartCoroutine(LoadFile(file)); }
         allImagesLoaded = true;
     }
 
@@ -67,13 +75,40 @@ public class _ResourceLoader : MonoBehaviour
     /// </summary>
     IEnumerator LoadFile(FileInfo file)
     {
+        if (file.Name.EndsWith("meta"))
+        {
+            yield break;
+        }
         string filePath = file.FullName.ToString();
         string url = string.Format("file://{0}", filePath);
-        WWW www = new WWW(filePath);
+        WWW www = new WWW(url);
         yield return new WaitUntil(() => www.isDone);
         Debug.Log(file);
         Debug.Log(www.bytesDownloaded);
         imagesList.Add(www.texture);
         
     }
+
+    public string GetDataFromURI(string uri)
+    {
+        StartCoroutine(GetRequest(uri));
+        return requestData;
+    }
+
+    IEnumerator GetRequest(string uri)
+    {
+        UnityWebRequest webRequest = UnityWebRequest.Get(uri);
+        yield return new WaitUntil(()=>webRequest.isDone);
+        if (webRequest.isNetworkError)
+        {
+            Debug.Log("Error: " + webRequest.error);
+            requestData = null;
+        }
+        else
+        {
+            Debug.Log(webRequest.downloadHandler.text);
+            requestData = webRequest.downloadHandler.text;
+        }
+    }
+    
 }

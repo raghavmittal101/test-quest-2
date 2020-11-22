@@ -65,11 +65,13 @@ public class DetectBoundaryTestScript : MonoBehaviour
         
     }
 
+    /*
+     * To fix problem with initial wall generation - the walls were crossing the boudaries.
+     */
     private IEnumerator WaitForPlayAreaBoudaries()
     {
         yield return new WaitForSeconds(0.1f);
     }
-
     private IEnumerator WaitForInitialPathSegments()
     {
         yield return new WaitForSeconds(0.1f);
@@ -77,12 +79,6 @@ public class DetectBoundaryTestScript : MonoBehaviour
 
     IEnumerator GenerateInitialPath()
     {
-        // generate first corridor in front of player
-        //float lastBeta = betaList[betaList.Count - 1];
-        //Vector3 lastPoint = pointsList[pointsList.Count - 1];
-        //Vector3 newPoint = new Vector3(lastPoint.x + pathLength * Mathf.Sin(lastBeta), 0f, lastPoint.z + pathLength * Mathf.Cos(lastBeta));
-        //betaList.Add(lastBeta);
-        //pointsList.Add(newPoint);
         GenerateNextPoint();
 
         for (int i = 0; i < numberOfPathSegments; i++)
