@@ -3,17 +3,22 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
+/// <summary>
+/// This class is used to fetch metadata information and images submitted by the user online. 
+/// This class is used when metadata input type is `online`.
+/// </summary>
 public class OnlineResourceFetcher : MonoBehaviour
 {
     string doc_id;
     string uri;
     public MetadataJson metadataJson { get; private set; }
-    public bool allImagesFetched {get; private set;}
-    public bool jsonFetchComplete = false;
-    public List<Texture> texturesList { get; private set; }
+    public static bool assetsDownloadComplete { get; private set; }
+    public static bool jsonFetchComplete {get; private set;}
+    public List<Texture> texturesList;
+    private bool errorDownloadingImages = false;
     // List<byte[]> downloadedDataBytesList;
     string payloadStr;
-
+    public bool isPayloadRecieved;
 
     /// <summary>
     /// any changes to this class should be matched with the expected payload JSON format
@@ -36,9 +41,10 @@ public class OnlineResourceFetcher : MonoBehaviour
     {
         this.doc_id = doc_id;
         this.uri = uri;
-        allImagesFetched = false;
+        assetsDownloadComplete= false;
         jsonFetchComplete = false;
-    }
+        isPayloadRecieved = false;
+}
     /*
     private void Start()
     {
@@ -50,86 +56,64 @@ public class OnlineResourceFetcher : MonoBehaviour
     */
     /// <summary>
     /// Fetches metadata, downloads the images given in metadata and convert them into textures.
+    /// These textures are saved into <see cref="texturesList"/>.
     /// </summary>
-    /// <returns>List containing textures</returns>
-    public List<Texture> GetTexturesList()
+    public void FetchAndDownload()
     {
-        Debug.Log("Downloading textures ...");
-        StartCoroutine(FetchMetadata_Coroutine());
-        StartCoroutine(DownloadAssets());
-        Debug.Log("Texture download complete...");
-        return texturesList;
+        Debug.Log("1. Fetching and downlaoding resources ...");
+        StartCoroutine(FetchAndDownloadResources());
     }
 
-    public MetadataJson FetchMetadata()
+    public IEnumerator FetchAndDownloadResources()
     {
         StartCoroutine(FetchMetadata_Coroutine());
-        return metadataJson;
+        yield return new WaitUntil(() => jsonFetchComplete);
+        StartCoroutine(DownloadAssets_Coroutine());
+        yield return new WaitUntil(() => assetsDownloadComplete);
+        Debug.Log("13. Fetching and downloading resources complete...");
+    }
+/*
+    public IEnumerator WaitForMetadataComplete()
+    {
+        yield return new WaitUntil(() => jsonFetchComplete);
+    }*/
+    public IEnumerator WaitForAssetsDownloadComplete(MetadataFileInput metadataFileInput)
+    {
+        yield return new WaitUntil(() => assetsDownloadComplete);
+        metadataFileInput.metadataJson = this.metadataJson;
+        metadataFileInput.pathSegmentLength = float.Parse(metadataJson.pathSegmentLength);
+        metadataFileInput.visiblePathSegmentCount = int.Parse(metadataJson.visiblePathSegmentCount);
+        metadataFileInput.pathWidth = float.Parse(metadataJson.pathWidth);
+        metadataFileInput.rayArrayLength = int.Parse(metadataJson.rayArrayLength);
+        metadataFileInput.playAreaPadding = float.Parse(metadataJson.playAreaPadding);
+        metadataFileInput.imageTexturesList = this.texturesList;
+        yield return null;
     }
 
     public IEnumerator FetchMetadata_Coroutine()
     {
-        Debug.Log("fetching metadata...");
+        Debug.Log("2. fetching metadata...");
         yield return StartCoroutine(GetPayloadRequest());
         if (payloadStr != null)
         {
             metadataJson = JsonUtility.FromJson<MetadataJson>(payloadStr);
             jsonFetchComplete = true;
         }
-        Debug.Log("fetching metadata complete...");
+        Debug.Log("8. fetching metadata complete...");
     }
+
     
-    /// <summary>
-    /// Intended for downloading images only. 
-    /// </summary>
-    /// <returns></returns>
-    IEnumerator DownloadAssets()
-    {
-        yield return new WaitUntil(() => jsonFetchComplete);
-        for (int i = 0; i < metadataJson.imageURI.Length; i++)
-        {
-            Debug.Log(metadataJson.imageURI[i]);
-        }
-        Debug.Log("Downloading assets...");
-        foreach (string uri in metadataJson.imageURI){
-            UnityWebRequest request = UnityWebRequestTexture.GetTexture(uri);
-            yield return request.SendWebRequest();
-            if (request.isNetworkError || request.isHttpError)
-                Debug.Log(request.error);
-            else {
-                Debug.Log("downloading: " + request.url);
-                Debug.Log("Image download status: " + request.responseCode);
-                texturesList.Add(((DownloadHandlerTexture)request.downloadHandler).texture);
-                allImagesFetched = true;
-            }
-        }
-        Debug.Log("Assets download complete...");
-    }
-    /*
-    Texture ConvertByteToTexture(byte[] data)
-    {
-        
-        var texture = new Texture2D(1, 1);
-        texture.LoadRawTextureData(data);
-        return texture;
-    }
-    */
     IEnumerator GetPayloadRequest()
     {
-        // string json = "{ 'id':'"+doc_id+"' }";
-        //       Dictionary<string, string> headers = new Dictionary<string, string>();
-        //       headers.Add("Content-Type", "application/json");
-        //        json = json.Replace("'", "\"");
-        //        byte[] postData = System.Text.Encoding.UTF8.GetBytes(json);
-        Debug.Log("Building request payload...");
+        Debug.Log("3. Building request payload...");
         Doc_id id = new Doc_id(this.doc_id);
         string request_json = JsonUtility.ToJson(id);
         UnityWebRequest webRequest = UnityWebRequest.Put(uri, request_json);
         webRequest.SetRequestHeader("Content-Type", "application/json");
-        Debug.Log("Sending request to server...");
+        Debug.Log("4. Sending request to server...");
         webRequest.SendWebRequest();
         yield return new WaitUntil(() => webRequest.isDone);
-        Debug.Log("Response recieved...");
+        Debug.Log("5. Response recieved...");
         if (webRequest.isNetworkError)
         {
             Debug.Log("Error: " + webRequest.error);
@@ -139,13 +123,36 @@ public class OnlineResourceFetcher : MonoBehaviour
         {
             // return null if response is empty
             if (webRequest.GetResponseHeaders() is null) { Debug.Log("Response headers null"); yield return null; }
-            Debug.Log("fetched data size : " + webRequest.downloadHandler.data.Length);
-            Debug.Log("fetched data:" + webRequest.downloadHandler.text);
+            Debug.Log("6. fetched data size : " + webRequest.downloadHandler.data.Length);
+            Debug.Log("7. fetched data:" + webRequest.downloadHandler.text);
             payloadStr = webRequest.downloadHandler.text;
+            isPayloadRecieved = true;
         }
         yield return null;
     }
 
- 
-    
+    /// <summary>
+    /// Intended for downloading images only. 
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator DownloadAssets_Coroutine()
+    {
+        yield return new WaitUntil(() => jsonFetchComplete);
+        Debug.Log("9. Downloading assets...");
+        foreach (string uri in metadataJson.imageURI){
+            UnityWebRequest request = UnityWebRequestTexture.GetTexture(uri);
+            yield return request.SendWebRequest();
+            if (request.isNetworkError || request.isHttpError)
+            { Debug.Log(request.error); errorDownloadingImages = true; }
+            else
+            {
+                Debug.Log("10. downloading: " + request.url);
+                Debug.Log("11. Image download status: " + request.responseCode);
+                texturesList.Add(((DownloadHandlerTexture)request.downloadHandler).texture);
+            }
+        }
+        if (!errorDownloadingImages)
+            assetsDownloadComplete = true;
+        Debug.Log("12. Assets download complete...");
+    }    
 }

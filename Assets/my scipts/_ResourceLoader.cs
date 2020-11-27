@@ -26,7 +26,7 @@ public class _ResourceLoader : MonoBehaviour
     public static GameObject spawner_photoFramePrefab;
     public static GameObject spawner_triggerColliderPrefab;
     public static Light spawner_pointLight;
-    public static List<Texture> imagesList = new List<Texture>();
+    // public static List<Texture> imagesList = new List<Texture>();
     public static string requestData;
 
     private void Awake()
@@ -45,7 +45,6 @@ public class _ResourceLoader : MonoBehaviour
         inputDevice = GameObject.Find("ScriptObject").GetComponent<InputDeviceContext>();
     }
 
-    bool allImagesLoaded;
     void LoadSpawnerResources()
     {
         spawner_boundaryColliderPrefab = Resources.Load("Prefabs/WallCollidersPrefab") as GameObject;
@@ -53,9 +52,12 @@ public class _ResourceLoader : MonoBehaviour
         spawner_photoFramePrefab = (GameObject)Resources.Load("Prefabs/PhotoFramePrefab", typeof(GameObject));
         spawner_triggerColliderPrefab = (GameObject)Resources.Load("Prefabs/PathTriggerColliderPrefab", typeof(GameObject));
         spawner_pointLight = (Light)Resources.Load("Prefabs/PointLight", typeof(Light));
-        StartCoroutine(LoadImageResources());
-        new WaitUntil(() => allImagesLoaded);   
+        //StartCoroutine(LoadImageResources());
+        //new WaitUntil(() => allImagesLoaded);   
     }
+    /*
+     * 
+    bool allImagesLoaded;
     IEnumerator LoadImageResources()
     {
         DirectoryInfo directoryInfo = new DirectoryInfo("Assets/Resources/Pictures/paintings/");
@@ -109,6 +111,6 @@ public class _ResourceLoader : MonoBehaviour
             Debug.Log(webRequest.downloadHandler.text);
             requestData = webRequest.downloadHandler.text;
         }
-    }
-    
+    }*/
+
 }

@@ -30,7 +30,7 @@ public class DetectBoundaryTestScript : MonoBehaviour
     private GameObject pathTriggerCollider { get { return _ResourceLoader.spawner_triggerColliderPrefab; } }
     [SerializeField] private bool spawnWallsFlag = false; // for simulation purpose to on/off wall spawning
     [SerializeField] Vector3 tasveerDimensions = new Vector3(0.7f, 0.7f, 0.01f);
-    [SerializeField] private List<Texture> imageList { get { return _ResourceLoader.imagesList; } }
+    [SerializeField] private List<Texture> imageList { get { return metadataInput.ImageTexturesList(); } }
     [SerializeField] private float tasveerLeftRightPadding;
     [SerializeField] private bool repeatPictures = false;
     [SerializeField] private GameObject planeObject;

@@ -18,20 +18,37 @@ public class MetadataInputContext : MonoBehaviour, IMetadataInput
     [SerializeField] private List<Texture> imageTexturesList;
 
     public IMetadataInput metadataInput;
+    public static bool isMetadataFetchComplete;
 
     public void Awake()
     {
+        isMetadataFetchComplete = false;
+
         if (_metadataInputType == metadataInputType.ManualInput)
         {
             this.metadataInput = new MetadataManualInput(pathSegmentLength, visiblePathSegmentCount, pathWidth, 
                 rayArrayLength, playAreaPadding, imageTexturesList);
+            isMetadataFetchComplete = true;
         }
         else if (_metadataInputType == metadataInputType.FileInput)
         {
-            this.metadataInput = new MetadataFileInput(docId, metadataAPIURL);
+            StartCoroutine(StartResourceDownload());
+            
+            
         }
 
         else Debug.Log("Please choose manual input in metadata input type");
+    }
+
+    IEnumerator StartResourceDownload()
+    {
+        this.metadataInput = new MetadataFileInput(docId, metadataAPIURL);
+        yield return new WaitUntil(()=> OnlineResourceFetcher.assetsDownloadComplete);
+        Debug.Log("Metadata settings done!!!");
+    }
+    IEnumerator WaitForMetadataFetchComplete(MetadataFileInput metadataFileInput)
+    {
+        yield return metadataFileInput.WaitForCompleteFetch();
     }
 
     public float PlayAreaPadding()

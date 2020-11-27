@@ -15,38 +15,47 @@ public class Doc_ID
 
 public class MetadataFileInput : MonoBehaviour, IMetadataInput
 {
-    private float pathSegmentLength;
-    private int visiblePathSegmentCount;
-    private float pathWidth;
+    public float pathSegmentLength;
+    public int visiblePathSegmentCount;
+    public float pathWidth;
     // private readonly Material material;
-    private int rayArrayLength;
-    private float playAreaPadding;
+    public int rayArrayLength;
+    public float playAreaPadding;
     // private string returnedPayload;
     //    private Doc_ID doc_id;
-    private List<Texture> imageTexturesList;
+    public List<Texture> imageTexturesList;
     OnlineResourceFetcher onlineResourceFetcher;
-    MetadataJson metadataJson;
+    public MetadataJson metadataJson;
 
     public MetadataFileInput(string doc_id, string metadataAPIURI)
     {
-        //onlineResourceFetcher = GameObject.Find("ScriptObject").GetComponent<OnlineResourceFetcher>();
+        onlineResourceFetcher = GameObject.Find("ScriptObject").GetComponent<OnlineResourceFetcher>();
         onlineResourceFetcher._Constructor(doc_id, metadataAPIURI);
-        onlineResourceFetcher.FetchMetadata();
-        //StartCoroutine(onlineResourceFetcher.FetchMetadata_Coroutine());
-        while (onlineResourceFetcher.jsonFetchComplete == false)
-        {
-            Debug.Log("a");
-        }
-        metadataJson = onlineResourceFetcher.metadataJson;
+        onlineResourceFetcher.FetchAndDownload();
+        Debug.Log("I am here first");
+        onlineResourceFetcher.StartCoroutine(onlineResourceFetcher.WaitForAssetsDownloadComplete(this));
+        //this.metadataJson = onlineResourceFetcher.metadataJson;
+        //this.pathSegmentLength = float.Parse(metadataJson.pathSegmentLength);
+        //this.visiblePathSegmentCount = int.Parse(metadataJson.visiblePathSegmentCount);
+        //this.pathWidth = float.Parse(metadataJson.pathWidth);
+        //this.rayArrayLength = int.Parse(metadataJson.rayArrayLength);
+        //this.playAreaPadding = float.Parse(metadataJson.playAreaPadding);
+        //this.imageTexturesList = onlineResourceFetcher.texturesList;
+        //onlineResourceFetcher.StartCoroutine(WaitForCompleteFetch());
+        //StartCoroutine(onlineResourceFetcher.FetchMetadata_Coroutine());        
+        // StartCoroutine(onlineResourceFetcher.WaitForAssetsDownloadComplete());
+        //StartCoroutine(onlineResourceFetcher.FetchAndDownloadResources());
 
-        this.pathSegmentLength = float.Parse(metadataJson.pathSegmentLength);
-        this.visiblePathSegmentCount = int.Parse(metadataJson.visiblePathSegmentCount);
-        this.pathWidth = float.Parse(metadataJson.pathWidth);
-        this.rayArrayLength = int.Parse(metadataJson.rayArrayLength);
-        this.playAreaPadding = float.Parse(metadataJson.playAreaPadding);
-        this.imageTexturesList = onlineResourceFetcher.GetTexturesList();
+
+        Debug.Log("I am here second");
+
     }
 
+    public IEnumerator WaitForCompleteFetch()
+    {
+        yield return new WaitUntil(() => OnlineResourceFetcher.assetsDownloadComplete);
+
+    }
 /*
     public MetadataFileInput(int doc_id)
     {
