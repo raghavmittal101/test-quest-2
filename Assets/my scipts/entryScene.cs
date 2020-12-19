@@ -19,7 +19,7 @@ public class entryScene : MonoBehaviour
 
     IEnumerator WaitForResourceDownload()
     {
-        yield return new WaitUntil(() => OnlineResourceFetcher.assetsDownloadComplete);
+        yield return new WaitUntil(() => MetadataInputContext.isMetadataFetchComplete);
         UnityEngine.SceneManagement.SceneManager.LoadScene("SampleScene");
     }
     // Update is called once per frame

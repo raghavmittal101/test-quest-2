@@ -19,7 +19,8 @@ public class OnlineResourceFetcher : MonoBehaviour
     // List<byte[]> downloadedDataBytesList;
     string payloadStr;
     public bool isPayloadRecieved;
-
+   // public MetadataFileInput metadataFileInput;
+   
     /// <summary>
     /// any changes to this class should be matched with the expected payload JSON format
     /// </summary>
@@ -77,17 +78,18 @@ public class OnlineResourceFetcher : MonoBehaviour
     {
         yield return new WaitUntil(() => jsonFetchComplete);
     }*/
-    public IEnumerator WaitForAssetsDownloadComplete(MetadataFileInput metadataFileInput)
+    public IEnumerator WaitForAssetsDownloadComplete()
     {
         yield return new WaitUntil(() => assetsDownloadComplete);
-        metadataFileInput.metadataJson = this.metadataJson;
-        metadataFileInput.pathSegmentLength = float.Parse(metadataJson.pathSegmentLength);
+        // metadataFileInput.metadataJson = this.metadataJson;
+        /* metadataFileInput.pathSegmentLength = float.Parse(metadataJson.pathSegmentLength);
         metadataFileInput.visiblePathSegmentCount = int.Parse(metadataJson.visiblePathSegmentCount);
         metadataFileInput.pathWidth = float.Parse(metadataJson.pathWidth);
         metadataFileInput.rayArrayLength = int.Parse(metadataJson.rayArrayLength);
         metadataFileInput.playAreaPadding = float.Parse(metadataJson.playAreaPadding);
         metadataFileInput.imageTexturesList = this.texturesList;
-        yield return null;
+        */
+            yield return null;
     }
 
     public IEnumerator FetchMetadata_Coroutine()

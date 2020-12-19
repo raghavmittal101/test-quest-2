@@ -297,6 +297,11 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2815847647749295519, guid: 31dd6f2c446248240a0c2b5f1cba5348,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2815847647970548460, guid: 31dd6f2c446248240a0c2b5f1cba5348,
         type: 3}
       propertyPath: _trackingOriginType
@@ -381,6 +386,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2815847648600211942, guid: 31dd6f2c446248240a0c2b5f1cba5348,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 31dd6f2c446248240a0c2b5f1cba5348, type: 3}
@@ -508,7 +518,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!135 &552032641
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -779,11 +789,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1226282572}
-  - component: {fileID: 1226282573}
-  - component: {fileID: 1226282571}
-  - component: {fileID: 1226282574}
-  - component: {fileID: 1226282576}
-  - component: {fileID: 1226282575}
   - component: {fileID: 1226282577}
   m_Layer: 0
   m_Name: ScriptObject
@@ -792,19 +797,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1226282571
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1226282570}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe715fcb023d8d742840bf9719dfe5d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  player: {fileID: 552032640}
 --- !u!4 &1226282572
 Transform:
   m_ObjectHideFlags: 0
@@ -819,67 +811,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1226282573
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1226282570}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 70a6fc9ea292b0348b6a7b008c632a56, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  player: {fileID: 552032640}
---- !u!114 &1226282574
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1226282570}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0fc9b0afc6d62ef43bf0fd39ba647159, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1226282575
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1226282570}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bbf668a36985cb74a86a2d2ceebd1b3b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _inputDeviceType: 0
-  playerPosition: {x: 0, y: 0, z: 0}
-  playAreaDimensions: {x: 4, y: 0, z: 4}
-  playerRotationAlongYAxis: 90
-  playerObj: {fileID: 552032640}
---- !u!114 &1226282576
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1226282570}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1d5b65a449f801d45a67fdef46b6b4a1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _metadataInputType: 0
-  pathSegmentLength: 0.8
-  visiblePathSegmentCount: 3
-  pathWidth: 1
-  material: {fileID: 0}
-  rayArrayLength: 5
-  playAreaPadding: 0
 --- !u!114 &1226282577
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -893,13 +824,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spawnWallsFlag: 1
-  tasveerDimensions: {x: 0.7, y: 0.7, z: 0.01}
-  imageList:
-  - {fileID: 2800000, guid: 7fe6a5422e286a64fabaeb6813cb4759, type: 3}
-  - {fileID: 2800000, guid: 9905c32d767c4a542890c70b8412bd58, type: 3}
-  - {fileID: 2800000, guid: 9199c437145e81c45a824e21027df67b, type: 3}
-  - {fileID: 2800000, guid: 96f771b9a2f0985418a5af7e4ff9f1c1, type: 3}
-  - {fileID: 2800000, guid: f671d7a6033319c4d97188eeb8fb8c42, type: 3}
+  tasveerDimensions: {x: 0.5, y: 0.5, z: 0.5}
   tasveerLeftRightPadding: 0.1
   repeatPictures: 1
   planeObject: {fileID: 55976899}

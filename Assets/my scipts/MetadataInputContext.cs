@@ -5,7 +5,7 @@ using UnityEngine;
 public class MetadataInputContext : MonoBehaviour, IMetadataInput
 {
     
-    private enum metadataInputType { ManualInput, FileInput};
+    private enum metadataInputType { ManualInput, OnlineInput};
     [SerializeField] private metadataInputType _metadataInputType;
     [SerializeField] private float pathSegmentLength;
     [SerializeField] private int visiblePathSegmentCount;
@@ -19,6 +19,7 @@ public class MetadataInputContext : MonoBehaviour, IMetadataInput
 
     public IMetadataInput metadataInput;
     public static bool isMetadataFetchComplete;
+    private OnlineResourceFetcher onlineResourceFetcher;
 
     public void Awake()
     {
@@ -30,7 +31,7 @@ public class MetadataInputContext : MonoBehaviour, IMetadataInput
                 rayArrayLength, playAreaPadding, imageTexturesList);
             isMetadataFetchComplete = true;
         }
-        else if (_metadataInputType == metadataInputType.FileInput)
+        else if (_metadataInputType == metadataInputType.OnlineInput)
         {
             StartCoroutine(StartResourceDownload());
             
@@ -42,15 +43,22 @@ public class MetadataInputContext : MonoBehaviour, IMetadataInput
 
     IEnumerator StartResourceDownload()
     {
-        this.metadataInput = new MetadataFileInput(docId, metadataAPIURL);
+        //this.metadataInput = new MetadataFileInput(docId, metadataAPIURL);
+
+        onlineResourceFetcher = GameObject.Find("ScriptObject").GetComponent<OnlineResourceFetcher>();
+        onlineResourceFetcher._Constructor(docId, metadataAPIURL);
+        onlineResourceFetcher.FetchAndDownload();
         yield return new WaitUntil(()=> OnlineResourceFetcher.assetsDownloadComplete);
+        this.metadataInput = new MetadataFileInput(onlineResourceFetcher);
+        isMetadataFetchComplete = true;
         Debug.Log("Metadata settings done!!!");
     }
+    /*
     IEnumerator WaitForMetadataFetchComplete(MetadataFileInput metadataFileInput)
     {
         yield return metadataFileInput.WaitForCompleteFetch();
     }
-
+    */
     public float PlayAreaPadding()
     {
         return this.metadataInput.PlayAreaPadding();
@@ -72,7 +80,8 @@ public class MetadataInputContext : MonoBehaviour, IMetadataInput
     }
     public List<Texture> ImageTexturesList()
     {
-        return this.imageTexturesList;
+        //return this.imageTexturesList;
+        return this.metadataInput.ImageTexturesList();
     }
   //  public Material PathMaterial()
   //  {
