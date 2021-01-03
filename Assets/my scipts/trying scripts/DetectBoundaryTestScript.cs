@@ -144,7 +144,7 @@ public class DetectBoundaryTestScript : MonoBehaviour
             }
         }
 
-        if (Input.GetKey("escape"))
+        if (inputDevice.ButtonPressed())
         {
             Debug.Log(dataLogger.LogPointsList(totalPointsList));
             Application.Quit();

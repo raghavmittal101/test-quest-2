@@ -65,7 +65,7 @@ public class ManualDeviceInput : IDeviceInput
 
     public bool ButtonPressed()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetKeyDown(KeyCode.Q))
             return true;
         return false;
     }
