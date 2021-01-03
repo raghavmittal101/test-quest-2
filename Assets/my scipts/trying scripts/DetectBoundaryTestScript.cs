@@ -20,6 +20,7 @@ public class DetectBoundaryTestScript : MonoBehaviour
     private float pathWidth { get { return metadataInput.PathWidth(); } }
     private List<float> betaList = new List<float>();
     private List<Vector3> pointsList = new List<Vector3>();
+    private List<Vector3> totalPointsList = new List<Vector3>();
     private float[] betaRange = new float[2];
     private int rayArrayLength { get { return metadataInput.RayArrayLength(); } }
     private float boundaryBufferWidth { get { return metadataInput.PlayAreaPadding(); } }
@@ -37,6 +38,8 @@ public class DetectBoundaryTestScript : MonoBehaviour
     [SerializeField] private GameObject player { get { return inputDevice.PlayerObj(); } }
     private int triggerColliderHitNumber = -1;
     private int triggerColliderSpawnCount = 0;
+    public string subjectID;
+    private DataLogger dataLogger;
 
     void Awake()
     {
@@ -46,6 +49,7 @@ public class DetectBoundaryTestScript : MonoBehaviour
         this.point = inputDevice.PlayerPosition();
         this.betaList.Add(beta); // adding beta_0 that is player's rotation along Y axis
         this.pointsList.Add(point); // adding P_0 that is player's initial position 
+        totalPointsList.Add(point);
         this._WallSpawner = new WallsSpawner();
         leftWalls = new List<GameObject>();
         rightWalls = new List<GameObject>();
@@ -54,6 +58,8 @@ public class DetectBoundaryTestScript : MonoBehaviour
         spawner = new Spawner();
         this.db = new DetectBoundaryFixedDirections(rayArrayLength, boundaryBufferWidth, pathLength, pathWidth);
         spawner.SpawnPlayAreaBoundaryColliders();
+        dataLogger = new DataLogger(subjectID);
+
     }
 
     private void Start()
@@ -138,6 +144,12 @@ public class DetectBoundaryTestScript : MonoBehaviour
             }
         }
 
+        if (Input.GetKey("escape"))
+        {
+            Debug.Log(dataLogger.LogPointsList(totalPointsList));
+            Application.Quit();
+        }
+
         for (int i = 0; i < pointsList.Count - 1; i++)
         {
             Debug.DrawLine(pointsList[i], pointsList[i + 1], Color.gray);
@@ -166,6 +178,7 @@ public class DetectBoundaryTestScript : MonoBehaviour
         Vector3 newPoint = new Vector3(lastPoint.x + pathLength * Mathf.Sin(newBeta), 0f, lastPoint.z + pathLength * Mathf.Cos(newBeta));
         this.betaList.Add(newBeta);
         this.pointsList.Add(newPoint);
+        totalPointsList.Add(newPoint);
     }
 
     /// <summary>

@@ -1248,9 +1248,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbf668a36985cb74a86a2d2ceebd1b3b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _inputDeviceType: 1
+  _inputDeviceType: 0
   playerPosition: {x: 0, y: 0, z: 0}
-  playAreaDimensions: {x: 10, y: 0, z: 10}
+  playAreaDimensions: {x: 3.6576, y: 0, z: 3.6576}
   playerRotationAlongYAxis: 0
   playerObj: {fileID: 1094078420}
 --- !u!114 &1496347465

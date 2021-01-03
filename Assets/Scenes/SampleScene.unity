@@ -828,6 +828,7 @@ MonoBehaviour:
   tasveerLeftRightPadding: 0.1
   repeatPictures: 1
   planeObject: {fileID: 55976899}
+  subjectID: test
 --- !u!1 &1425253254
 GameObject:
   m_ObjectHideFlags: 0
