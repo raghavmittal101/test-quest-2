@@ -21,6 +21,7 @@ public class MetadataFileInput : IMetadataInput
     private int rayArrayLength;
     private float playAreaPadding;
     public List<Texture> imageTexturesList;
+    private string subjectId;
     //OnlineResourceFetcher onlineResourceFetcher;
     //MetadataJson metadataJson;
     // public MetadataJson metadataJson;
@@ -44,6 +45,7 @@ public class MetadataFileInput : IMetadataInput
         this.rayArrayLength = int.Parse(onlineResourceFetcher.metadataJson.rayArrayLength);
         this.playAreaPadding = float.Parse(onlineResourceFetcher.metadataJson.playAreaPadding);
         this.imageTexturesList = onlineResourceFetcher.texturesList;
+        this.subjectId = onlineResourceFetcher.metadataJson.subjectId;
         //onlineResourceFetcher.StartCoroutine(WaitForCompleteFetch());
         //StartCoroutine(onlineResourceFetcher.FetchMetadata_Coroutine());        
         // StartCoroutine(onlineResourceFetcher.WaitForAssetsDownloadComplete());
@@ -101,6 +103,10 @@ public class MetadataFileInput : IMetadataInput
     public List<Texture> ImageTexturesList()
     {
         return this.imageTexturesList;
+    }
+    public string SubjectId()
+    {
+        return this.subjectId;
     }
 //    public Material PathMaterial()
 //    {

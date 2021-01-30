@@ -10,4 +10,5 @@ public interface IMetadataInput
     int RayArrayLength();
     List<Texture> ImageTexturesList();
     float PlayAreaPadding();
+    string SubjectId();
 }

@@ -15,4 +15,5 @@ public class MetadataJson
     public string playAreaPadding;
     public string returnedPayload;
     public string[] imageURI;
+    public string subjectId;
 }
