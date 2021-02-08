@@ -884,6 +884,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1226282572}
   - component: {fileID: 1226282577}
+  - component: {fileID: 1226282571}
   m_Layer: 0
   m_Name: ScriptObject
   m_TagString: Untagged
@@ -891,6 +892,23 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &1226282571
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1226282570}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77689b5084334924e8422dc24bb8edf2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spawnWallsFlag: 1
+  tasveerDimensions: {x: 0.7, y: 0.7, z: 0.01}
+  tasveerLeftRightPadding: 0
+  repeatPictures: 1
+  planeObject: {fileID: 55976899}
 --- !u!4 &1226282572
 Transform:
   m_ObjectHideFlags: 0
@@ -912,7 +930,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1226282570}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d905d819e205df541b36e798779b3d46, type: 3}
   m_Name: 
