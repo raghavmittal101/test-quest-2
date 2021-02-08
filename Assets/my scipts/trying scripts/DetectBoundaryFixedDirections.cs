@@ -63,7 +63,7 @@ public class DetectBoundaryFixedDirections
         for (int i = 0; i < rayArrayLength; i++)
         {
             //Debug.DrawRay(playerPosition, GetFwd(playerRotation + rayDirectionArray[i], playerPosition) * rayLength, Color.green);
-            if (Physics.Raycast(playerPosition, GetFwd(playerRotation + rayDirectionArray[i], playerPosition), out rayArray[i], rayLength))
+            if (Physics.Raycast(playerPosition, GetFwd(playerRotation + rayDirectionArray[i], new Vector3(playerPosition.x, 1f, playerPosition.z)), out rayArray[i], rayLength))
             {
                 //Debug.DrawRay(playerPosition, GetFwd(playerRotation + rayDirectionArray[i], playerPosition) * rayLength, Color.red);
             }
