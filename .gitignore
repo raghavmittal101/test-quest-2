@@ -44,7 +44,7 @@ Thumbs.db
 ###
 # Unity version information which can be different for different machines
 ###
-Packages/manifest.json
-Logs/Packages-Update.log
-Packages/packages-lock.json
-ProjectSettings/ProjectVersion.txt
+# Packages/manifest.json
+# Logs/Packages-Update.log
+# Packages/packages-lock.json
+# ProjectSettings/ProjectVersion.txt
