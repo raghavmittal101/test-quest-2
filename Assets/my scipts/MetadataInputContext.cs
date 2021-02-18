@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MetadataInputContext : MonoBehaviour, IMetadataInput
 {
@@ -21,9 +22,18 @@ public class MetadataInputContext : MonoBehaviour, IMetadataInput
     public IMetadataInput metadataInput;
     public static bool isMetadataFetchComplete;
     private OnlineResourceFetcher onlineResourceFetcher;
+    public GameObject ConfIDInputField;
+    private enum configurationIDEnteringMethod
+    {
+        EnterInEditor, 
+        EnterInUI
+    };
+
+    [SerializeField] private configurationIDEnteringMethod _configurationIDEnteringMethod;
 
     public void Awake()
     {
+
         isMetadataFetchComplete = false;
 
         if (_metadataInputType == metadataInputType.ManualInput)
@@ -34,14 +44,30 @@ public class MetadataInputContext : MonoBehaviour, IMetadataInput
         }
         else if (_metadataInputType == metadataInputType.OnlineInput)
         {
-            StartCoroutine(StartResourceDownload());
-            
-            
+
+            switch (_configurationIDEnteringMethod)
+            {
+                case configurationIDEnteringMethod.EnterInEditor:
+                    GameObject.Find("Canvas").SetActive(false);
+                    StartCoroutine(StartResourceDownload());
+                    break;
+                case configurationIDEnteringMethod.EnterInUI:
+                    GameObject.Find("Canvas").SetActive(true);
+                    // GameObject.Find("TextDisplay").GetComponent<Text>().text = "Loading for " + docId;
+                    break;
+                default:
+                    StartCoroutine(StartResourceDownload());
+                    break;
+            }
         }
 
         else Debug.Log("Please choose manual input in metadata input type");
     }
-
+    public void OnDocIDSubmit(){
+        this.docId = ConfIDInputField.GetComponent<Text>().text;
+        GameObject.Find("TextDisplay").GetComponent<Text>().text = "Loading for " + docId;
+        StartCoroutine(StartResourceDownload());
+    }
     IEnumerator StartResourceDownload()
     {
         //this.metadataInput = new MetadataFileInput(docId, metadataAPIURL);

@@ -29,6 +29,12 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/path_gen_sim.unity
     guid: c2e52bc14343ac34797b4924e28ee489
+  - enabled: 0
+    path: Assets/Oculus/VR/Scenes/ControllerTest.unity
+    guid: d56af3aeb2176e7459f753c1c2e2dd97
+  - enabled: 0
+    path: Assets/Scenes/interactionTestScene.unity
+    guid: d45a2ced18979cedcb81cd3cbca258f9
   m_configObjects:
     Unity.XR.Oculus.Settings: {fileID: 11400000, guid: 2d9c1523854f4be4ea794742f74a805e,
       type: 2}
