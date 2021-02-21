@@ -29,6 +29,8 @@ public class _ResourceLoader : MonoBehaviour
     // public static List<Texture> imagesList = new List<Texture>();
     public static string requestData;
 
+    public static GameObject spawner_interactionPanel;
+
     private void Awake()
     {
         SetMetadataInputContext();
@@ -52,8 +54,7 @@ public class _ResourceLoader : MonoBehaviour
         spawner_photoFramePrefab = (GameObject)Resources.Load("Prefabs/PhotoFramePrefab", typeof(GameObject));
         spawner_triggerColliderPrefab = (GameObject)Resources.Load("Prefabs/PathTriggerColliderPrefab", typeof(GameObject));
         spawner_pointLight = (Light)Resources.Load("Prefabs/PointLight", typeof(Light));
-        //StartCoroutine(LoadImageResources());
-        //new WaitUntil(() => allImagesLoaded);   
+        spawner_interactionPanel = (GameObject)Resources.Load("Prefabs/InteractionPanel", typeof(GameObject));
     }
     /*
      * 

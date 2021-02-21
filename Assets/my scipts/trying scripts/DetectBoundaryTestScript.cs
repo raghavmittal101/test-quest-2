@@ -27,6 +27,7 @@ public class DetectBoundaryTestScript : MonoBehaviour
     private int numberOfPathSegments { get { return metadataInput.VisiblePathSegmentCount(); } }
     private GameObject wallPrefab { get { return _ResourceLoader.spawner_wallPrefab; } }
     private GameObject tasveer { get { return _ResourceLoader.spawner_photoFramePrefab; } }
+    private GameObject interactionPanel {get { return _ResourceLoader.spawner_interactionPanel; } }
     private Light pointLight { get { return _ResourceLoader.spawner_pointLight; } }
     private GameObject pathTriggerCollider { get { return _ResourceLoader.spawner_triggerColliderPrefab; } }
     [SerializeField] private bool spawnWallsFlag = false; // for simulation purpose to on/off wall spawning
@@ -293,6 +294,9 @@ public class DetectBoundaryTestScript : MonoBehaviour
                 tasveerObj.transform.localRotation = Quaternion.Euler(localRotation);
                 tasveerObj.transform.localScale = new Vector3(tasveerDimensions.x / wallScale.x, tasveerDimensions.y / wallScale.y, tasveerDimensions.z); // no need to divide tasveerDimensions.z as the thickness of wall is constant in scene
                 AddImageTexture(ref tasveerObj, imageList[imageIndex--]);
+                GameObject interactionPanelObj = Instantiate(interactionPanel, tasveerObj.transform);
+                interactionPanelObj.transform.localPosition = new Vector3(0f, -0.7f, 0f);
+                interactionPanelObj.transform.localRotation = Quaternion.Euler(new Vector3(45f, 180f, 0f));
             }
         }
     }
