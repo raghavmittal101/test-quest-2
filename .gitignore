@@ -30,6 +30,11 @@ sysinfo.txt
 /.vs/
 
 ###
+# VSCode files
+###
+/.vscode/
+
+###
 # OS generated
 ###
 .DS_Store
