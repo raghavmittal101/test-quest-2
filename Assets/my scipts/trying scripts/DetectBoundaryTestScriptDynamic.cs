@@ -237,6 +237,19 @@ public class DetectBoundaryTestScriptDynamic : MonoBehaviour
                 forward += points[i] - points[i - 1];
             }
 
+            Vector3 angleBetweenSegments = Vector3.zero; // it is the angle between two adjecent path segments
+            float pathWidthMultiplier; // to increase the path width at turns to keep the walls parallel always
+            
+            if (i == 0 || i == points.Count - 1){
+                pathWidthMultiplier = 1;
+            }
+            else{
+                Debug.Log("Angle:" + Vector3.Angle(points[i+1] - points[i], points[i-1] - points[i]));
+                Debug.Log("SignedAngle: " + Vector3.SignedAngle(points[i+1] - points[i], points[i-1] - points[i], Vector3.up));
+               pathWidthMultiplier =  1/ Mathf.Sin(Mathf.Deg2Rad * (Vector3.Angle(points[i+1] - points[i], points[i-1] - points[i])/2));
+            }
+            
+            pathWidth = pathWidth * pathWidthMultiplier ;
             forward.Normalize();
             Vector3 left = new Vector3(-forward.z, 0, forward.x);
 

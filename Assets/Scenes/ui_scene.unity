@@ -1508,7 +1508,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d5b65a449f801d45a67fdef46b6b4a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _metadataInputType: 1
+  _metadataInputType: 0
   pathSegmentLength: 1
   visiblePathSegmentCount: 3
   pathWidth: 1
