@@ -308,9 +308,9 @@ public class DetectBoundaryTestScript : MonoBehaviour
                 tasveerObj.transform.localRotation = Quaternion.Euler(localRotation);
                 tasveerObj.transform.localScale = new Vector3(tasveerDimensions.x / wallScale.x, tasveerDimensions.y / wallScale.y, tasveerDimensions.z); // no need to divide tasveerDimensions.z as the thickness of wall is constant in scene
                 AddImageTexture(ref tasveerObj, imageList[imageIndex--]);
-                GameObject interactionPanelObj = Instantiate(interactionPanel, tasveerObj.transform);
-                interactionPanelObj.transform.localPosition = new Vector3(0f, -0.7f, 0f);
-                interactionPanelObj.transform.localRotation = Quaternion.Euler(new Vector3(45f, 180f, 0f));
+                // GameObject interactionPanelObj = Instantiate(interactionPanel, tasveerObj.transform);
+                // interactionPanelObj.transform.localPosition = new Vector3(0f, -0.7f, 0f);
+                // interactionPanelObj.transform.localRotation = Quaternion.Euler(new Vector3(45f, 180f, 0f));
             }
         }
     }

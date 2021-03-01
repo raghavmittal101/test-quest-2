@@ -11,6 +11,7 @@ public class entryScene : MonoBehaviour
         DontDestroyOnLoad(transform.gameObject);
         DontDestroyOnLoad(GameObject.Find("player").transform.gameObject);
         DontDestroyOnLoad(GameObject.Find("PlayerController").transform.gameObject);
+        DontDestroyOnLoad(GameObject.Find("FPSComponent").transform.gameObject);
     }
     // Start is called before the first frame update
     void Start()
