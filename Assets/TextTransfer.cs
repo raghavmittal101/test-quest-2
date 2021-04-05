@@ -9,8 +9,12 @@ public class TextTransfer : MonoBehaviour
     public GameObject confIDInputField;
     public GameObject textDisplay;
 
+    public GameObject panel;
+
     public void OnButClick(){
         theName = confIDInputField.GetComponent<Text>().text;
         textDisplay.GetComponent<Text>().text = theName;
+        if(panel.activeSelf) panel.SetActive(false);
+        else panel.SetActive(true);
     }
 }

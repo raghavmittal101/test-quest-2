@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class DetectBoundaryTestScript : MonoBehaviour
 {
@@ -158,6 +159,12 @@ public class DetectBoundaryTestScript : MonoBehaviour
         db.GenerateRays(pointsList[pointsList.Count - 1], betaList[betaList.Count - 1]);
         //_WallSpawner.GenerateWalls(pointsList, betaList, pathWidth);
         List<Vector3>[] _leftRightPoints = GenerateLeftRightPoints(pointsList, pathWidth);
+
+        GameObject current =  eventSystem.currentSelectedGameObject;
+        if(current.CompareTag("photoFrame")){
+            GameObject interactionPanel = current.GetComponentInChildren<GameObject>(true);
+            toggleActive(interactionPanel);
+        }
     }
 
     /// <summary>
@@ -281,6 +288,7 @@ public class DetectBoundaryTestScript : MonoBehaviour
         // Adding pointLight with collider, positioned at top of it and as a subobject of it.
         //Instantiate(pointLight, new Vector3(0f, localScale.y, 0f), Quaternion.identity, obj.transform);
     }
+    private EventSystem eventSystem = EventSystem.current; // getting the current event system to capture user interactions
 
     /// <summary>
     /// Build a photoframe by adding image as texture to it.
@@ -313,6 +321,10 @@ public class DetectBoundaryTestScript : MonoBehaviour
                 interactionPanelObj.transform.localRotation = Quaternion.Euler(new Vector3(45f, 180f, 0f));
             }
         }
+    }
+    private void toggleActive(GameObject gameObject){
+        if(gameObject.activeSelf) gameObject.SetActive(false);
+        else gameObject.SetActive(true);
     }
 
     /// <summary>
