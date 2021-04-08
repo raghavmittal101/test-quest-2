@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 5766987199501453621}
   - component: {fileID: 5691991884787388088}
   - component: {fileID: 1082518944827222786}
-  m_Layer: 0
-  m_Name: wallCollidersPrefab
+  m_Layer: 2
+  m_Name: wallCollidersPrefab2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -97,7 +97,7 @@ GameObject:
   - component: {fileID: 5679404801226396995}
   - component: {fileID: 7779956237521515611}
   - component: {fileID: 2737231092882068892}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}

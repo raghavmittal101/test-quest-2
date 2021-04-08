@@ -159,12 +159,6 @@ public class DetectBoundaryTestScript : MonoBehaviour
         db.GenerateRays(pointsList[pointsList.Count - 1], betaList[betaList.Count - 1]);
         //_WallSpawner.GenerateWalls(pointsList, betaList, pathWidth);
         List<Vector3>[] _leftRightPoints = GenerateLeftRightPoints(pointsList, pathWidth);
-
-        GameObject current =  eventSystem.currentSelectedGameObject;
-        if(current.CompareTag("photoFrame")){
-            GameObject interactionPanel = current.GetComponentInChildren<GameObject>(true);
-            toggleActive(interactionPanel);
-        }
     }
 
     /// <summary>
@@ -288,7 +282,6 @@ public class DetectBoundaryTestScript : MonoBehaviour
         // Adding pointLight with collider, positioned at top of it and as a subobject of it.
         //Instantiate(pointLight, new Vector3(0f, localScale.y, 0f), Quaternion.identity, obj.transform);
     }
-    private EventSystem eventSystem = EventSystem.current; // getting the current event system to capture user interactions
 
     /// <summary>
     /// Build a photoframe by adding image as texture to it.
@@ -319,10 +312,20 @@ public class DetectBoundaryTestScript : MonoBehaviour
                 GameObject interactionPanelObj = Instantiate(interactionPanel, tasveerObj.transform);
                 interactionPanelObj.transform.localPosition = new Vector3(0f, -0.7f, 0f);
                 interactionPanelObj.transform.localRotation = Quaternion.Euler(new Vector3(45f, 180f, 0f));
+                
+                // Attaching an event to detect click of controller or mouse for user interaction
+                EventTrigger.Entry entry = new EventTrigger.Entry();
+                entry.eventID = EventTriggerType.PointerClick;
+                entry.callback.AddListener( (eventData) => { toggleActive(interactionPanelObj); } );
+                tasveerObj.GetComponent<EventTrigger>().triggers.Add(entry);
             }
         }
     }
-    private void toggleActive(GameObject gameObject){
+    /// <summary>
+    /// A simple method made for responding to the user actions by hiding and showing a gameobject.
+    /// </summary>
+    public void toggleActive(GameObject gameObject){
+        Debug.Log("reached in toggle active function");
         if(gameObject.activeSelf) gameObject.SetActive(false);
         else gameObject.SetActive(true);
     }

@@ -12,8 +12,8 @@ GameObject:
   - component: {fileID: 5487619763823584155}
   - component: {fileID: 5487619763823584164}
   - component: {fileID: 5487619763823584165}
-  m_Layer: 0
-  m_Name: path tigger collider
+  m_Layer: 2
+  m_Name: pathTriggerColliderPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

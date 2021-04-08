@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 9044872777535134238}
   - component: {fileID: 2179394953597485087}
   - component: {fileID: 116256484660062575}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: wallCollidersPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
