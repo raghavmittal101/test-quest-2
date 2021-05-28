@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.18028334, g: 0.22571343, b: 0.30692205, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028355, g: 0.22571374, b: 0.30692255, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -935,7 +935,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d905d819e205df541b36e798779b3d46, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnWallsFlag: 1
+  spawnWallsFlag: 0
   tasveerDimensions: {x: 0.5, y: 0.5, z: 0.5}
   tasveerLeftRightPadding: 0.1
   repeatPictures: 1

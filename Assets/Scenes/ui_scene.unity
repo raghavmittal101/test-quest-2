@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028334, g: 0.22571343, b: 0.30692208, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028355, g: 0.22571374, b: 0.30692255, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1561,7 +1561,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d5b65a449f801d45a67fdef46b6b4a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _metadataInputType: 1
+  _metadataInputType: 0
   pathSegmentLength: 1
   visiblePathSegmentCount: 3
   pathWidth: 1
@@ -1572,7 +1572,7 @@ MonoBehaviour:
   imageTexturesList: []
   subjectId: 12P
   ConfIDInputField: {fileID: 598705445}
-  _configurationIDEnteringMethod: 1
+  _configurationIDEnteringMethod: 0
 --- !u!114 &1496347463
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1598,7 +1598,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbf668a36985cb74a86a2d2ceebd1b3b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _inputDeviceType: 1
+  _inputDeviceType: 0
   playerPosition: {x: 0, y: 0, z: 0}
   playAreaDimensions: {x: 8, y: 0, z: 8}
   playerRotationAlongYAxis: 0
