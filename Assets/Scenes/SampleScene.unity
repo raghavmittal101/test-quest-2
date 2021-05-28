@@ -935,7 +935,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d905d819e205df541b36e798779b3d46, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnWallsFlag: 0
+  spawnWallsFlag: 1
   tasveerDimensions: {x: 0.5, y: 0.5, z: 0.5}
   tasveerLeftRightPadding: 0.1
   repeatPictures: 1

@@ -1599,8 +1599,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _inputDeviceType: 0
-  playerPosition: {x: 0, y: 0, z: 0}
-  playAreaDimensions: {x: 8, y: 0, z: 8}
+  playerPosition: {x: -2, y: 0, z: -2}
+  playAreaDimensions: {x: 5, y: 0, z: 5}
   playerRotationAlongYAxis: 0
   playerObj: {fileID: 1094078420}
 --- !u!114 &1496347465

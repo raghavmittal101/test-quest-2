@@ -22,6 +22,8 @@ public class DetectBoundaryTestScript : MonoBehaviour
     private List<float> betaList = new List<float>();
     private List<Vector3> pointsList = new List<Vector3>();
     private List<Vector3> totalPointsList = new List<Vector3>();
+    private List<Vector3> leftWallPointsList = new List<Vector3>();
+    private List<Vector3> rightWallPointsList = new List<Vector3>();
     private float[] betaRange = new float[2];
     private int rayArrayLength { get { return metadataInput.RayArrayLength(); } }
     private float boundaryBufferWidth { get { return metadataInput.PlayAreaPadding(); } }
@@ -105,6 +107,9 @@ public class DetectBoundaryTestScript : MonoBehaviour
         var lastLeftPoint = leftRightPoints[0][leftRightPoints[0].Count - 2];
         var lastRightPoint = leftRightPoints[1][leftRightPoints[1].Count - 2];
         SpawnPathTrigger(lastLeftPoint, lastRightPoint);
+        // adding points to a list for logging purposes
+        leftWallPointsList.Add(lastLeftPoint);
+        rightWallPointsList.Add(lastRightPoint);
         if (spawnWallsFlag)
         {
             leftWalls.Add(_WallSpawner.GenerateWall(ref leftRightPoints[0], wallPrefab));
@@ -133,6 +138,7 @@ public class DetectBoundaryTestScript : MonoBehaviour
             {
                 pointsList.RemoveAt(0);
                 betaList.RemoveAt(0);
+                Debug.Log("*************************");
                 GenerateNextPoint();
 
                 Destroy(leftWalls[0]);
@@ -148,7 +154,10 @@ public class DetectBoundaryTestScript : MonoBehaviour
 
         if (inputDevice.ButtonPressed())
         {
-            Debug.Log(dataLogger.LogPointsList(totalPointsList)); // save pathlog to a file
+            Debug.Log(dataLogger.LogPointsList(totalPointsList, nameof(totalPointsList))); // save pathlog to a file
+            Debug.Log(dataLogger.LogPointsList(leftWallPointsList, nameof(leftWallPointsList))); // save left wall points list to a file
+            Debug.Log(dataLogger.LogPointsList(rightWallPointsList, nameof(rightWallPointsList))); // save right wall points list to a file
+            
             Application.Quit();
         }
 
@@ -177,7 +186,21 @@ public class DetectBoundaryTestScript : MonoBehaviour
         else newBeta = lastBeta + betaRange[0]; // if upper and lower bound of beta are equal
         Debug.Log("GenerateNextPoint: betaRange: " + betaRange[0] * Mathf.Rad2Deg + ", " + betaRange[1] * Mathf.Rad2Deg);
         Debug.Log("GenerateNextPoint: newBeta: " + newBeta * Mathf.Rad2Deg);
-        Vector3 newPoint = new Vector3(lastPoint.x + pathLength * Mathf.Sin(newBeta), 0f, lastPoint.z + pathLength * Mathf.Cos(newBeta));
+        Debug.Log("**************************************");
+        RaycastHit ray;
+        Physics.Raycast(lastPoint, GetFwd(newBeta, lastPoint), out ray); // sending a ray in direction of chosen new beta to understand how far the boundary is.
+        Debug.DrawRay(lastPoint, GetFwd(newBeta, lastPoint)*5f, Color.red, 3f);
+        Debug.Log("This is b:" + ray.distance);
+        float dynamicPathLength;
+        if (ray.distance > 0)
+        {
+            dynamicPathLength = UnityEngine.Random.Range(pathLength, pathLength + ray.distance - pathWidth - boundaryBufferWidth);
+            Debug.Log("The ray touched a boundary, the next point is dynamic point");
+        }
+        else dynamicPathLength = pathLength; // to make sure that path do not grow outside boundaries.
+        Vector3 newPoint = new Vector3(lastPoint.x + dynamicPathLength * Mathf.Sin(newBeta), 0f, lastPoint.z + dynamicPathLength * Mathf.Cos(newBeta));
+        
+        //Vector3 newPoint = new Vector3(lastPoint.x + pathLength * Mathf.Sin(newBeta), 0f, lastPoint.z + pathLength * Mathf.Cos(newBeta));
         this.betaList.Add(newBeta);
         this.pointsList.Add(newPoint);
         totalPointsList.Add(newPoint);
@@ -226,14 +249,14 @@ public class DetectBoundaryTestScript : MonoBehaviour
             Vector3 angleBetweenSegments = Vector3.zero; // it is the angle between two adjecent path segments
             float pathWidthMultiplier = 1; // to increase the path width at turns to keep the walls parallel always
             
-            // if (i == 0 || i == points.Count - 1){
-            //     pathWidthMultiplier = 1;
-            // }
-            // else{
-            //     Debug.Log("Angle:" + Vector3.Angle(points[i+1] - points[i], points[i-1] - points[i]));
-            //     Debug.Log("SignedAngle: " + Vector3.SignedAngle(points[i+1] - points[i], points[i-1] - points[i], Vector3.up));
-            //    pathWidthMultiplier =  1/ Mathf.Sin(Mathf.Deg2Rad * (Vector3.Angle(points[i+1] - points[i], points[i-1] - points[i])/2));
-            // }
+            if (i == 0 || i == points.Count - 1){
+                pathWidthMultiplier = 1;
+            }
+            else{
+                // Debug.Log("Angle:" + Vector3.Angle(points[i+1] - points[i], points[i-1] - points[i]));
+                // Debug.Log("SignedAngle: " + Vector3.SignedAngle(points[i+1] - points[i], points[i-1] - points[i], Vector3.up));
+               pathWidthMultiplier =  1/ Mathf.Sin(Mathf.Deg2Rad * (Vector3.Angle(points[i+1] - points[i], points[i-1] - points[i])/2));
+            }
             
             pathWidth = pathWidth * pathWidthMultiplier ;
             forward.Normalize();

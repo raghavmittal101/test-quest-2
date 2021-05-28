@@ -18,14 +18,14 @@ public class DataLogger : MonoBehaviour
     /// </summary>
     /// <param name="pointsList"></param>
     /// <returns>full path of the resultant file.</returns>
-    public string LogPointsList(List<Vector3> pointsList)
+    public string LogPointsList(List<Vector3> pointsList, string name)
     {
         var str = "x, y, z";
         foreach (Vector3 point in pointsList)
         {
             str = str + "\n[" + point.x + "," + point.y + "," + point.z + "],";
         }
-        return SaveToCSV("pointsList", str);
+        return SaveToCSV(name, str);
         
     }
 
@@ -39,4 +39,39 @@ public class DataLogger : MonoBehaviour
         File.WriteAllText(filePath, content);
         return filePath;
     }
+
+    // /// <summary>
+    // /// Save current <see cref="DetectBoundaryTestScript.leftWallPointsList"/> to CSV file.
+    // /// Resultant filename will be subjectId_pointsList.csv .
+    // /// Format of the file will be : left wall points
+    // /// </summary>
+    // /// <param name="pointsList"></param>
+    // /// <returns>full path of the resultant file.</returns>
+    // public string LogLeftWallsPointsList(List<Vector3> leftWallPointsList)
+    // {
+    //     var str = "x, y, z";
+    //     foreach (Vector3 point in leftWallPointsList)
+    //     {
+    //         str = str + "\n[" + point.x + "," + point.y + "," + point.z + "],";
+    //     }
+    //     return SaveToCSV("leftWallPointsList", str);        
+    // }
+
+
+    // /// <summary>
+    // /// Save current <see cref="DetectBoundaryTestScript.rightWallPointsList"/> to CSV file.
+    // /// Resultant filename will be subjectId_pointsList.csv .
+    // /// Format of the file will be : right wall points
+    // /// </summary>
+    // /// <param name="pointsList"></param>
+    // /// <returns>full path of the resultant file.</returns>
+    // public string LogRightWallsPointsList(List<Vector3> rightWallPointsList)
+    // {
+    //     var str = "x, y, z";
+    //     foreach (Vector3 point in rightWallPointsList)
+    //     {
+    //         str = str + "\n[" + point.x + "," + point.y + "," + point.z + "],";
+    //     }
+    //     return SaveToCSV(nameof(rightWallPointsList), str);        
+    // }
 }

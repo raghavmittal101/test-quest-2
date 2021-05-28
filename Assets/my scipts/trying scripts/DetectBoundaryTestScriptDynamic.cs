@@ -147,7 +147,7 @@ public class DetectBoundaryTestScriptDynamic : MonoBehaviour
 
         if (inputDevice.ButtonPressed())
         {
-            Debug.Log(dataLogger.LogPointsList(totalPointsList)); // save pathlog to a file
+            Debug.Log(dataLogger.LogPointsList(totalPointsList, nameof(totalPointsList))); // save pathlog to a file
             Application.Quit();
         }
 
