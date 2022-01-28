@@ -5,9 +5,9 @@
 </pre>
 ### [Demo video 📺](https://www.youtube.com/watch?v=tmBYfRN74mk) 
 
-### [Releases](https://github.com/raghavmittal101/test-quest-2/releases)
+### [Releases 🏁](https://github.com/raghavmittal101/test-quest-2/releases)
 
-### [Publication](https://www.springerprofessional.de/en/designing-limitless-path-in-virtual-reality-environment/19324810)
+### [Publication 📎](https://www.springerprofessional.de/en/designing-limitless-path-in-virtual-reality-environment/19324810)
 
 Walking in a Virtual Environment is a bounded task. It is challenging for a subject to navigate a large virtual environment designed in a limited physical space. External hardware support may be required to achieve such an act in a concise physical area without compromising navigation and virtual scene rendering quality. This paper proposes an algorithmic approach to let a subject navigate a limitless virtual environment within a limited physical space with no additional external hardware support apart from the regular Head-Mounted-Device (HMD) itself. As part of our work, we developed a Virtual Art Gallery as a use-case to validate our algorithm. We conducted a simple user-study to gather feedback from the participants to evaluate the ease of locomotion of the application. The results showed that our algorithm could generate limitless paths of our use-case under predefined conditions and can be extended to other use-cases.
 
@@ -39,7 +39,7 @@ Assets/
 3. Oculus Quest or Quest 2, if you want to experience it. Headset is not required for simulation puposes.
 4. Internet connection with wireless LAN if you intend to use a headset.
 
-### Steps
+### Setup
 1. Extract the downloaded _limitless path generation_ project.
 2. Open the project in Unity.
 3. Open `Assets > Scenes > ui_scene.unity`.
