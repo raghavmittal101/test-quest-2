@@ -116,7 +116,7 @@ public class OnlineResourceFetcher : MonoBehaviour
         webRequest.SendWebRequest();
         yield return new WaitUntil(() => webRequest.isDone);
         Debug.Log("5. Response recieved...");
-        if (webRequest.isNetworkError)
+        if (webRequest.result == UnityWebRequest.Result.ConnectionError)
         {
             Debug.Log("Error: " + webRequest.error);
             payloadStr = null;
@@ -144,7 +144,7 @@ public class OnlineResourceFetcher : MonoBehaviour
         foreach (string uri in metadataJson.imageURI){
             UnityWebRequest request = UnityWebRequestTexture.GetTexture(uri);
             yield return request.SendWebRequest();
-            if (request.isNetworkError || request.isHttpError)
+            if (request.result == UnityWebRequest.Result.ConnectionError)
             { Debug.Log(request.error); errorDownloadingImages = true; }
             else
             {
