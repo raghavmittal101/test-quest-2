@@ -65,7 +65,7 @@ public class MetadataInputContext : MonoBehaviour, IMetadataInput
     }
     public void OnDocIDSubmit(){
         this.docId = ConfIDInputField.GetComponent<Text>().text;
-        GameObject.Find("TextDisplay").GetComponent<Text>().text = "Loading...";
+        GameObject.Find("TextDisplay").GetComponent<Text>().text = "Loading for " + docId;
         StartCoroutine(StartResourceDownload());
     }
     IEnumerator StartResourceDownload()

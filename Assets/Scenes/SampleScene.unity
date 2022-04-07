@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.18028334, g: 0.22571343, b: 0.30692205, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -304,24 +304,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2815847647970548460, guid: 31dd6f2c446248240a0c2b5f1cba5348,
         type: 3}
-      propertyPath: AllowRecenter
-      value: 0
+      propertyPath: _trackingOriginType
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 2815847647970548460, guid: 31dd6f2c446248240a0c2b5f1cba5348,
         type: 3}
-      propertyPath: _trackingOriginType
-      value: 2
+      propertyPath: AllowRecenter
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2815847648062557486, guid: 31dd6f2c446248240a0c2b5f1cba5348,
         type: 3}
       propertyPath: CameraRig
       value: 
       objectReference: {fileID: 411337364}
-    - target: {fileID: 2815847648062557487, guid: 31dd6f2c446248240a0c2b5f1cba5348,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 5
-      objectReference: {fileID: 0}
     - target: {fileID: 2815847648062557487, guid: 31dd6f2c446248240a0c2b5f1cba5348,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -339,11 +334,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2815847648062557487, guid: 31dd6f2c446248240a0c2b5f1cba5348,
         type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2815847648062557487, guid: 31dd6f2c446248240a0c2b5f1cba5348,
-        type: 3}
       propertyPath: m_LocalRotation.x
       value: 0
       objectReference: {fileID: 0}
@@ -356,6 +346,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalRotation.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2815847648062557487, guid: 31dd6f2c446248240a0c2b5f1cba5348,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2815847648062557487, guid: 31dd6f2c446248240a0c2b5f1cba5348,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 2815847648062557487, guid: 31dd6f2c446248240a0c2b5f1cba5348,
         type: 3}
@@ -905,8 +905,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spawnWallsFlag: 1
-  tasveerDimensions: {x: 0.5, y: 0.5, z: 0.5}
-  tasveerLeftRightPadding: 0.1
+  tasveerDimensions: {x: 0.7, y: 0.7, z: 0.01}
+  tasveerLeftRightPadding: 0
   repeatPictures: 1
   planeObject: {fileID: 55976899}
 --- !u!4 &1226282572
