@@ -62,19 +62,3 @@ Update Mode: updateDependencies
 
 The following packages were updated:
   com.unity.test-framework from version 1.1.20 to 1.1.22
-
-=== Wed Mar 30 18:36:36 2022
-
-Packages were changed.
-Update Mode: updateDependencies
-
-The following packages were added:
-  com.unity.ide.visualstudio@2.0.14
-The following packages were updated:
-  com.unity.ide.rider from version 1.1.4 to 2.0.7
-  com.unity.ide.vscode from version 1.2.3 to 1.2.5
-  com.unity.test-framework from version 1.1.22 to 1.1.31
-  com.unity.textmeshpro from version 2.1.1 to 3.0.6
-  com.unity.timeline from version 1.2.15 to 1.4.8
-  com.unity.xr.management from version 3.2.17 to 4.0.1
-  com.unity.xr.oculus from version 1.5.0 to 1.11.2
