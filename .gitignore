@@ -48,3 +48,13 @@ Thumbs.db
 # Logs/Packages-Update.log
 # Packages/packages-lock.json
 # ProjectSettings/ProjectVersion.txt
+
+###
+# Other files
+###
+Assets/paintings/
+Assets/paintings.meta
+*.apk
+lfs/
+hooks/
+.vsconfig

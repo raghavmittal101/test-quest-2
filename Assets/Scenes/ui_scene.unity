@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028334, g: 0.22571343, b: 0.30692205, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -304,7 +304,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &258460375
 RectTransform:
   m_ObjectHideFlags: 0
@@ -990,7 +990,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &922204807
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1182,7 +1182,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1464178350
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1361,16 +1361,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Enter the numeric ID below
-
-    - Point towards the input filed and press
-    the key under index finger to start typing.
-
-    - Press ''B'' key on right controller
-    to close the keyboard.
-
-    -  Point towards the "start" button and press the
-    key under index finger to continue.'
+  m_text: Let us know when you are ready to start!
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1397,10 +1388,10 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 8
+  m_fontSize: 19.2
   m_fontSizeBase: 8
   m_fontWeight: 400
-  m_enableAutoSizing: 0
+  m_enableAutoSizing: 1
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 32
@@ -1433,7 +1424,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 1
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: -6.15921}
+  m_margin: {x: 0, y: 0, z: -1.6378877, w: 5.878213}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -1508,15 +1499,35 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d5b65a449f801d45a67fdef46b6b4a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _metadataInputType: 1
-  pathSegmentLength: 1
+  _metadataInputType: 0
+  pathSegmentLength: 1.5
   visiblePathSegmentCount: 3
   pathWidth: 1
   rayArrayLength: 5
   playAreaPadding: 0.1
-  docId: 8
+  docId: 3
   metadataAPIURL: https://pathgen-input.herokuapp.com/metadata
-  imageTexturesList: []
+  imageTexturesList:
+  - {fileID: 2800000, guid: 4e4585dc7a5dd154f8050695ac679c50, type: 3}
+  - {fileID: 2800000, guid: 2b54b33887ee62c4995c11f855ddd007, type: 3}
+  - {fileID: 2800000, guid: 51b321952bfbfcf4992efa7ec0f7205b, type: 3}
+  - {fileID: 2800000, guid: f122716c6780bb44abe294fd346a58f8, type: 3}
+  - {fileID: 2800000, guid: 901b9b150640cb247b289c9c1c7ae810, type: 3}
+  - {fileID: 2800000, guid: 8798a1bfdb514ef40a3090c7df76f6bf, type: 3}
+  - {fileID: 2800000, guid: b04c41133b5280645ae0f46c52de5906, type: 3}
+  - {fileID: 2800000, guid: 7574b72cbd95fad49889783796e34af1, type: 3}
+  - {fileID: 2800000, guid: 85471a35e65e43847a9e7f539ddec25a, type: 3}
+  - {fileID: 2800000, guid: 579843cafbb23e84589713b7f9d5e115, type: 3}
+  - {fileID: 2800000, guid: b0e91b0ca4a980440a424e9809d01a95, type: 3}
+  - {fileID: 2800000, guid: 419b0835d3c516b4bba4d56aa6e8271a, type: 3}
+  - {fileID: 2800000, guid: 9e02c631bdd126d4fb2dda86c654394f, type: 3}
+  - {fileID: 2800000, guid: f765a5ce5c5f8ab47a3118ec57b4bcd4, type: 3}
+  - {fileID: 2800000, guid: 1360803ae5b4f234c899ad97f4c3d9c6, type: 3}
+  - {fileID: 2800000, guid: 51b321952bfbfcf4992efa7ec0f7205b, type: 3}
+  - {fileID: 2800000, guid: 55d1faca1bffdc94b826eaed7322a61a, type: 3}
+  - {fileID: 2800000, guid: 53f3e53958b45ef449b793907d45b973, type: 3}
+  - {fileID: 2800000, guid: 8f06fb1ac50e4144a93f445c6305c41e, type: 3}
+  - {fileID: 2800000, guid: 8cab9793dff23904695f37d7326e6a17, type: 3}
   subjectId: 12P
   ConfIDInputField: {fileID: 598705445}
   _configurationIDEnteringMethod: 0
@@ -1532,6 +1543,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 147c09c3c4aca5d48b8a556c8070a7ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _autoContinueToPathgenScene: 1
 --- !u!114 &1496347464
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1544,7 +1556,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbf668a36985cb74a86a2d2ceebd1b3b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _inputDeviceType: 0
+  _inputDeviceType: 1
   playerPosition: {x: 0, y: 0, z: 0}
   playAreaDimensions: {x: 8, y: 0, z: 8}
   playerRotationAlongYAxis: 0
