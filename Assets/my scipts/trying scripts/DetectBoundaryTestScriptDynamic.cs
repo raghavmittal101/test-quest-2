@@ -39,7 +39,6 @@ public class DetectBoundaryTestScriptDynamic : MonoBehaviour
     [SerializeField] private GameObject player { get { return inputDevice.PlayerObj(); } }
     private int triggerColliderHitNumber = -1;
     private int triggerColliderSpawnCount = 0;
-    public string subjectID { get { return metadataInput.SubjectId(); } }
     private DataLogger dataLogger;
 
     void Awake()
@@ -59,7 +58,7 @@ public class DetectBoundaryTestScriptDynamic : MonoBehaviour
         spawner = new Spawner();
         this.db = new DetectBoundaryFixedDirections(rayArrayLength, boundaryBufferWidth, pathLength, pathWidth);
         spawner.SpawnPlayAreaBoundaryColliders();
-        dataLogger = new DataLogger(subjectID);
+       // dataLogger = new DataLogger();
 
     }
 
@@ -147,7 +146,9 @@ public class DetectBoundaryTestScriptDynamic : MonoBehaviour
 
         if (inputDevice.ButtonPressed())
         {
-            Debug.Log(dataLogger.LogPointsList(totalPointsList)); // save pathlog to a file
+            Debug.Log(dataLogger.LogPointsList(totalPointsList));
+            Debug.Log(dataLogger.LogPlayerVelocity());
+            Debug.Log(dataLogger.LogPlayerPosition());
             Application.Quit();
         }
 

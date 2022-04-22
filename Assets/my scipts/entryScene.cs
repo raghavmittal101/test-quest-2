@@ -7,6 +7,7 @@ public class entryScene : MonoBehaviour
 {
     private enum autoContinueToPathgenScene { yes, no };
     [SerializeField] private autoContinueToPathgenScene _autoContinueToPathgenScene;
+    [SerializeField] private bool skipSubjectIdUiInput;
     void Awake()
     {
         
@@ -29,9 +30,11 @@ public class entryScene : MonoBehaviour
 
     private void Update()
     {
-        if (OVRInput.GetDown(OVRInput.Button.One))
-        {
+        if ((!skipSubjectIdUiInput && DataLogger.isSubjectIDRecieved) || OVRInput.GetDown(OVRInput.Button.One))
+        {  
             UnityEngine.SceneManagement.SceneManager.LoadScene("SampleScene");
+            skipSubjectIdUiInput = false;
+            DataLogger.isSubjectIDRecieved = false;
         }
     }
 

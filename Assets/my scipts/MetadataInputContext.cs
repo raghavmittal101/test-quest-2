@@ -17,7 +17,6 @@ public class MetadataInputContext : MonoBehaviour, IMetadataInput
     [SerializeField] private string docId;
     [SerializeField] private string metadataAPIURL;
     [SerializeField] private List<Texture> imageTexturesList;
-    [SerializeField] private string subjectId;
 
     public IMetadataInput metadataInput;
     public static bool isMetadataFetchComplete;
@@ -39,7 +38,7 @@ public class MetadataInputContext : MonoBehaviour, IMetadataInput
         if (_metadataInputType == metadataInputType.ManualInput)
         {
             this.metadataInput = new MetadataManualInput(pathSegmentLength, visiblePathSegmentCount, pathWidth, 
-                rayArrayLength, playAreaPadding, imageTexturesList, subjectId);
+                rayArrayLength, playAreaPadding, imageTexturesList);
             isMetadataFetchComplete = true;
         }
         else if (_metadataInputType == metadataInputType.OnlineInput)
@@ -109,10 +108,6 @@ public class MetadataInputContext : MonoBehaviour, IMetadataInput
     {
         //return this.imageTexturesList;
         return this.metadataInput.ImageTexturesList();
-    }
-    public string SubjectId()
-    {
-        return this.metadataInput.SubjectId();
     }
   //  public Material PathMaterial()
   //  {
