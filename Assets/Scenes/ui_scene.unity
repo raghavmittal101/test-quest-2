@@ -2144,8 +2144,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 147c09c3c4aca5d48b8a556c8070a7ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _autoContinueToPathgenScene: 1
-  skipSubjectIdUiInput: 0
+  _autoContinueToPathgenScene: 0
+  skipSubjectIdUiInput: 1
 --- !u!114 &1496347464
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2158,7 +2158,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbf668a36985cb74a86a2d2ceebd1b3b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _inputDeviceType: 1
+  _inputDeviceType: 0
   playerPosition: {x: 0, y: 0, z: 0}
   playAreaDimensions: {x: 8, y: 0, z: 8}
   playerRotationAlongYAxis: 0

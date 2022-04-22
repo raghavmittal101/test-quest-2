@@ -41,6 +41,8 @@ public class DetectBoundaryTestScriptDynamic : MonoBehaviour
     private int triggerColliderSpawnCount = 0;
     private DataLogger dataLogger;
 
+    public bool enableEnhancements;
+
     void Awake()
     {
         //this.db = new DetectBoundary();
@@ -180,23 +182,30 @@ public class DetectBoundaryTestScriptDynamic : MonoBehaviour
         Debug.Log("***********************************");
 
         // ************** Enhancement ***************************
-        RaycastHit ray;
-        Physics.Raycast(lastPoint, GetFwd(newBeta, lastPoint), out ray); // sending a ray in direction of chosen new beta to understand how far the boundary is.
-        Debug.DrawRay(lastPoint, GetFwd(newBeta, lastPoint) * 5f, Color.red, 3f);
-        Debug.Log("b:" + ray.distance);
-        float dynamicPathLength;
-
-        if (ray.distance > 0)
+        Vector3 newPoint;
+        if (enableEnhancements)
         {
-            //dynamicPathLength = UnityEngine.Random.Range(pathLength, pathLength + ray.distance - pathWidth - boundaryBufferWidth); // according to ISEC paper
-            dynamicPathLength = UnityEngine.Random.Range(pathLength, ray.distance - pathWidth - boundaryBufferWidth); // not based on ISEC paper
-        }
-        else dynamicPathLength = pathLength; // to make sure that path do not grow outside boundaries.
-        Vector3 newPoint = new Vector3(lastPoint.x + dynamicPathLength * Mathf.Sin(newBeta), 0f, lastPoint.z + dynamicPathLength * Mathf.Cos(newBeta));
+            RaycastHit ray;
+            Physics.Raycast(lastPoint, GetFwd(newBeta, lastPoint), out ray); // sending a ray in direction of chosen new beta to understand how far the boundary is.
+            Debug.DrawRay(lastPoint, GetFwd(newBeta, lastPoint) * 5f, Color.red, 3f);
+            Debug.Log("b:" + ray.distance);
+            float dynamicPathLength;
 
-        Debug.Log("dynamicPathLength: " + dynamicPathLength);
+            if (ray.distance > 0)
+            {
+                //dynamicPathLength = UnityEngine.Random.Range(pathLength, pathLength + ray.distance - pathWidth - boundaryBufferWidth); // according to ISEC paper
+                dynamicPathLength = UnityEngine.Random.Range(pathLength, ray.distance - pathWidth - boundaryBufferWidth); // not based on ISEC paper
+            }
+            else dynamicPathLength = pathLength; // to make sure that path do not grow outside boundaries.
+            newPoint = new Vector3(lastPoint.x + dynamicPathLength * Mathf.Sin(newBeta), 0f, lastPoint.z + dynamicPathLength * Mathf.Cos(newBeta));
+
+            Debug.Log("dynamicPathLength: " + dynamicPathLength);
+        }
+        else
+            newPoint = new Vector3(lastPoint.x + pathLength * Mathf.Sin(newBeta), 0f, lastPoint.z + pathLength* Mathf.Cos(newBeta));
+
         // ******************************************************************
-        Debug.Log("dynamicPathLength: " + dynamicPathLength);
+        
         this.betaList.Add(newBeta);
         this.pointsList.Add(newPoint);
         totalPointsList.Add(newPoint);
@@ -243,21 +252,25 @@ public class DetectBoundaryTestScriptDynamic : MonoBehaviour
                 forward += points[i] - points[i - 1];
             }
             // ************** Enhancement ***************************
-            Vector3 angleBetweenSegments = Vector3.zero; // it is the angle between two adjecent path segments
-            float pathWidthMultiplier; // to increase the path width at turns to keep the walls parallel always
-
-            if (i == 0 || i == points.Count - 1)
+            if (enableEnhancements)
             {
-                pathWidthMultiplier = 1;
-            }
-            else
-            {
-                Debug.Log("Angle:" + Vector3.Angle(points[i + 1] - points[i], points[i - 1] - points[i]));
-                Debug.Log("SignedAngle: " + Vector3.SignedAngle(points[i + 1] - points[i], points[i - 1] - points[i], Vector3.up));
-                pathWidthMultiplier = 1 / Mathf.Sin(Mathf.Deg2Rad * (Vector3.Angle(points[i + 1] - points[i], points[i - 1] - points[i]) / 2));
-            }
+                Vector3 angleBetweenSegments = Vector3.zero; // it is the angle between two adjecent path segments
+                float pathWidthMultiplier; // to increase the path width at turns to keep the walls parallel always
 
-            pathWidth = pathWidth * pathWidthMultiplier;
+                if (i == 0 || i == points.Count - 1)
+                {
+                    pathWidthMultiplier = 1;
+                }
+                else
+                {
+                    Debug.Log("Angle:" + Vector3.Angle(points[i + 1] - points[i], points[i - 1] - points[i]));
+                    Debug.Log("SignedAngle: " + Vector3.SignedAngle(points[i + 1] - points[i], points[i - 1] - points[i], Vector3.up));
+                    pathWidthMultiplier = 1 / Mathf.Sin(Mathf.Deg2Rad * (Vector3.Angle(points[i + 1] - points[i], points[i - 1] - points[i]) / 2));
+                }
+
+                pathWidth = pathWidth * pathWidthMultiplier;
+            }
+            
 
             // ************** ***************************
 

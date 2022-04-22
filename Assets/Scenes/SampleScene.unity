@@ -909,6 +909,7 @@ MonoBehaviour:
   tasveerLeftRightPadding: 0.1
   repeatPictures: 1
   planeObject: {fileID: 55976899}
+  enableEnhancements: 0
 --- !u!4 &1226282572
 Transform:
   m_ObjectHideFlags: 0
