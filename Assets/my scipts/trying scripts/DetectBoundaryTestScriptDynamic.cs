@@ -60,7 +60,7 @@ public class DetectBoundaryTestScriptDynamic : MonoBehaviour
         spawner = new Spawner();
         this.db = new DetectBoundaryFixedDirections(rayArrayLength, boundaryBufferWidth, pathLength, pathWidth);
         spawner.SpawnPlayAreaBoundaryColliders();
-       // dataLogger = new DataLogger();
+       dataLogger = gameObject.AddComponent<DataLogger>();
 
     }
 
@@ -149,8 +149,8 @@ public class DetectBoundaryTestScriptDynamic : MonoBehaviour
         if (inputDevice.ButtonPressed())
         {
             Debug.Log(dataLogger.LogPointsList(totalPointsList));
-            Debug.Log(dataLogger.LogPlayerVelocity());
-            Debug.Log(dataLogger.LogPlayerPosition());
+          // Debug.Log(dataLogger.LogPlayerVelocity());
+           Debug.Log(dataLogger.LogPlayerPosition());
             Application.Quit();
         }
 
@@ -255,20 +255,20 @@ public class DetectBoundaryTestScriptDynamic : MonoBehaviour
             if (enableEnhancements)
             {
                 Vector3 angleBetweenSegments = Vector3.zero; // it is the angle between two adjecent path segments
-                float pathWidthMultiplier; // to increase the path width at turns to keep the walls parallel always
+            float pathWidthMultiplier; // to increase the path width at turns to keep the walls parallel always
 
-                if (i == 0 || i == points.Count - 1)
-                {
-                    pathWidthMultiplier = 1;
-                }
-                else
-                {
-                    Debug.Log("Angle:" + Vector3.Angle(points[i + 1] - points[i], points[i - 1] - points[i]));
-                    Debug.Log("SignedAngle: " + Vector3.SignedAngle(points[i + 1] - points[i], points[i - 1] - points[i], Vector3.up));
-                    pathWidthMultiplier = 1 / Mathf.Sin(Mathf.Deg2Rad * (Vector3.Angle(points[i + 1] - points[i], points[i - 1] - points[i]) / 2));
-                }
+            if (i == 0 || i == points.Count - 1)
+            {
+                pathWidthMultiplier = 1;
+            }
+            else
+            {
+                Debug.Log("Angle:" + Vector3.Angle(points[i + 1] - points[i], points[i - 1] - points[i]));
+                Debug.Log("SignedAngle: " + Vector3.SignedAngle(points[i + 1] - points[i], points[i - 1] - points[i], Vector3.up));
+                pathWidthMultiplier = 1 / Mathf.Sin(Mathf.Deg2Rad * (Vector3.Angle(points[i + 1] - points[i], points[i - 1] - points[i]) / 2));
+            }
 
-                pathWidth = pathWidth * pathWidthMultiplier;
+            pathWidth = pathWidth * pathWidthMultiplier;
             }
             
 

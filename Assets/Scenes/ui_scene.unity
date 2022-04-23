@@ -777,7 +777,7 @@ GameObject:
   - component: {fileID: 547450954}
   - component: {fileID: 547450953}
   m_Layer: 0
-  m_Name: InputField (TMP)
+  m_Name: subIdInputField
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2115,7 +2115,57 @@ MonoBehaviour:
   playAreaPadding: 0.1
   docId: 3
   metadataAPIURL: https://pathgen-input.herokuapp.com/metadata
-  imageTexturesList: []
+  imageTexturesList:
+  - {fileID: 2800000, guid: c959816e12184e4408dc49f2cb9c2df2, type: 3}
+  - {fileID: 2800000, guid: 61891d47e81b09643a5f17a60ed1ecb1, type: 3}
+  - {fileID: 2800000, guid: 9daaab5ce1cfcce4fa9b8f515b74bf34, type: 3}
+  - {fileID: 2800000, guid: 6e261485205a2554a9a47e0b1449decb, type: 3}
+  - {fileID: 2800000, guid: 2c65a24144b8f444ebaa833d01bc0e35, type: 3}
+  - {fileID: 2800000, guid: d65d68136b1a07d40a97785198732880, type: 3}
+  - {fileID: 2800000, guid: 7783f47a2fd1ed848b8a4a950244c6d6, type: 3}
+  - {fileID: 2800000, guid: 709a23495b7950945a94d31423dfa98a, type: 3}
+  - {fileID: 2800000, guid: 1ee9672892755084bb63de9eb2cfe887, type: 3}
+  - {fileID: 2800000, guid: 2adbaa40b5caec1459d60173adf0c7fd, type: 3}
+  - {fileID: 2800000, guid: 3b249d480b4ea01478b69089dbb87d60, type: 3}
+  - {fileID: 2800000, guid: 6ba4635c463c1114da63f57771743877, type: 3}
+  - {fileID: 2800000, guid: 27468c25d3b799241a1b2c741b7ba26c, type: 3}
+  - {fileID: 2800000, guid: f8937ac7abf942549817a6014612bf17, type: 3}
+  - {fileID: 2800000, guid: 58f33b23153289844916db17f04bb6cc, type: 3}
+  - {fileID: 2800000, guid: 9039d8002cd57b046a55fcc999e467bf, type: 3}
+  - {fileID: 2800000, guid: 66428b6b3f92f1841b7be95414b61eba, type: 3}
+  - {fileID: 2800000, guid: c74f5dbc57f96cb4eb1496f99fe7a56f, type: 3}
+  - {fileID: 2800000, guid: f88260ebae9791f4c996f26263b6cbbd, type: 3}
+  - {fileID: 2800000, guid: f423f2b7dea304546a79eb7f36dc12da, type: 3}
+  - {fileID: 2800000, guid: 54317be581593cf44a1809df4b29cc79, type: 3}
+  - {fileID: 2800000, guid: 112799c9f9f074a4bb6b72d0d9d60805, type: 3}
+  - {fileID: 2800000, guid: f7497b46d28ac594ba506c9a20f6da62, type: 3}
+  - {fileID: 2800000, guid: 7617abf20a474614da534671469130a9, type: 3}
+  - {fileID: 2800000, guid: 9958c3f968368b74db2c803ed2a2c2d2, type: 3}
+  - {fileID: 2800000, guid: c92e38ea76457664fa920c2d03f57d3d, type: 3}
+  - {fileID: 2800000, guid: d9d2208897cef364ca2ca0efbfb8137f, type: 3}
+  - {fileID: 2800000, guid: c746e94cde05eb049880176d8aded1ed, type: 3}
+  - {fileID: 2800000, guid: ada71fcce06e6b746a20beeaf1f05731, type: 3}
+  - {fileID: 2800000, guid: 746e6e6edf999c942a37c85631d1a050, type: 3}
+  - {fileID: 2800000, guid: f4c54945df52fef4fa3754d3ae28e7c1, type: 3}
+  - {fileID: 2800000, guid: 7debb34b0fc098c4091b48f7479d2eeb, type: 3}
+  - {fileID: 2800000, guid: 42fc51a1fecfa7e4d86d0f79c16ede00, type: 3}
+  - {fileID: 2800000, guid: c367c4a4d4e71ef4d832313e5e4d129d, type: 3}
+  - {fileID: 2800000, guid: cca0ed07f0f7656499a941774a2fb949, type: 3}
+  - {fileID: 2800000, guid: 5f532b603d90b3d4780afa0485974f59, type: 3}
+  - {fileID: 2800000, guid: 549a8046dc18cb740912a0810c9e660f, type: 3}
+  - {fileID: 2800000, guid: c296941a42115294aa4ad0990939363c, type: 3}
+  - {fileID: 2800000, guid: 3ab413a5fa574d74a917d716c336e45a, type: 3}
+  - {fileID: 2800000, guid: e1d7d87820372194f8d0601cab5bcf9f, type: 3}
+  - {fileID: 2800000, guid: a8eec544d0b63074c896849357dc0017, type: 3}
+  - {fileID: 2800000, guid: a14996e91f57a8d4a9af874bf443b5d0, type: 3}
+  - {fileID: 2800000, guid: 2465fc494ac4e2f4b865a33892e87232, type: 3}
+  - {fileID: 2800000, guid: 48ea34539217dc64f8959a90ccdb2e3d, type: 3}
+  - {fileID: 2800000, guid: 6f4622b36194c7442a617514c9bde484, type: 3}
+  - {fileID: 2800000, guid: 55ec7351dbfd7534cbd46bc58e3e743a, type: 3}
+  - {fileID: 2800000, guid: 7c0729c26f0a4de4ea43b2a008cee255, type: 3}
+  - {fileID: 2800000, guid: 175628b30fd955f4a9cb8ac062ad4693, type: 3}
+  - {fileID: 2800000, guid: 6af76cfba6e118e4e8c82385572624dc, type: 3}
+  - {fileID: 2800000, guid: 4af1c8223a679ff4fa0d9dfef1278782, type: 3}
   ConfIDInputField: {fileID: 598705445}
   _configurationIDEnteringMethod: 0
 --- !u!114 &1496347462
@@ -2130,8 +2180,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7f65868b5565c645bb15748547700ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  subjectIDInputField: {fileID: 1709832547}
-  player: {fileID: 1094078420}
+  subjectIDInputField: {fileID: 547450953}
 --- !u!114 &1496347463
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2144,8 +2193,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 147c09c3c4aca5d48b8a556c8070a7ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _autoContinueToPathgenScene: 0
-  skipSubjectIdUiInput: 1
+  _autoContinueToPathgenScene: 1
+  skipSubjectIdUiInput: 0
 --- !u!114 &1496347464
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2158,7 +2207,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbf668a36985cb74a86a2d2ceebd1b3b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _inputDeviceType: 0
+  _inputDeviceType: 1
   playerPosition: {x: 0, y: 0, z: 0}
   playAreaDimensions: {x: 8, y: 0, z: 8}
   playerRotationAlongYAxis: 0
@@ -2324,6 +2373,16 @@ PrefabInstance:
       propertyPath: _trackingOriginType
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 2815847647970548460, guid: 31dd6f2c446248240a0c2b5f1cba5348,
+        type: 3}
+      propertyPath: useRecommendedMSAALevel
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2815847647970548462, guid: 31dd6f2c446248240a0c2b5f1cba5348,
+        type: 3}
+      propertyPath: m_TagString
+      value: playerObj
+      objectReference: {fileID: 0}
     - target: {fileID: 2815847648062557484, guid: 31dd6f2c446248240a0c2b5f1cba5348,
         type: 3}
       propertyPath: m_IsKinematic
@@ -2403,6 +2462,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2815847648062557493, guid: 31dd6f2c446248240a0c2b5f1cba5348,
+        type: 3}
+      propertyPath: m_TagString
+      value: Untagged
+      objectReference: {fileID: 0}
+    - target: {fileID: 2815847648236865632, guid: 31dd6f2c446248240a0c2b5f1cba5348,
+        type: 3}
+      propertyPath: m_TagString
+      value: MainCamera
       objectReference: {fileID: 0}
     - target: {fileID: 2815847648566463917, guid: 31dd6f2c446248240a0c2b5f1cba5348,
         type: 3}

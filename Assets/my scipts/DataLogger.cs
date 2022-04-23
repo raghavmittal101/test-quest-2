@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
+
 
 public class DataLogger : MonoBehaviour
 {
@@ -10,17 +12,20 @@ public class DataLogger : MonoBehaviour
     // private enum subjectIDInputMethod { EnterInEditor, EnterInScene};
     // [SerializeField] private subjectIDInputMethod _subjectIDInputMethod;
     private string subjectId = "-1";
-    public GameObject subjectIDInputField;
-    [SerializeField] private GameObject player;
+    public TMP_InputField subjectIDInputField;
+    private GameObject player;
     public Dictionary<double, Vector3> playerPositionLog;
     public Dictionary<double, float> playerVelocityLog;
     private System.DateTime startTime;
     public static bool isSubjectIDRecieved;
+    private bool loggerFlag = true;
 
     public void OnSubjectIdSubmit()
     {
+        Debug.Log("At subject submission");
         // get data from input field and assign it to subject ID.
-        this.subjectId = subjectIDInputField.GetComponent<Text>().text;
+ //       Debug.Log(subjectIDInputField.GetComponent<Text>().text);
+        this.subjectId = subjectIDInputField.text;
         isSubjectIDRecieved = true;
     }
 
@@ -99,16 +104,29 @@ public class DataLogger : MonoBehaviour
         startTime = System.DateTime.Now;
         playerPositionLog = new Dictionary<double, Vector3>();
         playerVelocityLog = new Dictionary<double, float>();
+        player = GameObject.FindGameObjectWithTag("playerObj");
 
     }
     public void Update()
     {
-      double timeSpent = System.DateTime.Now.Subtract(startTime).TotalSeconds;
-        Vector3 playerPos = player.transform.position;
-      playerPositionLog.Add(timeSpent, playerPos);
-      Vector3 velocity = player.GetComponent<Rigidbody>().velocity;
-        // float speed = Mathf.Pow(Mathf.Pow(velocity.x, 2) + Mathf.Pow(velocity.z, 2), 0.5f);
-        float speed = velocity.magnitude;
-        playerVelocityLog.Add(timeSpent, speed);
+        if (loggerFlag)
+        {
+            StartCoroutine(logData());
+        }
     }
+
+    private IEnumerator logData() {
+        loggerFlag = false;
+        yield return new WaitForSeconds(1);
+        double timeSpent = System.DateTime.Now.Subtract(startTime).TotalSeconds;
+        Vector3 playerPos = GameObject.FindObjectOfType<OVRCameraRig>().leftEyeAnchor.position;
+        playerPositionLog.Add(timeSpent, playerPos);
+        // Vector3 velocity = OVRManager.tracker.GetPose().
+        // float speed = Mathf.Pow(Mathf.Pow(velocity.x, 2) + Mathf.Pow(velocity.z, 2), 0.5f);
+        // float speed = velocity.magnitude;
+        // playerVelocityLog.Add(timeSpent, speed);
+        loggerFlag = true;
+        Debug.Log("playerPos: " + playerPos.ToString());
+    }
+
 }
