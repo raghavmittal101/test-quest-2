@@ -148,9 +148,14 @@ public class DetectBoundaryTestScriptDynamic : MonoBehaviour
 
         if (inputDevice.ButtonPressed())
         {
-            Debug.Log(dataLogger.LogPointsList(totalPointsList));
-          // Debug.Log(dataLogger.LogPlayerVelocity());
-           Debug.Log(dataLogger.LogPlayerPosition());
+            if (entryScene.isSubjectIDRecieved)
+            {
+                Debug.Log("logging user data");
+                dataLogger.LogPointsList(totalPointsList);
+                // Debug.Log(dataLogger.LogPlayerVelocity());
+                dataLogger.LogPlayerPosition();
+            }
+           
             Application.Quit();
         }
 

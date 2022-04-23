@@ -1486,7 +1486,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1496347462}
+      - m_Target: {fileID: 1496347463}
         m_MethodName: OnSubjectIdSubmit
         m_Mode: 1
         m_Arguments:
@@ -2059,7 +2059,6 @@ GameObject:
   - component: {fileID: 1496347463}
   - component: {fileID: 1496347465}
   - component: {fileID: 1496347464}
-  - component: {fileID: 1496347462}
   m_Layer: 0
   m_Name: ScriptObject
   m_TagString: Untagged
@@ -2168,19 +2167,6 @@ MonoBehaviour:
   - {fileID: 2800000, guid: 4af1c8223a679ff4fa0d9dfef1278782, type: 3}
   ConfIDInputField: {fileID: 598705445}
   _configurationIDEnteringMethod: 0
---- !u!114 &1496347462
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1496347458}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e7f65868b5565c645bb15748547700ea, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  subjectIDInputField: {fileID: 547450953}
 --- !u!114 &1496347463
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2195,6 +2181,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _autoContinueToPathgenScene: 1
   skipSubjectIdUiInput: 0
+  subjectIDInputField: {fileID: 547450953}
 --- !u!114 &1496347464
 MonoBehaviour:
   m_ObjectHideFlags: 0

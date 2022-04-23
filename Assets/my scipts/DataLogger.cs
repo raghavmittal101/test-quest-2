@@ -11,23 +11,14 @@ public class DataLogger : MonoBehaviour
     // string SubjectId { get; }
     // private enum subjectIDInputMethod { EnterInEditor, EnterInScene};
     // [SerializeField] private subjectIDInputMethod _subjectIDInputMethod;
-    private string subjectId = "-1";
-    public TMP_InputField subjectIDInputField;
+    private string subjectId;
+    
     private GameObject player;
-    public Dictionary<double, Vector3> playerPositionLog;
+    //public Dictionary<double, Vector3> playerPositionLog;
     public Dictionary<double, float> playerVelocityLog;
+    public Dictionary<double, string> playerPositionLog;
     private System.DateTime startTime;
-    public static bool isSubjectIDRecieved;
     private bool loggerFlag = true;
-
-    public void OnSubjectIdSubmit()
-    {
-        Debug.Log("At subject submission");
-        // get data from input field and assign it to subject ID.
- //       Debug.Log(subjectIDInputField.GetComponent<Text>().text);
-        this.subjectId = subjectIDInputField.text;
-        isSubjectIDRecieved = true;
-    }
 
     /// <summary>
     /// Save current <see cref="DetectBoundaryTestScript.pointsList"/> to CSV file.
@@ -42,18 +33,21 @@ public class DataLogger : MonoBehaviour
         {
             str = str + "\n[" + point.x + "," + point.y + "," + point.z + "],";
         }
+        Debug.Log("Saving PointsList");
         return SaveToCSV("pointsList", str);
         
     }
 
     public string LogPlayerPosition()
     {
+        Debug.Log("Saving PlayerPosition");
         return SaveToCSV("playerPositions", playerPositionLog);
     }
 
     public string LogPlayerVelocity()
     {
-       return SaveToCSV("velocity", playerVelocityLog);
+        Debug.Log("Saving Velocity");
+        return SaveToCSV("velocity", playerVelocityLog);
     }
 
     /// <summary>
@@ -70,7 +64,7 @@ public class DataLogger : MonoBehaviour
     /// <summary>
     /// Save data to CSV file named "SubjectID_dataType.csv".
     /// </summary>
-    private string SaveToCSV(string dataType, Dictionary<double, Vector3> content)
+    private string SaveToCSV(string dataType, Dictionary<double, string> content)
     {
         var folder = Application.persistentDataPath;
         var filePath = Path.Combine(folder, subjectId + "_" + dataType + ".csv");
@@ -78,7 +72,7 @@ public class DataLogger : MonoBehaviour
 
         using (StreamWriter file = new StreamWriter(filePath))
             foreach (var entry in content)
-                file.WriteLine("[{0}, {1}]\n", entry.Key, entry.Value);
+                file.WriteLine("[{0}, {1}]", entry.Key, entry.Value);
 
         return filePath;
     }
@@ -102,9 +96,10 @@ public class DataLogger : MonoBehaviour
     public void Start()
     {
         startTime = System.DateTime.Now;
-        playerPositionLog = new Dictionary<double, Vector3>();
+        playerPositionLog = new Dictionary<double, string>();
         playerVelocityLog = new Dictionary<double, float>();
         player = GameObject.FindGameObjectWithTag("playerObj");
+        subjectId = entryScene.subjectID;
 
     }
     public void Update()
@@ -120,13 +115,15 @@ public class DataLogger : MonoBehaviour
         yield return new WaitForSeconds(1);
         double timeSpent = System.DateTime.Now.Subtract(startTime).TotalSeconds;
         Vector3 playerPos = GameObject.FindObjectOfType<OVRCameraRig>().leftEyeAnchor.position;
-        playerPositionLog.Add(timeSpent, playerPos);
-        // Vector3 velocity = OVRManager.tracker.GetPose().
-        // float speed = Mathf.Pow(Mathf.Pow(velocity.x, 2) + Mathf.Pow(velocity.z, 2), 0.5f);
-        // float speed = velocity.magnitude;
+        string playerPosString = "[" + playerPos.x +","+ playerPos.z + "]";  // for getting more decimal places for precision you need to write x, y, z separately.
+        playerPositionLog.Add(timeSpent, playerPosString);
+     //   Vector3 velocity = ;
+     //   float speed = Mathf.Pow(Mathf.Pow(velocity.x, 2) + Mathf.Pow(velocity.z, 2), 0.5f);
+     //   float speed = velocity.magnitude;
         // playerVelocityLog.Add(timeSpent, speed);
         loggerFlag = true;
         Debug.Log("playerPos: " + playerPos.ToString());
+        Debug.Log(entryScene.subjectID);
     }
 
 }
