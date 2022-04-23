@@ -2180,7 +2180,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _autoContinueToPathgenScene: 1
-  skipSubjectIdUiInput: 0
   subjectIDInputField: {fileID: 547450953}
 --- !u!114 &1496347464
 MonoBehaviour:

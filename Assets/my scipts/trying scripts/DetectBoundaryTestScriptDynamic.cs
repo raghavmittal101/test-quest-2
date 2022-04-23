@@ -11,6 +11,8 @@ public class DetectBoundaryTestScriptDynamic : MonoBehaviour
     private int steps = 0;
     private List<GameObject> pathTriggerColliderList;
     private List<GameObject> leftWalls, rightWalls;
+    private List<Vector3> leftWallsList;
+    private List<Vector3> rightWallsList;
     private int imageIndex;
 
     private MetadataInputContext metadataInput { get { return _ResourceLoader.metadataInput; } }
@@ -61,6 +63,8 @@ public class DetectBoundaryTestScriptDynamic : MonoBehaviour
         this.db = new DetectBoundaryFixedDirections(rayArrayLength, boundaryBufferWidth, pathLength, pathWidth);
         spawner.SpawnPlayAreaBoundaryColliders();
        dataLogger = gameObject.AddComponent<DataLogger>();
+        leftWallsList = new List<Vector3>();
+        rightWallsList = new List<Vector3>();
 
     }
 
@@ -154,6 +158,8 @@ public class DetectBoundaryTestScriptDynamic : MonoBehaviour
                 dataLogger.LogPointsList(totalPointsList);
                 // Debug.Log(dataLogger.LogPlayerVelocity());
                 dataLogger.LogPlayerPosition();
+                dataLogger.LogLeftWallPositions(leftWallsList);
+                dataLogger.LogRightWallPositions(rightWallsList);
             }
            
             Application.Quit();
@@ -199,9 +205,11 @@ public class DetectBoundaryTestScriptDynamic : MonoBehaviour
             if (ray.distance > 0)
             {
                 //dynamicPathLength = UnityEngine.Random.Range(pathLength, pathLength + ray.distance - pathWidth - boundaryBufferWidth); // according to ISEC paper
-                dynamicPathLength = UnityEngine.Random.Range(pathLength, ray.distance - pathWidth - boundaryBufferWidth); // not based on ISEC paper
+                dynamicPathLength = UnityEngine.Random.Range(pathLength, ray.distance - pathWidth*1.5f - boundaryBufferWidth); // not based on ISEC paper
             }
             else dynamicPathLength = pathLength; // to make sure that path do not grow outside boundaries.
+            if (dynamicPathLength < pathLength) dynamicPathLength = pathLength; // to make sure that resultant dynamicPathLength should never be less than pathlength.
+
             newPoint = new Vector3(lastPoint.x + dynamicPathLength * Mathf.Sin(newBeta), 0f, lastPoint.z + dynamicPathLength * Mathf.Cos(newBeta));
 
             Debug.Log("dynamicPathLength: " + dynamicPathLength);
@@ -257,6 +265,7 @@ public class DetectBoundaryTestScriptDynamic : MonoBehaviour
                 forward += points[i] - points[i - 1];
             }
             // ************** Enhancement ***************************
+            /*
             if (enableEnhancements)
             {
                 Vector3 angleBetweenSegments = Vector3.zero; // it is the angle between two adjecent path segments
@@ -275,8 +284,7 @@ public class DetectBoundaryTestScriptDynamic : MonoBehaviour
 
             pathWidth = pathWidth * pathWidthMultiplier;
             }
-            
-
+            */
             // ************** ***************************
 
             forward.Normalize();
@@ -296,6 +304,11 @@ public class DetectBoundaryTestScriptDynamic : MonoBehaviour
             Debug.DrawLine(leftPoints[i - 1], leftPoints[i], Color.yellow);
             Debug.DrawLine(rightPoints[i - 1], rightPoints[i], Color.yellow);
         }
+
+        if(leftWallsList.Count == 0 || leftWallsList[leftWallsList.Count-1] != array[0][0])
+            leftWallsList.Add(array[0][0]);
+        if (rightWallsList.Count == 0 || rightWallsList[rightWallsList.Count-1] != array[0][1])
+            rightWallsList.Add(array[0][1]);
 
         return array;
     }

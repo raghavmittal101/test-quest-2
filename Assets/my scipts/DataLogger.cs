@@ -44,6 +44,28 @@ public class DataLogger : MonoBehaviour
         return SaveToCSV("playerPositions", playerPositionLog);
     }
 
+    public string LogLeftWallPositions(List<Vector3> leftWallsList)
+    {
+        Debug.Log("Saving Left Wall positions");
+        var str = "x, y, z";
+        foreach (Vector3 point in leftWallsList)
+        {
+            str = str + "\n[" + point.x + "," + point.y + "," + point.z + "],";
+        }
+        return SaveToCSV("leftWallPositions", str);
+    }
+
+    public string LogRightWallPositions(List<Vector3> rightWallsList)
+    {
+        Debug.Log("Saving Right Wall positions");
+        var str = "x, y, z";
+        foreach (Vector3 point in rightWallsList)
+        {
+            str = str + "\n[" + point.x + "," + point.y + "," + point.z + "],";
+        }
+        return SaveToCSV("rightWallPositions", str);
+    }
+
     public string LogPlayerVelocity()
     {
         Debug.Log("Saving Velocity");
@@ -72,7 +94,7 @@ public class DataLogger : MonoBehaviour
 
         using (StreamWriter file = new StreamWriter(filePath))
             foreach (var entry in content)
-                file.WriteLine("[{0}, {1}]", entry.Key, entry.Value);
+                file.WriteLine("{0}, {1}", entry.Key, entry.Value);
 
         return filePath;
     }
