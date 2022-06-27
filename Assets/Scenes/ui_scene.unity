@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0.12731704, g: 0.13414727, b: 0.121078536, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -684,7 +684,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &522149307
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2179,7 +2179,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 147c09c3c4aca5d48b8a556c8070a7ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _autoContinueToPathgenScene: 1
+  _autoContinueToPathgenScene: 0
   subjectIDInputField: {fileID: 547450953}
 --- !u!114 &1496347464
 MonoBehaviour:
@@ -2193,7 +2193,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbf668a36985cb74a86a2d2ceebd1b3b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _inputDeviceType: 1
+  _inputDeviceType: 0
   playerPosition: {x: 0, y: 0, z: 0}
   playAreaDimensions: {x: 8, y: 0, z: 8}
   playerRotationAlongYAxis: 0
@@ -2226,7 +2226,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!108 &1501491763
 Light:
   m_ObjectHideFlags: 0
@@ -2364,6 +2364,11 @@ PrefabInstance:
       propertyPath: useRecommendedMSAALevel
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2815847647970548461, guid: 31dd6f2c446248240a0c2b5f1cba5348,
+        type: 3}
+      propertyPath: usePerEyeCameras
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2815847647970548462, guid: 31dd6f2c446248240a0c2b5f1cba5348,
         type: 3}
       propertyPath: m_TagString
@@ -2452,7 +2457,7 @@ PrefabInstance:
     - target: {fileID: 2815847648062557493, guid: 31dd6f2c446248240a0c2b5f1cba5348,
         type: 3}
       propertyPath: m_TagString
-      value: Untagged
+      value: PlayerTron
       objectReference: {fileID: 0}
     - target: {fileID: 2815847648236865632, guid: 31dd6f2c446248240a0c2b5f1cba5348,
         type: 3}

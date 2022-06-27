@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028331, g: 0.2257133, b: 0.3069217, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -886,7 +886,7 @@ GameObject:
   - component: {fileID: 1226282577}
   - component: {fileID: 1226282571}
   m_Layer: 0
-  m_Name: ScriptObject1
+  m_Name: ScriptObject
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -899,7 +899,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1226282570}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 77689b5084334924e8422dc24bb8edf2, type: 3}
   m_Name: 
@@ -909,7 +909,7 @@ MonoBehaviour:
   tasveerLeftRightPadding: 0.1
   repeatPictures: 1
   planeObject: {fileID: 55976899}
-  enableEnhancements: 1
+  enableEnhancements: 0
 --- !u!4 &1226282572
 Transform:
   m_ObjectHideFlags: 0
@@ -931,11 +931,23 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1226282570}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d905d819e205df541b36e798779b3d46, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  leftWall: {fileID: 929967979270486353, guid: af22b3093c504df45bd8f291d4262c93, type: 3}
+  rightWall: {fileID: 929967979270486353, guid: af22b3093c504df45bd8f291d4262c93,
+    type: 3}
+  obstacleBlueGateOrangegate:
+  - {fileID: 8801851889277488510, guid: fcb5644e439eb3d40ac38b01cb645f4e, type: 3}
+  - {fileID: 3182762110788098728, guid: 8d820076251dc1f4a8b279633123a4ed, type: 3}
+  - {fileID: 2047593804719967491, guid: 782a2af1c2b5bfe44b8917ef5c4af637, type: 3}
+  turretBlueOrange:
+  - {fileID: 3135288413624074899, guid: 60cca4776982e594288377d994dc6e56, type: 3}
+  - {fileID: 4052393820880438228, guid: 209a438661553574cad4e27b360a6af9, type: 3}
+  discCoin: {fileID: 7627527953598608504, guid: 3e0ecc3fba1ed9043ad5ed562dd1c370,
+    type: 3}
   spawnWallsFlag: 1
   tasveerDimensions: {x: 0.5, y: 0.5, z: 0.5}
   tasveerLeftRightPadding: 0.1

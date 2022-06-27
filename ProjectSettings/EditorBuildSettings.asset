@@ -10,6 +10,9 @@ EditorBuildSettings:
     guid: b27c3196c0761184bbfac9a2053d25dc
   - enabled: 1
     path: Assets/Scenes/SampleScene.unity
+    guid: d3a5ad9d51d970541a402ac35ad52f52
+  - enabled: 0
+    path: Assets/Scenes/TronGame_scene.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
   - enabled: 0
     path: Assets/Oculus/VR/Scenes/Trivial.unity
@@ -39,4 +42,6 @@ EditorBuildSettings:
     Unity.XR.Oculus.Settings: {fileID: 11400000, guid: 2d9c1523854f4be4ea794742f74a805e,
       type: 2}
     com.unity.xr.management.loader_settings: {fileID: 11400000, guid: ead72e196b4aa694589fa1727f9ef583,
+      type: 2}
+    xr.sdk.mock-hmd.settings: {fileID: 11400000, guid: dddda810394756d4cae0b5d1f7e9aa8e,
       type: 2}

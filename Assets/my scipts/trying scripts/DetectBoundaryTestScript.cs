@@ -5,12 +5,30 @@ using UnityEngine;
 
 public class DetectBoundaryTestScript : MonoBehaviour
 {
+
+    // kandarp
+    public GameObject leftWall,rightWall;
+    [SerializeField]
+    public List<GameObject> obstacleBlueGateOrangegate;
+    public List<GameObject> turretBlueOrange;
+    public GameObject discCoin;
+
+
+
+
     private Spawner spawner;
     private DetectBoundaryFixedDirections db;
     private WallsSpawner _WallSpawner;
     private int steps = 0;
     private List<GameObject> pathTriggerColliderList;
     private List<GameObject> leftWalls, rightWalls;
+
+
+    //Kandarp
+    private List<GameObject> obstaclesGatesTurretsCoins;
+
+
+
     private int imageIndex;
 
     private MetadataInputContext metadataInput { get { return _ResourceLoader.metadataInput; } }
@@ -53,6 +71,12 @@ public class DetectBoundaryTestScript : MonoBehaviour
         this._WallSpawner = new WallsSpawner();
         leftWalls = new List<GameObject>();
         rightWalls = new List<GameObject>();
+
+
+        //Kandarp
+        obstaclesGatesTurretsCoins = new List<GameObject>();
+
+
         imageIndex = imageList.Count - 1; // number of images. Images will be placed in reverse order
         pathTriggerColliderList = new List<GameObject>();
         spawner = new Spawner();
@@ -104,8 +128,16 @@ public class DetectBoundaryTestScript : MonoBehaviour
         SpawnPathTrigger(lastLeftPoint, lastRightPoint);
         if (spawnWallsFlag)
         {
-            leftWalls.Add(_WallSpawner.GenerateWall(ref leftRightPoints[0], wallPrefab));
-            rightWalls.Add(_WallSpawner.GenerateWall(ref leftRightPoints[1], wallPrefab));
+            // leftWalls.Add(_WallSpawner.GenerateWall(ref leftRightPoints[0], wallPrefab));
+            // rightWalls.Add(_WallSpawner.GenerateWall(ref leftRightPoints[1], wallPrefab));
+
+            // Kandarp
+            leftWalls.Add(_WallSpawner.GenerateWall(ref leftRightPoints[0], leftWall));
+            rightWalls.Add(_WallSpawner.GenerateWall(ref leftRightPoints[1], rightWall));
+
+            obstaclesGatesTurretsCoins.Add(_WallSpawner.GenerateObstacleGateTurretCoin(ref leftRightPoints,ref betaList,obstacleBlueGateOrangegate,turretBlueOrange,discCoin));
+
+
             if (imageIndex < 0 && repeatPictures) { imageIndex = imageList.Count - 1; }
             if (imageIndex >= 0) { PlaceOnWall(leftWalls[leftWalls.Count - 1], true); }
             if (imageIndex < 0 && repeatPictures) { imageIndex = imageList.Count - 1; }
@@ -136,6 +168,14 @@ public class DetectBoundaryTestScript : MonoBehaviour
                 leftWalls.RemoveAt(0);
                 Destroy(rightWalls[0]);
                 rightWalls.RemoveAt(0);
+
+                // Kandarp
+                Destroy(obstaclesGatesTurretsCoins[0]);
+                obstaclesGatesTurretsCoins.RemoveAt(0);
+
+
+
+
                 Destroy(pathTriggerColliderList[0]);
                 pathTriggerColliderList.RemoveAt(0);
                 SpawnWallsAndImages();

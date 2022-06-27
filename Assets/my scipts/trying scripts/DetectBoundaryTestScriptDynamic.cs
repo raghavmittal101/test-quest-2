@@ -171,7 +171,15 @@ public class DetectBoundaryTestScriptDynamic : MonoBehaviour
         }
         db.GenerateRays(pointsList[pointsList.Count - 1], betaList[betaList.Count - 1]);
         //_WallSpawner.GenerateWalls(pointsList, betaList, pathWidth);
-        List<Vector3>[] _leftRightPoints = GenerateLeftRightPoints(pointsList, pathWidth);
+        
+        
+        // kandarp
+        List<Vector3> points_tmp = new List<Vector3>();
+        points_tmp = pointsList.GetRange(0,pointsList.Count - 1);
+        List<Vector3>[] _leftRightPoints = GenerateLeftRightPoints(points_tmp, pathWidth);
+
+
+        // List<Vector3>[] _leftRightPoints = GenerateLeftRightPoints(pointsList, pathWidth);
     }
 
     /// <summary>
@@ -200,15 +208,32 @@ public class DetectBoundaryTestScriptDynamic : MonoBehaviour
             Physics.Raycast(lastPoint, GetFwd(newBeta, lastPoint), out ray); // sending a ray in direction of chosen new beta to understand how far the boundary is.
             Debug.DrawRay(lastPoint, GetFwd(newBeta, lastPoint) * 5f, Color.red, 3f);
             Debug.Log("b:" + ray.distance);
-            float dynamicPathLength;
+            
 
-            if (ray.distance > 0)
-            {
-                //dynamicPathLength = UnityEngine.Random.Range(pathLength, pathLength + ray.distance - pathWidth - boundaryBufferWidth); // according to ISEC paper
-                dynamicPathLength = UnityEngine.Random.Range(pathLength, ray.distance - pathWidth*1.5f - boundaryBufferWidth); // not based on ISEC paper
+            // if (ray.distance > 0)
+            // {
+            //     //dynamicPathLength = UnityEngine.Random.Range(pathLength, pathLength + ray.distance - pathWidth - boundaryBufferWidth); // according to ISEC paper
+            //     dynamicPathLength = UnityEngine.Random.Range(pathLength, ray.distance - pathWidth*1.5f - boundaryBufferWidth); // not based on ISEC paper
+            // }
+            // else dynamicPathLength = pathLength; // to make sure that path do not grow outside boundaries.
+            // if (dynamicPathLength < pathLength) dynamicPathLength = pathLength; // to make sure that resultant dynamicPathLength should never be less than pathlength.
+
+
+        float dynamicPathLength;
+        dynamicPathLength = pathLength;
+        //change by Kandarp
+        float previousLength = Vector3.Magnitude(lastPoint - pointsList[pointsList.Count - 2]);
+        if(Mathf.Abs(newBeta) % Mathf.PI > Mathf.PI/2)
+        {
+            if(!(dynamicPathLength > previousLength && dynamicPathLength < previousLength/Mathf.Cos(newBeta))){
+                dynamicPathLength = UnityEngine.Random.Range(previousLength,previousLength/Mathf.Cos(newBeta));
             }
-            else dynamicPathLength = pathLength; // to make sure that path do not grow outside boundaries.
-            if (dynamicPathLength < pathLength) dynamicPathLength = pathLength; // to make sure that resultant dynamicPathLength should never be less than pathlength.
+        }
+
+
+
+
+
 
             newPoint = new Vector3(lastPoint.x + dynamicPathLength * Mathf.Sin(newBeta), 0f, lastPoint.z + dynamicPathLength * Mathf.Cos(newBeta));
 
@@ -248,12 +273,14 @@ public class DetectBoundaryTestScriptDynamic : MonoBehaviour
     /// <param name="points">List of points representing the direction of path segments.</param>
     /// <param name="pathWidth"></param>
     /// <returns>List[List of left points, list of right points] corresponding to input list of points.</returns>
-    private List<Vector3>[] GenerateLeftRightPoints(List<Vector3> points, float pathWidth)
+    private List<Vector3>[] GenerateLeftRightPoints(List<Vector3> points_tmp, float pathWidth)
     {
         List<Vector3> leftPoints = new List<Vector3>();
         List<Vector3> rightPoints = new List<Vector3>();
 
-        for (int i = 0; i < points.Count; i++)
+        List<Vector3> points = points_tmp;
+
+        for (int i = 0; i < points.Count ; i++)
         {
             Vector3 forward = Vector3.zero;
             if (i < points.Count - 1)
@@ -286,6 +313,40 @@ public class DetectBoundaryTestScriptDynamic : MonoBehaviour
             }
             */
             // ************** ***************************
+
+            // change by Kandarp
+            Vector3 angleBetweenSegments = Vector3.zero; // it is the angle between two adjecent path segments
+            float pathWidthMultiplier; // to increase the path width at turns to keep the walls parallel always
+            Vector3 a,b;
+
+            if(i == 0){
+                pathWidthMultiplier = 1;
+            }    
+            else if(i == points.Count - 1){
+                a = points[i] - points[i-1];
+                b = pointsList[pointsList.Count - 1] - points[i];
+                float a_mag = Vector3.Magnitude(a);
+                float b_mag = Vector3.Magnitude(b);
+                float calc_beta = Vector3.Angle(a,b); // check if (a,b) or (b,a) better
+                float val_to_arcTan = (a_mag * Mathf.Sin(Mathf.Deg2Rad * (calc_beta)))/(b_mag + a_mag * Mathf.Cos(Mathf.Deg2Rad * (calc_beta)));
+                pathWidthMultiplier = 1/Mathf.Cos(Mathf.Deg2Rad * ((calc_beta) - Mathf.Rad2Deg * Mathf.Atan(val_to_arcTan)));
+            }
+            else{
+                a = points[i] - points[i-1];
+                b = points[i+1] - points[i];
+                float a_mag = Vector3.Magnitude(a);
+                float b_mag = Vector3.Magnitude(b);
+                float calc_beta = Vector3.Angle(a,b);
+
+                float val_to_arcTan = 
+                (a_mag * Mathf.Sin(Mathf.Deg2Rad * (calc_beta)))/(b_mag + a_mag * Mathf.Cos(Mathf.Deg2Rad * (calc_beta)));
+                
+                pathWidthMultiplier = 1/Mathf.Cos(Mathf.Deg2Rad * ((calc_beta) - Mathf.Rad2Deg * Mathf.Atan(val_to_arcTan)));
+            }
+            pathWidth = pathWidth * pathWidthMultiplier;
+
+
+
 
             forward.Normalize();
             Vector3 left = new Vector3(-forward.z, 0, forward.x);

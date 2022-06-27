@@ -6,6 +6,12 @@ TagManager:
   tags:
   - pathWall
   - playerObj
+  - Wall
+  - Turret
+  - Obstacle
+  - Gate
+  - BlackWall
+  - PlayerTron
   layers:
   - Default
   - TransparentFX
